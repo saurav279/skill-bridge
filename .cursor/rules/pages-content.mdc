@@ -1,0 +1,23 @@
+---
+description: Conversion copy, SEO, and semantic HTML for Skill Bridge pages
+globs: src/app/**/*.{tsx,ts},src/data/**/*.ts
+alwaysApply: false
+---
+
+# Pages & Content
+
+## Positioning
+Evidence-driven Global Talent Visa guidance for founders, engineers, researchers, designers, product leaders, marketers, scientists, and creators. Never use “immigration agency,” “visa mill,” or low-trust sales copy.
+
+## Conversion
+Every section should support trust or next action. Dual CTAs where appropriate. Case studies emphasize challenge → strategy → outcome.
+
+## SEO & HTML
+- Export `metadata` / `generateMetadata` (title template, description, Open Graph, Twitter)
+- Semantic landmarks (`header`, `main`, `nav`, `footer`, `section` with headings)
+- One `h1` per page; logical heading hierarchy
+- JSON-LD for Organization/WebSite on home; case-study structured data on detail pages
+- Accessible controls: ARIA labels, keyboard focus, accordion semantics
+
+## Auth pages
+Login/Register are dummy UI only — no API calls, `preventDefault` on submit.

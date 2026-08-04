@@ -1,0 +1,27 @@
+---
+description: Prefer reusable Skill Bridge components and motion patterns
+globs: src/components/**/*.{tsx,ts},src/app/**/*.{tsx,ts}
+alwaysApply: false
+---
+
+# Components
+
+## Prefer composition
+Build pages from `src/components/layout`, `src/components/sections`, `src/components/shared`, and `src/components/ui` (shadcn). Do not duplicate section markup across pages.
+
+## Shared primitives
+- `SectionTitle` — eyebrow + headline + optional description
+- `FadeIn` / `StaggerChildren` — scroll reveal (respect `prefers-reduced-motion`)
+- `CaseCard`, `TestimonialCard`, `Timeline`, `FinalCTA`, `ThemeToggle`
+- Stats, FAQ, Process use shared data from `src/data`
+
+## Motion
+- Subtle fade-up, stagger, card lift (`hover:-translate-y-0.5`), navbar glass transition
+- No excessive bounce, parallax overload, or autoplay gimmicks
+- Framer Motion only through shared wrappers when possible
+
+## Buttons & links
+Use shadcn `Button` variants. Primary CTAs: Book Free Consultation. Secondary: View Success Stories / Contact.
+
+## Large UI changes
+For new pages or redesigns, propose a short plan and wait for approval before rewriting structure.

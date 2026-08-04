@@ -1,0 +1,42 @@
+---
+description: Skill Bridge visual design system — Linear/Vercel/Stripe aesthetic
+alwaysApply: true
+---
+
+# Design System
+
+## Brand
+Skill Bridge is an elite Global Talent Visa **consultancy** — never frame it as an immigration agency.
+
+## Aesthetic references
+Linear.app, Vercel, Stripe, Notion, Framer, Apple. Premium, trustworthy, clean, editorial, minimal.
+
+## Layout
+- Max width: `1280px` (`max-w-7xl` / container utility)
+- 12-column mental grid; generous white space
+- Section padding: `py-20 md:py-28` unless a hero needs more
+- Rounded cards: `rounded-2xl` / `rounded-xl`
+- Soft shadows only (`shadow-sm` / custom soft tokens)
+
+## Color
+- Brand orange from logo: `#FF5500` → CSS `--primary` (`oklch(0.676 0.217 38.8)`).
+- Use Tailwind: `bg-primary`, `text-primary`, `text-primary-foreground`, `border-primary`, `bg-primary/10`, `ring-primary`.
+- Default `Button` already uses `bg-primary text-primary-foreground`.
+- Eyebrows, stats, active nav, timeline markers, and key CTAs should use primary.
+- Neutrals stay cool near-white / near-black. No purple-on-white, no cream/terracotta, no neon glow.
+- Glass (`backdrop-blur`) only on navbar-on-scroll and auth cards.
+
+## Typography
+- Geist Sans for UI; Geist Mono sparingly for labels/accents
+- Large display headlines (`text-4xl`–`text-6xl`), clear hierarchy
+- Body: comfortable leading (`leading-relaxed`)
+
+## Banned
+- WordPress / TemplateMonster looks
+- Typical immigration-site chrome (flags, passport stamps, cartoon planes)
+- Generic AI gradients, purple glows, cartoon/stock illustrations
+- Cheesy motion, emoji decoration, pill-stat strips in heroes
+- Cards in the hero; inset/floating hero media cards when a full-bleed plane is intended
+
+## Imagery
+High-quality Unsplash photos via `next/image`. Professionals, workspaces, editorial headshots. Never AI illustrations.
