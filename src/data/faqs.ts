@@ -2,6 +2,11 @@ import type { FAQ } from "@/types";
 
 export const faqs: FAQ[] = [
   {
+    question: "What’s the difference between Profiling Strategy and the Comprehensive Package?",
+    answer:
+      "Profiling Strategy is a focused assessment and written plan — pathway, gaps, and evidence priorities. The Comprehensive Package includes that strategy plus end-to-end statement drafting, evidence assembly, letter support, and submission guidance.",
+  },
+  {
     question: "What is the Global Talent Visa?",
     answer:
       "The Global Talent Visa is a UK route for leaders and promising talent in digital technology, arts and culture, and academia/research. It recognizes exceptional achievement and contribution — not employer sponsorship.",

@@ -6,6 +6,7 @@ import { BrandLogo } from "@/components/shared/brand-logo";
 
 const company = [
   { href: "/about", label: "About" },
+  { href: "/packages", label: "Packages" },
   { href: "/case-studies", label: "Case Studies" },
   { href: "/login", label: "Client Login" },
 ];
@@ -13,11 +14,13 @@ const company = [
 const navigation = [
   { href: "/", label: "Home" },
   { href: "/about", label: "Our Story" },
+  { href: "/packages", label: "Packages" },
   { href: "/case-studies", label: "Success Stories" },
 ];
 
 const resources = [
   { href: "/#faq", label: "FAQ" },
+  { href: "/#packages", label: "Packages" },
   { href: "/#process", label: "Our Process" },
   { href: "/consultation", label: "Book Consultation" },
   { href: "/contact", label: "Contact Us" },

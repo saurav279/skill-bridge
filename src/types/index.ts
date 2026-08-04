@@ -74,3 +74,17 @@ export type ValueItem = {
   description: string;
   icon: "integrity" | "transparency" | "expertise" | "client";
 };
+
+export type ServicePackage = {
+  slug: string;
+  name: string;
+  tagline: string;
+  description: string;
+  priceLabel?: string;
+  priceNote?: string;
+  featured?: boolean;
+  features: string[];
+  idealFor: string;
+  ctaLabel: string;
+  ctaHref: string;
+};

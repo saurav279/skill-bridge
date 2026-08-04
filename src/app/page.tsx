@@ -1,6 +1,7 @@
 import { Hero } from "@/components/sections/hero";
 import { StatsSection } from "@/components/sections/stats";
 import { WhyChooseUs } from "@/components/sections/why-choose-us";
+import { PackagesSection } from "@/components/sections/packages-section";
 import { ProcessTimeline } from "@/components/sections/process-timeline";
 import { FeaturedStories } from "@/components/sections/featured-stories";
 import { TestimonialsSection } from "@/components/sections/testimonials";
@@ -13,6 +14,7 @@ export default function HomePage() {
       <Hero />
       <StatsSection />
       <WhyChooseUs />
+      <PackagesSection />
       <ProcessTimeline />
       <FeaturedStories />
       <TestimonialsSection />
