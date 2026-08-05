@@ -4,12 +4,12 @@ import { ContactForm } from "@/components/shared/contact-form";
 import { ContactMap } from "@/components/shared/contact-map";
 import { SectionTitle } from "@/components/shared/section-title";
 import { FadeIn } from "@/components/shared/fade-in";
-import { Mail, MapPin, Clock } from "lucide-react";
+import { Mail, MapPin, Clock, Phone } from "lucide-react";
+import { company } from "@/data/company";
 
 export const metadata: Metadata = {
   title: "Contact",
-  description:
-    "Get in touch with Skill Bridge about Global Talent Visa strategy, partnerships, or general inquiries.",
+  description: `Get in touch with ${company.name} about Global Talent Visa strategy, partnerships, or general inquiries.`,
 };
 
 export default function ContactPage() {
@@ -28,19 +28,41 @@ export default function ContactPage() {
               <ul className="mt-10 space-y-5">
                 <li className="flex gap-3 text-sm text-muted-foreground">
                   <Mail
-                    className="mt-0.5 size-4 shrink-0 text-foreground"
+                    className="mt-0.5 size-4 shrink-0 text-primary"
                     aria-hidden
                   />
                   <span>
                     <span className="block font-medium text-foreground">
                       Email
                     </span>
-                    hello@skillbridge.example
+                    <a
+                      href={`mailto:${company.email}`}
+                      className="hover:text-foreground"
+                    >
+                      {company.email}
+                    </a>
+                  </span>
+                </li>
+                <li className="flex gap-3 text-sm text-muted-foreground">
+                  <Phone
+                    className="mt-0.5 size-4 shrink-0 text-primary"
+                    aria-hidden
+                  />
+                  <span>
+                    <span className="block font-medium text-foreground">
+                      Phone
+                    </span>
+                    <a
+                      href={`tel:${company.phone.replace(/\s+/g, "")}`}
+                      className="hover:text-foreground"
+                    >
+                      {company.phone}
+                    </a>
                   </span>
                 </li>
                 <li className="flex gap-3 text-sm text-muted-foreground">
                   <Clock
-                    className="mt-0.5 size-4 shrink-0 text-foreground"
+                    className="mt-0.5 size-4 shrink-0 text-primary"
                     aria-hidden
                   />
                   <span>
@@ -52,14 +74,14 @@ export default function ContactPage() {
                 </li>
                 <li className="flex gap-3 text-sm text-muted-foreground">
                   <MapPin
-                    className="mt-0.5 size-4 shrink-0 text-foreground"
+                    className="mt-0.5 size-4 shrink-0 text-primary"
                     aria-hidden
                   />
                   <span>
                     <span className="block font-medium text-foreground">
                       Office
                     </span>
-                    Shoreditch, London · Remote meetings available
+                    {company.address}
                   </span>
                 </li>
               </ul>
@@ -89,8 +111,8 @@ export default function ContactPage() {
           <FadeIn>
             <SectionTitle
               eyebrow="Location"
-              title="Visit us in London"
-              description="Based in Shoreditch — happy to meet on-site or remotely."
+              title="Visit us"
+              description={`Find ${company.name} at ${company.address}.`}
               className="mb-8"
             />
             <ContactMap />

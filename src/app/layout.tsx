@@ -4,6 +4,8 @@ import { ThemeProvider } from "@/components/providers/theme-provider";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import "./globals.css";
+import Whatsapp from "@/components/layout/whatsapp";
+import { company } from "@/data/company";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,7 +17,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const siteUrl = "https://skillbridge.example.com";
+const siteUrl = company.website;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -77,16 +79,19 @@ const jsonLd = {
   "@graph": [
     {
       "@type": "Organization",
-      name: "Skill Bridge",
+      name: company.name,
       url: siteUrl,
       logo: `${siteUrl}/logo.png`,
+      email: company.email,
+      telephone: company.phone,
+      address: company.address,
       description:
         "Premium Global Talent Visa consultancy offering evidence-driven strategies for exceptional talent.",
-      sameAs: [],
+      sameAs: Object.values(company.socialLinks),
     },
     {
       "@type": "WebSite",
-      name: "Skill Bridge",
+      name: company.name,
       url: siteUrl,
       potentialAction: {
         "@type": "SearchAction",
@@ -122,6 +127,7 @@ export default function RootLayout({
             <Navbar />
             <main className="flex-1">{children}</main>
             <Footer />
+            <Whatsapp />
           </div>
         </ThemeProvider>
       </body>

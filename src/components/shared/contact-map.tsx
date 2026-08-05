@@ -1,3 +1,5 @@
+import { company } from "@/data/company";
+
 /**
  * Map embed for the contact page.
  * Override with NEXT_PUBLIC_MAP_EMBED_URL (Google Maps or OSM embed URL).
@@ -15,7 +17,7 @@ type ContactMapProps = {
 export function ContactMap({
   embedUrl = DEFAULT_MAP_EMBED_URL,
   className,
-  title = "Skill Bridge office location — London",
+  title = `${company.name} office location`,
 }: ContactMapProps) {
   return (
     <div className={className}>
@@ -30,9 +32,9 @@ export function ContactMap({
         />
       </div>
       <div className="mt-3 flex flex-col gap-1 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-        <p>14 Crown Place · Shoreditch · London EC2A · United Kingdom</p>
+        <p>{company.address}</p>
         <a
-          href="https://www.openstreetmap.org/?mlat=51.522&mlon=-0.082#map=15/51.522/-0.082"
+          href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(company.address)}`}
           target="_blank"
           rel="noopener noreferrer"
           className="font-medium text-primary underline-offset-4 hover:underline"
