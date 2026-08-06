@@ -1,14 +1,17 @@
 import { NextResponse } from "next/server";
-import { getAssessment } from "@/lib/eligibility-assessment";
+import {
+  getAssessment,
+  normalizeAssessment,
+} from "@/lib/eligibility-assessment";
 import { buildAssessmentPdf } from "@/lib/build-assessment-pdf";
 
 type Params = { params: Promise<{ id: string }> };
 
 export async function POST(_request: Request, { params }: Params) {
   const { id } = await params;
-  const assessment = getAssessment(id);
+  const raw = getAssessment(id);
 
-  if (!assessment) {
+  if (!raw) {
     return NextResponse.json(
       { error: "Assessment not found" },
       { status: 404 }
@@ -24,6 +27,7 @@ export async function POST(_request: Request, { params }: Params) {
   //   },
   // });
 
+  const assessment = normalizeAssessment(raw);
   const bytes = await buildAssessmentPdf(assessment);
   const filename = `skill-bridge-assessment-${id}.pdf`;
 
