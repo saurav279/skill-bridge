@@ -80,6 +80,8 @@ export type ServicePackage = {
   name: string;
   tagline: string;
   description: string;
+  /** Longer page copy for the package detail page */
+  overview?: string;
   priceLabel?: string;
   priceNote?: string;
   featured?: boolean;
@@ -87,4 +89,8 @@ export type ServicePackage = {
   idealFor: string;
   ctaLabel: string;
   ctaHref: string;
+  /** YouTube (or other) embed URL for the reference video */
+  videoEmbedUrl?: string;
+  videoTitle?: string;
+  steps?: { title: string; detail: string }[];
 };

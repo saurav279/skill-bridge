@@ -2,9 +2,14 @@ import type { FAQ } from "@/types";
 
 export const faqs: FAQ[] = [
   {
-    question: "What’s the difference between Profiling Strategy and the Comprehensive Package?",
+    question: "How do I start?",
     answer:
-      "Profiling Strategy is a focused assessment and written plan — pathway, gaps, and evidence priorities. The Comprehensive Package includes that strategy plus end-to-end statement drafting, evidence assembly, letter support, and submission guidance.",
+      "Complete the Eligibility Questionnaire for a free 15-minute discovery call. We’ll discuss fit and recommend the right package — from Strategy Session to Full Review or Bespoke Coaching.",
+  },
+  {
+    question: "What packages do you offer?",
+    answer:
+      "Six options: Leadership in Tech Course (£799), DIY Membership (£999), Strategy Session (£1,950), Review Only (£3,500), Full Review (£5,500), and Bespoke 1-to-1 Coaching (£7,500).",
   },
   {
     question: "What is the Global Talent Visa?",
@@ -22,9 +27,9 @@ export const faqs: FAQ[] = [
       "We are a talent strategy consultancy. We focus on evidence architecture, narrative clarity, and endorsement readiness — not generic form-filling or volume processing.",
   },
   {
-    question: "How long does the process usually take?",
+    question: "Do you help with appeals or refusals?",
     answer:
-      "Engagements typically run 8–14 weeks depending on profile complexity, recommender availability, and evidence readiness. We set milestones at kickoff so you always know where you stand.",
+      "Yes. Our Appeal support diagnoses Stage 1 refusals, rebuilds strategy, and prepares a stronger resubmission. See the Appeal page for details. For formal immigration advice, instruct a solicitor.",
   },
   {
     question: "Do you guarantee approval?",

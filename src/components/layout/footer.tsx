@@ -9,6 +9,7 @@ import { company } from "@/data/company";
 const companyLinks = [
   { href: "/about", label: "About" },
   { href: "/packages", label: "Packages" },
+  { href: "/appeal", label: "Appeal" },
   { href: "/case-studies", label: "Case Studies" },
   { href: "/login", label: "Client Login" },
 ];
@@ -17,13 +18,14 @@ const navigation = [
   { href: "/", label: "Home" },
   { href: "/about", label: "Our Story" },
   { href: "/packages", label: "Packages" },
+  { href: "/resources", label: "Resources" },
   { href: "/case-studies", label: "Success Stories" },
 ];
 
-const resources = [
-  { href: "/#faq", label: "FAQ" },
-  { href: "/#packages", label: "Packages" },
-  { href: "/#process", label: "Our Process" },
+const resourceLinks = [
+  { href: "/eligibility", label: "Eligibility Questionnaire" },
+  { href: "/resources", label: "Insights & Guides" },
+  { href: "/resources#newsletters", label: "Newsletters" },
   { href: "/consultation", label: "Book Consultation" },
   { href: "/contact", label: "Contact Us" },
 ];
@@ -148,7 +150,7 @@ export function Footer() {
           />
           <FooterCol
             title="Resources"
-            links={resources}
+            links={resourceLinks}
             className="md:col-span-2"
           />
         </div>

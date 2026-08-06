@@ -1,27 +1,23 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import { Shield, Eye, Award, HeartHandshake } from "lucide-react";
+import Link from "next/link";
+import { Award, Check } from "lucide-react";
 import { SectionTitle } from "@/components/shared/section-title";
 import { Timeline } from "@/components/shared/timeline";
-import { FinalCTA } from "@/components/shared/final-cta";
+import { EbookCta } from "@/components/shared/ebook-cta";
 import { FadeIn, StaggerChildren, StaggerItem } from "@/components/shared/fade-in";
-import { team, values, milestones } from "@/data/team";
+import { Button } from "@/components/ui/button";
+import { team, milestones } from "@/data/team";
+import { ceo, awards } from "@/data/content-extra";
+import { ReadyToStartCta } from "@/components/sections/ready-to-start";
 
 export const metadata: Metadata = {
   title: "About",
   description:
-    "Learn about Skill Bridge — our mission, story, values, and the team behind premium Global Talent Visa strategy.",
-};
-
-const valueIcons = {
-  integrity: Shield,
-  transparency: Eye,
-  expertise: Award,
-  client: HeartHandshake,
+    "Meet Skill Bridge CEO Elena Voss — mission, awards, and leadership behind our Global Talent Visa consultancy.",
 };
 
 export default function AboutPage() {
-  const founder = team.find((m) => m.founder);
   const consultants = team.filter((m) => !m.founder);
 
   return (
@@ -33,132 +29,139 @@ export default function AboutPage() {
               as="h1"
               eyebrow="About Skill Bridge"
               title="A strategy firm for exceptional talent."
-              description="We help world-class professionals secure Global Talent Visas through evidence architecture, narrative clarity, and end-to-end guidance — never volume processing."
+              description="We help world-class professionals secure Global Talent Visas through evidence architecture, narrative clarity, and end-to-end guidance."
             />
           </FadeIn>
         </div>
       </section>
 
+      {/* CEO profile */}
       <section className="border-y border-border/70 bg-muted/20 py-20 md:py-28">
-        <div className="container-page grid gap-12 md:grid-cols-12">
+        <div className="container-page grid items-center gap-10 md:grid-cols-12">
           <div className="md:col-span-5">
-            <FadeIn>
-              <SectionTitle
-                eyebrow="Mission"
-                title="Raise the standard of Global Talent preparation."
-              />
-            </FadeIn>
-          </div>
-          <div className="md:col-span-7">
-            <FadeIn delay={0.08}>
-              <p className="text-lg leading-relaxed text-muted-foreground">
-                Exceptional people deserve exceptional counsel. Our mission is
-                to replace guesswork with a rigorous, human process — so
-                founders, researchers, designers, and operators can present
-                their work with the clarity endorsement panels expect.
-              </p>
-            </FadeIn>
-          </div>
-        </div>
-      </section>
-
-      <section className="py-20 md:py-28">
-        <div className="container-page grid items-center gap-12 md:grid-cols-12">
-          <div className="md:col-span-6">
-            <FadeIn>
-              <SectionTitle
-                eyebrow="Our Story"
-                title="Why we started"
-                description="Too many talented professionals were funneled through generic immigration workflows that ignored how excellence is actually evaluated. Skill Bridge was founded to bring product-grade strategy to Global Talent applications — selective intake, deep evidence planning, and writing that respects the craft of the candidate."
-              />
-            </FadeIn>
-          </div>
-          <div className="md:col-span-6">
-            <FadeIn delay={0.1} direction="scale">
-              <div className="relative aspect-[4/3] overflow-hidden rounded-2xl shadow-elevated">
+            <FadeIn direction="scale">
+              <div className="relative mx-auto aspect-[4/5] max-w-md overflow-hidden rounded-2xl shadow-elevated">
                 <Image
-                  src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1200&h=900&fit=crop&q=80"
-                  alt="Team collaborating in a modern office"
+                  src={ceo.image}
+                  alt={ceo.name}
                   fill
                   className="object-cover"
-                  sizes="(max-width: 768px) 100vw, 50vw"
+                  sizes="(max-width: 768px) 100vw, 40vw"
+                  priority
                 />
               </div>
             </FadeIn>
           </div>
+          <div className="md:col-span-7">
+            <FadeIn delay={0.08}>
+              <p className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-primary">
+                CEO profile
+              </p>
+              <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
+                {ceo.name}
+              </h2>
+              <p className="mt-1 text-lg text-muted-foreground">{ceo.title}</p>
+              <p className="mt-5 text-base leading-relaxed text-muted-foreground">
+                {ceo.shortBio}
+              </p>
+              <ul className="mt-6 space-y-2.5">
+                {ceo.highlights.map((h) => (
+                  <li key={h} className="flex gap-2.5 text-sm text-foreground/90">
+                    <Check className="mt-0.5 size-4 shrink-0 text-primary" />
+                    {h}
+                  </li>
+                ))}
+              </ul>
+              <Button
+                className="mt-8 h-11 rounded-full px-6 font-semibold uppercase tracking-wide"
+                render={<Link href="#more-about-ceo" />}
+              >
+                More about CEO
+              </Button>
+            </FadeIn>
+          </div>
         </div>
       </section>
 
-      <section className="bg-muted/20 py-20 md:py-28">
+      {/* More about CEO */}
+      <section id="more-about-ceo" className="scroll-mt-28 py-20 md:py-28">
+        <div className="container-page grid gap-12 md:grid-cols-12">
+          <div className="md:col-span-4">
+            <FadeIn>
+              <SectionTitle
+                eyebrow="Leadership"
+                title="More about our CEO"
+              />
+            </FadeIn>
+          </div>
+          <div className="md:col-span-8 space-y-5">
+            <FadeIn delay={0.08}>
+              {ceo.longBio.map((p) => (
+                <p
+                  key={p.slice(0, 32)}
+                  className="text-base leading-relaxed text-muted-foreground sm:text-lg"
+                >
+                  {p}
+                </p>
+              ))}
+              <Button
+                variant="outline"
+                className="mt-4 h-11 rounded-full px-6"
+                render={<Link href="/eligibility" />}
+              >
+                Book a discovery call with the team
+              </Button>
+            </FadeIn>
+          </div>
+        </div>
+      </section>
+
+      {/* Awards */}
+      <section className="border-y border-border/70 bg-muted/20 py-20 md:py-28">
         <div className="container-page">
           <FadeIn>
             <SectionTitle
-              eyebrow="Values"
-              title="What guides every engagement"
+              eyebrow="Awards & recognition"
+              title="Milestones that mark our work"
               align="center"
               className="mx-auto"
             />
           </FadeIn>
           <StaggerChildren className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {values.map((value) => {
-              const Icon = valueIcons[value.icon];
-              return (
-                <StaggerItem key={value.title}>
-                  <div className="h-full rounded-2xl border border-border/80 bg-card p-6 shadow-soft">
-                    <div className="mb-4 inline-flex size-10 items-center justify-center rounded-xl border border-primary/20 bg-primary/10 text-primary">
-                      <Icon className="size-5" aria-hidden />
-                    </div>
-                    <h3 className="text-lg font-semibold">{value.title}</h3>
-                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                      {value.description}
-                    </p>
+            {awards.map((a) => (
+              <StaggerItem key={a.title}>
+                <div className="h-full rounded-2xl border border-border/80 bg-card p-6 shadow-soft">
+                  <div className="mb-4 inline-flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                    <Award className="size-5" aria-hidden />
                   </div>
-                </StaggerItem>
-              );
-            })}
+                  <p className="font-mono text-xs text-primary">{a.year}</p>
+                  <h3 className="mt-1 text-base font-semibold tracking-tight">
+                    {a.title}
+                  </h3>
+                  <p className="mt-1 text-xs font-medium text-muted-foreground">
+                    {a.org}
+                  </p>
+                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                    {a.description}
+                  </p>
+                </div>
+              </StaggerItem>
+            ))}
           </StaggerChildren>
         </div>
       </section>
 
+      {/* Team consultants */}
       <section className="py-20 md:py-28">
         <div className="container-page">
           <FadeIn>
             <SectionTitle
               eyebrow="Team"
-              title="Meet the people behind the work"
-              description="Operators and strategists who understand exceptional careers — and how to evidence them."
+              title="Consultants behind the work"
+              description="Operators and strategists who understand exceptional careers."
             />
           </FadeIn>
-
-          {founder ? (
-            <FadeIn delay={0.08}>
-              <div className="mt-12 grid items-center gap-8 rounded-3xl border border-border/80 bg-card p-6 shadow-soft md:grid-cols-12 md:p-10">
-                <div className="relative aspect-square overflow-hidden rounded-2xl md:col-span-4">
-                  <Image
-                    src={founder.image}
-                    alt={founder.name}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                  />
-                </div>
-                <div className="md:col-span-8">
-                  <p className="font-mono text-xs uppercase tracking-wider text-primary">
-                    Founder spotlight
-                  </p>
-                  <h3 className="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl">
-                    {founder.name}
-                  </h3>
-                  <p className="mt-1 text-muted-foreground">{founder.role}</p>
-                  <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted-foreground">
-                    {founder.bio}
-                  </p>
-                </div>
-              </div>
-            </FadeIn>
-          ) : null}
-
-          <StaggerChildren className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <StaggerChildren className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {consultants.map((member) => (
               <StaggerItem key={member.name}>
                 <div className="overflow-hidden rounded-2xl border border-border/80 bg-card shadow-soft">
@@ -191,7 +194,7 @@ export default function AboutPage() {
             <FadeIn>
               <SectionTitle
                 eyebrow="Timeline"
-                title="Milestones that shaped Skill Bridge"
+                title="Company milestones"
               />
             </FadeIn>
           </div>
@@ -210,10 +213,9 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <FinalCTA
-        title="Work with a team that treats your career with care"
-        description="Book a consultation to explore fit, pathway, and next steps."
-      />
+      {/* E-book access */}
+      <EbookCta compact />
+      <ReadyToStartCta />
     </>
   );
 }
