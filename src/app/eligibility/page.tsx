@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { SectionTitle } from "@/components/shared/section-title";
 import { FadeIn } from "@/components/shared/fade-in";
-import { EligibilityForm } from "./eligibility-form";
+import { EligibilityCarousel } from "@/components/eligibility/eligibility-carousel";
 
 export const metadata: Metadata = {
   title: "Eligibility Questionnaire",
@@ -20,20 +20,20 @@ export default function EligibilityPage() {
               as="h1"
               eyebrow="Free discovery call"
               title="Eligibility Questionnaire"
-              description="Tell us about your background. We’ll review fit for Stage 1 endorsement and invite you to a free 15-minute discovery call."
+              description="Pick your endorsement route, then swipe through a guided carousel. We’ll review fit for Stage 1 and invite you to a free 15-minute discovery call."
             />
             <ul className="mt-8 space-y-3 text-sm text-muted-foreground">
               <li className="flex gap-2">
                 <span className="font-semibold text-primary">01</span>
-                Complete this short questionnaire
+                Choose Digital Tech, Academia, or Arts
               </li>
               <li className="flex gap-2">
                 <span className="font-semibold text-primary">02</span>
-                We assess Exceptional Talent / Promise fit
+                Answer route-specific carousel questions
               </li>
               <li className="flex gap-2">
                 <span className="font-semibold text-primary">03</span>
-                Book a free 15-minute discovery call
+                Get a readiness score and book a call
               </li>
             </ul>
             <p className="mt-8 text-sm text-muted-foreground">
@@ -50,7 +50,7 @@ export default function EligibilityPage() {
         </div>
         <div className="md:col-span-7">
           <FadeIn delay={0.08}>
-            <EligibilityForm />
+            <EligibilityCarousel />
           </FadeIn>
         </div>
       </div>
