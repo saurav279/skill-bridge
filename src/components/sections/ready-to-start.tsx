@@ -29,7 +29,7 @@ export function ReadyToStartCta() {
             </Button>
             <a
               href={`mailto:${company.email}`}
-              className="inline-flex h-12 items-center justify-center rounded-full border border-white/30 px-8 text-sm font-semibold uppercase tracking-wide text-white transition-colors hover:bg-white/10"
+              className="inline-flex h-12 items-center justify-center rounded-full border border-background/30 px-8 text-sm font-semibold uppercase tracking-wide text-background transition-colors hover:bg-background/10"
             >
               Email {company.name}
             </a>
