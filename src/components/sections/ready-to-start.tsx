@@ -14,7 +14,7 @@ export function ReadyToStartCta() {
           <h2 className="mx-auto mt-3 max-w-2xl text-balance text-3xl font-bold tracking-tight sm:text-4xl">
             Complete our questionnaire for a free 15-minute discovery call
           </h2>
-          <p className="mx-auto mt-4 max-w-xl text-base text-white/70">
+          <p className="mx-auto mt-4 max-w-xl text-background">
             We&apos;ll discuss your eligibility and recommend the right package —
             from Strategy Session to Full Review or Bespoke Coaching. All queries
             are replied to within 5 working days.

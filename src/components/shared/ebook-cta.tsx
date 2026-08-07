@@ -50,7 +50,7 @@ export function EbookCta({ className, compact }: EbookCtaProps) {
               <p
                 className={cn(
                   "mt-2 text-lg font-medium",
-                  compact ? "text-foreground/80" : "text-white/90"
+                  compact ? "text-foreground" : "text-background"
                 )}
               >
                 {ebook.subtitle}
@@ -58,7 +58,7 @@ export function EbookCta({ className, compact }: EbookCtaProps) {
               <p
                 className={cn(
                   "mt-4 max-w-xl text-base leading-relaxed",
-                  compact ? "text-muted-foreground" : "text-white/70"
+          compact ? "text-foreground" : "text-background"
                 )}
               >
                 {ebook.description}
@@ -69,7 +69,7 @@ export function EbookCta({ className, compact }: EbookCtaProps) {
                     key={b}
                     className={cn(
                       "flex gap-2 text-sm",
-                      compact ? "text-foreground/90" : "text-white/85"
+                  compact ? "text-foreground" : "text-background"
                     )}
                   >
                     <Check
@@ -105,7 +105,7 @@ export function EbookCta({ className, compact }: EbookCtaProps) {
                   <p
                     className={cn(
                       "mt-2 text-lg font-bold leading-snug",
-                      compact ? "text-foreground" : "text-white"
+                    compact ? "text-foreground" : "text-background"
                     )}
                   >
                     Global Talent Visa E-Book
@@ -113,7 +113,7 @@ export function EbookCta({ className, compact }: EbookCtaProps) {
                   <p
                     className={cn(
                       "mt-2 text-xs",
-                      compact ? "text-muted-foreground" : "text-white/60"
+                 compact ? "text-foreground" : "text-background"
                     )}
                   >
                     Free download

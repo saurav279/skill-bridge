@@ -24,7 +24,7 @@ export function ConversionHero() {
             <p className="mb-4 font-mono text-xs font-semibold uppercase tracking-[0.22em] text-primary">
               UK Global Talent Visa Consultancy
             </p>
-            <h1 className="text-balance text-4xl font-bold uppercase tracking-tight sm:text-5xl lg:text-6xl lg:leading-[1.05]">
+            <h1 className="text-white/90 text-4xl font-bold uppercase tracking-tight sm:text-5xl lg:text-6xl lg:leading-[1.05]">
               Helping Exceptional Talent Secure the UK Global Talent Visa
             </h1>
             <p className="mt-4 text-xl font-medium text-white/90 sm:text-2xl">
