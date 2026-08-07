@@ -97,8 +97,8 @@ export function AssessmentRadar({ items, className }: Props) {
         })}
         <polygon
           points={dataPolygon}
-          fill="oklch(0.546 0.215 262.88 / 0.18)"
-          stroke="oklch(0.546 0.215 262.88)"
+          fill="oklch(0.454 0.310 265.4 / 0.18)"
+          stroke="oklch(0.454 0.310 265.4)"
           strokeWidth="2"
         />
         {items.map((item, i) => {

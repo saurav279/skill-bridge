@@ -21,7 +21,7 @@ const PAGE: [number, number] = [595.28, 841.89]; // A4
 const MARGIN = 44;
 const CONTENT_WIDTH = PAGE[0] - MARGIN * 2;
 
-const brand = rgb(0.145, 0.388, 0.922); // #2563EB
+const brand = rgb(0.0706, 0.0039, 0.9961); // #1201FE
 const ink = rgb(0.09, 0.09, 0.09);
 const muted = rgb(0.38, 0.38, 0.4);
 const soft = rgb(0.96, 0.96, 0.97);

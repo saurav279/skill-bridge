@@ -21,8 +21,8 @@ const siteUrl = company.website;
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#2563EB" },
-    { media: "(prefers-color-scheme: dark)", color: "#2563EB" },
+    { media: "(prefers-color-scheme: light)", color: "#1201FE" },
+    { media: "(prefers-color-scheme: dark)", color: "#1201FE" },
   ],
 };
 

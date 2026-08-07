@@ -19,7 +19,7 @@ Linear.app, Vercel, Stripe, Notion, Framer, Apple. Premium, trustworthy, clean, 
 - Soft shadows only (`shadow-sm` / custom soft tokens)
 
 ## Color
-- Brand blue: `#2563EB` → CSS `--primary` (`oklch(0.546 0.215 262.88)`).
+- Brand blue: `#1201FE` → CSS `--primary` (`oklch(0.454 0.310 265.4)`).
 - Use Tailwind: `bg-primary`, `text-primary`, `text-primary-foreground`, `border-primary`, `bg-primary/10`, `ring-primary`.
 - Default `Button` already uses `bg-primary text-primary-foreground`.
 - Eyebrows, stats, active nav, timeline markers, and key CTAs should use primary.
