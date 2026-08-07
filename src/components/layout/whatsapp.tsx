@@ -21,7 +21,7 @@ const Whatsapp = () => {
       </div>
 
       <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#25D366] text-white shadow-[0_12px_40px_rgba(37,211,102,0.45)] transition-all duration-300 hover:scale-110 hover:shadow-[0_18px_50px_rgba(37,211,102,0.6)] active:scale-95">
-        <MessageCircle className="h-8 w-8" />
+        <MessageCircle className="h-6 w-6" />
       </div>
 
       <span className="absolute inset-0 -z-10 animate-ping rounded-full bg-[#25D366]/30"></span>
