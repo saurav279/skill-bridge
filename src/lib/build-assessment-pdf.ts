@@ -21,7 +21,7 @@ const PAGE: [number, number] = [595.28, 841.89]; // A4
 const MARGIN = 44;
 const CONTENT_WIDTH = PAGE[0] - MARGIN * 2;
 
-const brand = rgb(1, 0.333, 0); // #FF5500
+const brand = rgb(0.145, 0.388, 0.922); // #2563EB
 const ink = rgb(0.09, 0.09, 0.09);
 const muted = rgb(0.38, 0.38, 0.4);
 const soft = rgb(0.96, 0.96, 0.97);
@@ -585,8 +585,8 @@ export async function buildAssessmentPdf(
     y: recBottom,
     width: CONTENT_WIDTH,
     height: recH,
-    color: rgb(1, 0.95, 0.92),
-    borderColor: rgb(1, 0.85, 0.75),
+    color: rgb(0.94, 0.96, 1),
+    borderColor: rgb(0.75, 0.84, 0.98),
     borderWidth: 1,
   });
   page.drawText("OVERALL RECOMMENDATION", {

@@ -20,7 +20,7 @@ export function FinalCTA({
         <FadeIn>
           <div className="relative overflow-hidden rounded-3xl border border-border bg-card px-6 py-14 text-center shadow-soft sm:px-12 md:py-20">
             <div
-              className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_oklch(0.676_0.217_38.8_/_0.14),_transparent_55%)] dark:bg-[radial-gradient(ellipse_at_top,_oklch(0.72_0.21_38.8_/_0.2),_transparent_55%)]"
+              className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_oklch(0.546_0.215_262.88_/_0.14),_transparent_55%)] dark:bg-[radial-gradient(ellipse_at_top,_oklch(0.68_0.18_255_/_0.2),_transparent_55%)]"
               aria-hidden
             />
             <div className="relative mx-auto max-w-2xl">
