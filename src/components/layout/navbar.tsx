@@ -10,6 +10,7 @@ import { BrandLogo } from "@/components/shared/brand-logo";
 import { packages } from "@/data/packages";
 import { company } from "@/data/company";
 import { cn } from "@/lib/utils";
+import { socialIcons } from "@/components/shared/social-icons";
 
 const aboutLinks = [
   { href: "/about", label: "About Skill Bridge" },
@@ -45,31 +46,35 @@ export function Navbar() {
     <header className="sticky top-0 z-50 w-full">
       {/* Top utility bar — Michelle Hua style */}
       <div className="hidden border-b border-primary/20 bg-primary text-primary-foreground sm:block">
-        <div className="container-page flex h-9 items-center justify-between text-xs font-medium">
+        <div className="container-page flex h-12 items-center justify-between text-xs font-medium">
           <Link href="/about/gtv" className="hover:underline">
             About the UK Global Talent Visa
           </Link>
-          <div className="flex items-center gap-3">
-            {(
-              [
-                ["linkedin", company.socialLinks.linkedin],
-                ["twitter", company.socialLinks.twitter],
-                ["instagram", company.socialLinks.instagram],
-                ["youtube", company.socialLinks.youtube],
-              ] as const
-            ).map(([label, href]) => (
-              <a
-                key={label}
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="capitalize opacity-90 hover:opacity-100"
-                aria-label={label}
-              >
-                {label}
-              </a>
-            ))}
-          </div>
+          <div className="flex flex-wrap gap-2 my-2">
+              {socialIcons.map(({ key, label, path }) => (
+                <a
+                  key={key}
+                  href={company.socialLinks[key]}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={label}
+                  className="inline-flex size-9 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    className="size-4"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.75"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden
+                  >
+                    <path d={path} />
+                  </svg>
+                </a>
+              ))}
+            </div>
         </div>
       </div>
 

@@ -8,9 +8,8 @@ import {
   getPackage,
   whyWorkWithSkillBridge,
 } from "@/data/packages";
-import { testimonials } from "@/data/testimonials";
 import { SectionTitle } from "@/components/shared/section-title";
-import { TestimonialCard } from "@/components/shared/testimonial-card";
+import { TestimonialsCarousel } from "@/components/shared/testimonials-carousel";
 import { Timeline } from "@/components/shared/timeline";
 import { FadeIn, StaggerChildren, StaggerItem } from "@/components/shared/fade-in";
 import { ReadyToStartCta } from "@/components/sections/ready-to-start";
@@ -178,21 +177,8 @@ export default async function PackageDetailPage({ params }: PageProps) {
       <section className="py-20 md:py-28">
         <div className="container-page">
           <FadeIn>
-            <SectionTitle
-              eyebrow="Testimonials"
-              title="What clients say"
-              description="Leaders who trusted Skill Bridge with their Stage 1 journey."
-              align="center"
-              className="mx-auto"
-            />
+            <TestimonialsCarousel />
           </FadeIn>
-          <StaggerChildren className="mt-12 grid gap-5 md:grid-cols-2">
-            {testimonials.slice(0, 4).map((t) => (
-              <StaggerItem key={t.id}>
-                <TestimonialCard testimonial={t} />
-              </StaggerItem>
-            ))}
-          </StaggerChildren>
         </div>
       </section>
 
