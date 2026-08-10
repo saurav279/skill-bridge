@@ -8,6 +8,9 @@ import { FadeIn, StaggerChildren, StaggerItem } from "@/components/shared/fade-i
 import { ReadyToStartCta } from "@/components/sections/ready-to-start";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { PackageCard } from "@/components/shared/package-card";
+import { ServicePackage } from "@/types";
+import { EbookCta } from "@/components/shared/ebook-cta";
 
 export const metadata: Metadata = {
   title: "Appeal",
@@ -30,14 +33,14 @@ export default function AppealPage() {
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Button
                 className="h-11 rounded-full px-6 font-semibold uppercase tracking-wide"
-                render={<Link href="/assessment" />}
+                render={<Link href="/assessment"  target="_blank" rel="noopener noreferrer"/>}
               >
                 Start Assessment Questionnaire
               </Button>
               <Button
                 variant="outline"
                 className="h-11 rounded-full px-6 font-semibold uppercase tracking-wide"
-                render={<Link href="#appeal-packages" />}
+                render={<Link href="#appeal-packages"/>}
               >
                 View Appeal Packages
               </Button>
@@ -121,54 +124,7 @@ export default function AppealPage() {
           <StaggerChildren className="mt-12 grid gap-6 md:grid-cols-3">
             {appealPackages.map((pkg) => (
               <StaggerItem key={pkg.slug}>
-                <article
-                  className={cn(
-                    "flex h-full flex-col overflow-hidden rounded-2xl border bg-card shadow-soft",
-                    pkg.featured
-                      ? "border-primary ring-2 ring-primary/30"
-                      : "border-border/80"
-                  )}
-                >
-                  <div
-                    className={cn(
-                      "px-4 py-2 text-center text-xs font-semibold uppercase tracking-wider",
-                      pkg.featured
-                        ? "bg-primary text-primary-foreground"
-                        : "bg-muted text-muted-foreground"
-                    )}
-                  >
-                    {pkg.featured ? "Most Popular" : "Appeal support"}
-                  </div>
-                  <div className="flex flex-1 flex-col p-6">
-                    <h3 className="text-xl font-bold tracking-tight">
-                      {pkg.name}
-                    </h3>
-                    <p className="mt-4 text-3xl font-bold text-primary">
-                      {pkg.priceLabel}
-                    </p>
-                    <p className="mt-1 text-xs text-muted-foreground">
-                      {pkg.priceNote}
-                    </p>
-                    <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-                      {pkg.description}
-                    </p>
-                    <ul className="mt-5 flex-1 space-y-2.5 border-t border-border/70 pt-5">
-                      {pkg.features.map((f) => (
-                        <li key={f} className="flex gap-2 text-sm">
-                          <Check className="mt-0.5 size-4 shrink-0 text-primary" />
-                          {f}
-                        </li>
-                      ))}
-                    </ul>
-                    <Button
-                      className="mt-6 h-11 w-full rounded-full font-semibold uppercase tracking-wide"
-                      variant={pkg.featured ? "default" : "outline"}
-                      render={<Link href="/assessment" />}
-                    >
-                      Explore
-                    </Button>
-                  </div>
-                </article>
+              <PackageCard pkg={pkg as ServicePackage} />
               </StaggerItem>
             ))}
           </StaggerChildren>
@@ -178,8 +134,11 @@ export default function AppealPage() {
           </p>
         </div>
       </section>
-
+      <EbookCta />
       <ReadyToStartCta />
+     
+      
+    
     </>
   );
 }

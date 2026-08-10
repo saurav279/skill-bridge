@@ -148,7 +148,7 @@ export function Navbar() {
             <Button
               size="sm"
               className="hidden h-10 rounded-full px-4 text-xs font-semibold uppercase tracking-wide sm:inline-flex"
-              render={<Link href="/assessment" />}
+              render={<Link href="/assessment" target="_blank" rel="noopener noreferrer"/>}
             >
               Assessment Questionnaire
             </Button>
@@ -195,7 +195,7 @@ export function Navbar() {
               <MobileLink href="/contact">Contact</MobileLink>
               <Button
                 className="mt-3 h-11 rounded-full font-semibold uppercase tracking-wide"
-                render={<Link href="/assessment" />}
+                render={<Link href="/assessment" target="_blank" rel="noopener noreferrer"/>}
               >
                 Assessment Questionnaire
               </Button>
@@ -219,6 +219,8 @@ function NavLink({
   return (
     <Link
       href={href}
+      target="_blank"
+      rel="noopener noreferrer"
       className={cn(
         "rounded-lg px-3 py-2 text-sm font-medium transition-colors",
         active
@@ -285,6 +287,8 @@ function DropdownItem({
   return (
     <Link
       href={href}
+      target="_blank"
+      rel="noopener noreferrer"
       className="block rounded-lg px-3 py-2 text-sm text-foreground/90 transition-colors hover:bg-primary/10 hover:text-primary"
     >
       {children}
@@ -302,6 +306,8 @@ function MobileLink({
   return (
     <Link
       href={href}
+      target="_blank"
+      rel="noopener noreferrer"
       className="rounded-lg px-3 py-2.5 text-sm font-medium text-foreground hover:bg-muted"
     >
       {children}

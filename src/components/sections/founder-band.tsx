@@ -59,7 +59,7 @@ export function FounderBand() {
             </div>
             <Button
               className="mt-8 h-11 rounded-full px-6 font-semibold uppercase tracking-wide"
-              render={<Link href="/about" />}
+              render={<Link href="/about" target="_blank" rel="noopener noreferrer"/>}
             >
               Learn More About Us
             </Button>

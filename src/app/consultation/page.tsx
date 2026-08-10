@@ -25,6 +25,8 @@ export default function ConsultationPage() {
             Prefer email instead?{" "}
             <Link
               href="/contact"
+              target="_blank"
+              rel="noopener noreferrer"
               className="font-medium text-primary underline-offset-4 hover:underline"
             >
               Contact us

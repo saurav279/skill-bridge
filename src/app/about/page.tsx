@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { team, milestones } from "@/data/team";
 import { ceo, awards } from "@/data/content-extra";
 import { ReadyToStartCta } from "@/components/sections/ready-to-start";
+import { ConversionPackages } from "@/components/sections/conversion-packages";
 
 export const metadata: Metadata = {
   title: "About",
@@ -107,7 +108,7 @@ export default function AboutPage() {
               <Button
                 variant="outline"
                 className="mt-4 h-11 rounded-full px-6"
-                render={<Link href="/assessment" />}
+                render={<Link href="/assessment" target="_blank" rel="noopener noreferrer"/>}
               >
                 Book a discovery call with the team
               </Button>
@@ -213,8 +214,10 @@ export default function AboutPage() {
         </div>
       </section>
 
+
       {/* E-book access */}
-      <EbookCta compact />
+      <ConversionPackages />
+      <EbookCta />
       <ReadyToStartCta />
     </>
   );

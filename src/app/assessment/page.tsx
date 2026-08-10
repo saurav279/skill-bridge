@@ -40,6 +40,8 @@ export default function AssessmentPage() {
               Prefer to speak now?{" "}
               <Link
                 href="/consultation"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="font-medium text-primary underline-offset-4 hover:underline"
               >
                 Open the calendar

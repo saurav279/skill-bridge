@@ -3,6 +3,9 @@ import {
   CaseStudiesGrid,
   CaseStudiesHeader,
 } from "@/components/sections/case-studies-grid";
+import { EbookCta } from "@/components/shared/ebook-cta";
+import { ReadyToStartCta } from "@/components/sections/ready-to-start";
+import { ConversionPackages } from "@/components/sections/conversion-packages";
 
 export const metadata: Metadata = {
   title: "Case Studies",
@@ -15,6 +18,10 @@ export default function CaseStudiesPage() {
     <>
       <CaseStudiesHeader />
       <CaseStudiesGrid />
+
+      <ConversionPackages />
+      <EbookCta />
+      <ReadyToStartCta />
     </>
   );
 }

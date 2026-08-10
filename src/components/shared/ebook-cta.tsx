@@ -84,7 +84,7 @@ export function EbookCta({ className, compact }: EbookCtaProps) {
               </ul>
               <Button
                 className="mt-8 h-11 rounded-full px-6 font-semibold uppercase tracking-wide"
-                render={<Link href={ebook.href} />}
+                render={<Link href={ebook.href} target="_blank" rel="noopener noreferrer"/>}
               >
                 {ebook.ctaLabel}
               </Button>

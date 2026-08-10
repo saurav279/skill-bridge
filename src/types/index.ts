@@ -88,7 +88,7 @@ export type ServicePackage = {
   features: string[];
   idealFor: string;
   ctaLabel: string;
-  ctaHref: string;
+  ctaHref?: string;
   /** YouTube (or other) embed URL for the reference video */
   videoEmbedUrl?: string;
   videoTitle?: string;

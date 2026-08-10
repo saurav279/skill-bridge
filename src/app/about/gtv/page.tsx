@@ -18,6 +18,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { ReadyToStartCta } from "@/components/sections/ready-to-start";
+import { ConversionPackages } from "@/components/sections/conversion-packages";
 
 export const metadata: Metadata = {
   title: "About the UK Global Talent Visa",
@@ -39,7 +40,7 @@ export default function AboutGtvPage() {
             />
             <Button
               className="mt-8 h-11 rounded-full px-6 font-semibold uppercase tracking-wide"
-              render={<Link href="/assessment" />}
+              render={<Link href="/assessment" target="_blank" rel="noopener noreferrer"/>}
             >
               Start Assessment Questionnaire
             </Button>
@@ -166,6 +167,7 @@ export default function AboutGtvPage() {
           </div>
         </div>
       </section>
+      <ConversionPackages />
 
       {/* Common Qns */}
       <section className="py-20 md:py-28">

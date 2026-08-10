@@ -26,7 +26,7 @@ export default function PackagesPage() {
             />
             <Button
               className="mt-8 h-11 rounded-full px-6 font-semibold uppercase tracking-wide"
-              render={<Link href="/assessment" />}
+              render={<Link href="/assessment" target="_blank" rel="noopener noreferrer"/>}
             >
               Start Assessment Questionnaire
             </Button>

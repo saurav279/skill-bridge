@@ -175,6 +175,8 @@ export const appealPackages = [
       "Resubmit vs wait recommendation",
     ],
     featured: false,
+    ctaLabel: "Purchase Package",
+
   },
   {
     slug: "appeal-rebuild",
@@ -192,6 +194,7 @@ export const appealPackages = [
       "Resubmission readiness check",
     ],
     featured: true,
+    ctaLabel: "Purchase Package",
   },
   {
     slug: "appeal-full-support",
@@ -209,5 +212,6 @@ export const appealPackages = [
       "Submission support",
     ],
     featured: false,
+    ctaLabel: "Purchase Package",
   },
 ];

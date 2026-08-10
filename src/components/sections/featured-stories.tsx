@@ -21,7 +21,7 @@ export function FeaturedStories() {
             <Button
               variant="outline"
               className="h-10 shrink-0 rounded-xl"
-              render={<Link href="/case-studies" />}
+              render={<Link href="/case-studies" target="_blank" rel="noopener noreferrer"/>}
             >
               View all
             </Button>

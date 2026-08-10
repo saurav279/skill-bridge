@@ -19,7 +19,7 @@ export function PackagesSection() {
             <Button
               variant="outline"
               className="h-10 shrink-0 rounded-xl"
-              render={<Link href="/packages" />}
+              render={<Link href="/packages" target="_blank" rel="noopener noreferrer"/>}
             >
               Compare packages
             </Button>

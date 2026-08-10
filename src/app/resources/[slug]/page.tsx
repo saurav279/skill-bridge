@@ -51,7 +51,7 @@ export default async function ResourceArticlePage({ params }: PageProps) {
             variant="ghost"
             size="sm"
             className="mb-6 -ml-2 rounded-full"
-            render={<Link href="/resources" />}
+            render={<Link href="/resources" target="_blank" rel="noopener noreferrer"/>}
           >
             <ArrowLeft className="size-4" />
             All resources
@@ -104,7 +104,7 @@ export default async function ResourceArticlePage({ params }: PageProps) {
                 </p>
                 <Button
                   className="mt-4 h-10 rounded-full px-5 font-semibold uppercase tracking-wide"
-                  render={<Link href="/assessment" />}
+                  render={<Link href="/assessment" target="_blank" rel="noopener noreferrer"/>}
                 >
                   Start Questionnaire
                 </Button>
@@ -127,6 +127,8 @@ export default async function ResourceArticlePage({ params }: PageProps) {
               <StaggerItem key={item.slug}>
                 <Link
                   href={`/resources/${item.slug}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="group flex h-full flex-col rounded-2xl border border-border/80 bg-card p-6 shadow-soft transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-elevated"
                 >
                   <p className="font-mono text-[11px] uppercase tracking-wider text-primary">

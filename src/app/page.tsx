@@ -17,16 +17,20 @@ export default function HomePage() {
     <>
       <ConversionHero />
       <AboutGtvSection />
-      <LatestInsightsSection />
       <BenefitsSection />
       <ConversionStatsBand />
-      <ConversionPackages />
-      <FounderBand />
+   
       <HowWeHelpSection />
+      <FounderBand />
+
+      <ConversionPackages />
+
+      <LatestInsightsSection />
       <EbookCta />
       <ReadyToStartCta />
       <FeaturedStories />
       <TestimonialsSection />
+      
       <FAQSection />
     </>
   );

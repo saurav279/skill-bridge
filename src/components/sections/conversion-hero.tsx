@@ -39,7 +39,7 @@ export function ConversionHero() {
               <Button
                 size="lg"
                 className="h-12 rounded-full px-7 text-sm font-semibold uppercase tracking-wide"
-                render={<Link href="/assessment" />}
+                render={<Link href="/assessment" target="_blank" rel="noopener noreferrer"/>}
               >
                 Start Assessment Questionnaire
               </Button>
@@ -47,7 +47,7 @@ export function ConversionHero() {
                 size="lg"
                 variant="outline"
                 className="h-12 rounded-full border-white/30 bg-transparent px-7 text-sm font-semibold uppercase tracking-wide text-white hover:bg-white/10 hover:text-white"
-                render={<Link href="/packages" />}
+                render={<Link href="/packages" target="_blank" rel="noopener noreferrer"/>}
               >
                 View Packages
               </Button>

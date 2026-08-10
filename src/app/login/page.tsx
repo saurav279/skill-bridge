@@ -122,6 +122,8 @@ export default function LoginPage() {
             Don&apos;t have an account?{" "}
             <Link
               href="/register"
+              target="_blank"
+              rel="noopener noreferrer"
               className="font-medium text-primary underline-offset-4 hover:underline"
             >
               Register
@@ -130,7 +132,7 @@ export default function LoginPage() {
         </div>
 
         <p className="mt-6 text-center text-sm text-muted-foreground">
-          <Link href="/" className="hover:text-foreground">
+          <Link href="/" target="_blank" rel="noopener noreferrer" className="hover:text-foreground">
             ← Back to home
           </Link>
         </p>

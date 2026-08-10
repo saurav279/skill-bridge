@@ -25,7 +25,7 @@ const navigation = [
 const resourceLinks = [
   { href: "/assessment", label: "Assessment Questionnaire" },
   { href: "/resources", label: "Insights & Guides" },
-  { href: "/resources#newsletters", label: "Newsletters" },
+  // { href: "/resources#newsletters", label: "Newsletters" },
   { href: "/consultation", label: "Book Consultation" },
   { href: "/contact", label: "Contact Us" },
 ];
@@ -192,6 +192,8 @@ function FooterCol({
           <li key={link.label}>
             <Link
               href={link.href}
+              target="_blank"
+              rel="noopener noreferrer"
               className="text-sm text-foreground/80 transition-colors hover:text-foreground"
             >
               {link.label}

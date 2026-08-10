@@ -5,8 +5,8 @@ import { FadeIn, StaggerChildren, StaggerItem } from "@/components/shared/fade-i
 import { SectionTitle } from "@/components/shared/section-title";
 import { Button } from "@/components/ui/button";
 
-export function LatestInsightsSection() {
-  const latest = resources.slice(0, 3);
+export function LatestInsightsSection({ limit = 3, main = false }: { limit?: number, main?: boolean }) {
+  const latest = resources.slice(0, limit);
 
   return (
     <section className="border-y border-border/70 bg-muted/20 py-20 md:py-28">
@@ -18,13 +18,13 @@ export function LatestInsightsSection() {
               title="Stay informed on Stage 1 endorsement"
               description="Practical notes on criteria, evidence, and talent strategy."
             />
-            <Button
+       { !main &&    <Button
               variant="outline"
               className="h-10 shrink-0 rounded-full"
-              render={<Link href="/resources" />}
+              render={<Link href="/resources" target="_blank" rel="noopener noreferrer"/>}
             >
               View all resources
-            </Button>
+            </Button>}
           </div>
         </FadeIn>
 
@@ -33,6 +33,8 @@ export function LatestInsightsSection() {
             <StaggerItem key={item.slug}>
               <Link
                 href={`/resources/${item.slug}`}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="group flex h-full flex-col rounded-2xl border border-border/80 bg-card p-6 shadow-soft transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-elevated"
               >
                 <p className="font-mono text-[11px] uppercase tracking-wider text-primary">

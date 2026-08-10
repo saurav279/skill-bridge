@@ -9,6 +9,9 @@ import { Timeline } from "@/components/shared/timeline";
 import { FinalCTA } from "@/components/shared/final-cta";
 import { FadeIn } from "@/components/shared/fade-in";
 import { Button } from "@/components/ui/button";
+import { ConversionPackages } from "@/components/sections/conversion-packages";
+import { EbookCta } from "@/components/shared/ebook-cta";
+import { ReadyToStartCta } from "@/components/sections/ready-to-start";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -73,7 +76,7 @@ export default async function CaseStudyDetailPage({ params }: PageProps) {
             variant="ghost"
             size="sm"
             className="mb-6 -ml-2 rounded-xl"
-            render={<Link href="/case-studies" />}
+            render={<Link href="/case-studies" target="_blank" rel="noopener noreferrer"/>}
           >
             <ArrowLeft className="size-4" />
             All case studies
@@ -216,7 +219,11 @@ export default async function CaseStudyDetailPage({ params }: PageProps) {
         </div>
       </section>
 
-      <FinalCTA title="Book Your Consultation" />
+      <ConversionPackages />
+      <EbookCta />
+      <ReadyToStartCta />
+
+
     </>
   );
 }

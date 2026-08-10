@@ -6,6 +6,9 @@ import { SectionTitle } from "@/components/shared/section-title";
 import { FadeIn } from "@/components/shared/fade-in";
 import { Mail, MapPin, Clock, Phone } from "lucide-react";
 import { company } from "@/data/company";
+import { ConversionPackages } from "@/components/sections/conversion-packages";
+import { EbookCta } from "@/components/shared/ebook-cta";
+import { ReadyToStartCta } from "@/components/sections/ready-to-start";
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -89,6 +92,8 @@ export default function ContactPage() {
                 Ready to book time?{" "}
                 <Link
                   href="/consultation"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="font-medium text-primary underline-offset-4 hover:underline"
                 >
                   Open the calendar
@@ -119,6 +124,10 @@ export default function ContactPage() {
           </FadeIn>
         </div>
       </section>
+
+      <ConversionPackages />
+      <EbookCta />
+      <ReadyToStartCta />
     </>
   );
 }

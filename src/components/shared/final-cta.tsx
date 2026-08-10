@@ -34,7 +34,7 @@ export function FinalCTA({
                 <Button
                   size="lg"
                   className="h-11 rounded-xl px-6 text-sm"
-                  render={<Link href="/consultation" />}
+                  render={<Link href="/consultation" target="_blank" rel="noopener noreferrer"/>}
                 >
                   Book Consultation
                 </Button>
@@ -42,7 +42,7 @@ export function FinalCTA({
                   size="lg"
                   variant="outline"
                   className="h-11 rounded-xl px-6 text-sm"
-                  render={<Link href="/contact" />}
+                  render={<Link href="/contact" target="_blank" rel="noopener noreferrer"/>}
                 >
                   Contact Us
                 </Button>

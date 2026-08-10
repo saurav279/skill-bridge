@@ -32,7 +32,7 @@ export function AboutGtvSection() {
             </p>
             <Button
               className="mt-8 h-11 rounded-full px-6 font-semibold uppercase tracking-wide"
-              render={<Link href="/about/gtv" />}
+              render={<Link href="/about/gtv" target="_blank" rel="noopener noreferrer"/>}
             >
               Learn more about the visa
             </Button>

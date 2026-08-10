@@ -24,7 +24,7 @@ export function Hero() {
               <Button
                 size="lg"
                 className="h-11 rounded-xl px-6"
-                render={<Link href="/consultation" />}
+                render={<Link href="/consultation" target="_blank" rel="noopener noreferrer"/>}
               >
                 Book Free Consultation
               </Button>
@@ -32,7 +32,7 @@ export function Hero() {
                 size="lg"
                 variant="outline"
                 className="h-11 rounded-xl px-6"
-                render={<Link href="/case-studies" />}
+                render={<Link href="/case-studies" target="_blank" rel="noopener noreferrer"/>}
               >
                 View Success Stories
               </Button>

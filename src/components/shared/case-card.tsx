@@ -60,6 +60,8 @@ export function CaseCard({ study, className, compact }: CaseCardProps) {
         )}
         <Link
           href={`/case-studies/${study.slug}`}
+          target="_blank"
+          rel="noopener noreferrer"
           className="mt-auto inline-flex items-center gap-1 pt-5 text-sm font-medium text-primary transition-colors hover:text-primary/80"
         >
           Read Case Study

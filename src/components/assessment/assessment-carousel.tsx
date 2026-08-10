@@ -5,6 +5,7 @@ import {
   useRef,
   useState,
   type ChangeEvent,
+  type KeyboardEvent,
   type RefObject,
 } from "react";
 import Link from "next/link";
@@ -20,11 +21,13 @@ import {
   Mail,
   Map,
   Palette,
+  Plus,
   Sparkles,
   TrendingUp,
   Upload,
   User,
   Users,
+  X,
   type LucideIcon,
 } from "lucide-react";
 import {
@@ -261,7 +264,7 @@ export function AssessmentCarousel() {
         <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
           <Button
             className="h-11 rounded-full px-6 font-semibold uppercase tracking-wide"
-            render={<Link href={`/assessment/${assessment.id}`} />}
+            render={<Link href={`/assessment/${assessment.id}`} target="_blank" rel="noopener noreferrer"/>}
           >
             View assessment
             <ArrowRight className="size-4" />
@@ -400,6 +403,7 @@ export function AssessmentCarousel() {
               onChips={(opt) => setAnswer(q.id, opt)}
               onText={(v) => setAnswer(q.id, v)}
               onFile={(file) => setAnswer(q.id, file)}
+              onValue={(v) => setAnswer(q.id, v)}
               fileRef={q.type === "file" ? fileRef : undefined}
             />
           ))}
@@ -430,6 +434,15 @@ export function AssessmentCarousel() {
   );
 }
 
+const OTHER_OPTION = "Other";
+
+function isCustomOtherValue(
+  option: string,
+  options: string[] | undefined
+): boolean {
+  return Boolean(options && option !== OTHER_OPTION && !options.includes(option));
+}
+
 function QuestionField({
   question: q,
   value,
@@ -438,6 +451,7 @@ function QuestionField({
   onChips,
   onText,
   onFile,
+  onValue,
   fileRef,
 }: {
   question: AssessmentQuestion;
@@ -447,9 +461,145 @@ function QuestionField({
   onChips: (option: string) => void;
   onText: (value: string) => void;
   onFile: (file: File | null) => void;
+  onValue: (value: unknown) => void;
   fileRef?: RefObject<HTMLInputElement | null>;
 }) {
+  const [draft, setDraft] = useState("");
+  const [addingOther, setAddingOther] = useState(false);
   const selected = (value as string[] | undefined) ?? [];
+  const hasOtherOption = Boolean(q.options?.includes(OTHER_OPTION));
+
+  const customValues =
+    q.type === "checkbox"
+      ? selected.filter((v) => isCustomOtherValue(v, q.options))
+      : typeof value === "string" && isCustomOtherValue(value, q.options)
+        ? [value]
+        : [];
+
+  const isOtherOn =
+    addingOther ||
+    selected.includes(OTHER_OPTION) ||
+    value === OTHER_OPTION ||
+    customValues.length > 0;
+
+  const atMax =
+    q.type === "checkbox" &&
+    Boolean(q.maxSelection) &&
+    selected.filter((v) => v !== OTHER_OPTION).length >= (q.maxSelection ?? 0);
+
+  function clearOther() {
+    setDraft("");
+    setAddingOther(false);
+    if (q.type === "checkbox") {
+      onValue(
+        selected.filter(
+          (v) => v !== OTHER_OPTION && !isCustomOtherValue(v, q.options)
+        )
+      );
+      return;
+    }
+    onValue(undefined);
+  }
+
+  function selectOther() {
+    if (isOtherOn) {
+      clearOther();
+      return;
+    }
+    setAddingOther(true);
+    if (q.type === "checkbox") onCheckbox(q, OTHER_OPTION, true);
+    else if (q.type === "chips") onChips(OTHER_OPTION);
+    else onRadio(OTHER_OPTION);
+  }
+
+  function addCustom() {
+    const text = draft.trim();
+    if (!text) return;
+
+    if (q.options?.includes(text)) {
+      setDraft("");
+      if (q.type === "checkbox") onCheckbox(q, text, true);
+      else if (q.type === "chips") onChips(text);
+      else onRadio(text);
+      setAddingOther(false);
+      return;
+    }
+
+    if (q.type === "checkbox") {
+      if (customValues.includes(text)) {
+        setDraft("");
+        return;
+      }
+      const base = selected.filter((v) => v !== OTHER_OPTION);
+      let next = [...base, text];
+      if (q.maxSelection && next.length > q.maxSelection) {
+        next = next.slice(-q.maxSelection);
+      }
+      onValue(next);
+    } else {
+      onValue(text);
+    }
+
+    setDraft("");
+    setAddingOther(true);
+  }
+
+  function removeCustom(opt: string) {
+    if (q.type === "checkbox") {
+      const next = selected.filter((v) => v !== opt);
+      const stillHasCustom = next.some((v) =>
+        isCustomOtherValue(v, q.options)
+      );
+      setAddingOther(true);
+      onValue(
+        stillHasCustom || next.includes(OTHER_OPTION)
+          ? next
+          : [...next, OTHER_OPTION]
+      );
+      return;
+    }
+    setAddingOther(true);
+    onValue(OTHER_OPTION);
+  }
+
+  function isOptionOn(opt: string) {
+    if (opt === OTHER_OPTION) return isOtherOn;
+    if (q.type === "checkbox") return selected.includes(opt);
+    return value === opt;
+  }
+
+  function selectOption(opt: string) {
+    if (opt === OTHER_OPTION) {
+      selectOther();
+      return;
+    }
+    if (q.type === "chips") {
+      setAddingOther(false);
+      onChips(opt);
+      return;
+    }
+    if (q.type === "radio") {
+      setAddingOther(false);
+      onRadio(opt);
+      return;
+    }
+    onCheckbox(q, opt, !selected.includes(opt));
+  }
+
+  function onDraftKeyDown(e: KeyboardEvent<HTMLInputElement>) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      addCustom();
+    }
+  }
+
+  const optionClass = (isOn: boolean) =>
+    cn(
+      "inline-flex items-center gap-2 rounded-full border px-3.5 py-2 text-sm transition-all",
+      isOn
+        ? "border-primary bg-primary text-primary-foreground"
+        : "border-border bg-background text-foreground hover:border-primary/40"
+    );
 
   return (
     <fieldset className="space-y-3">
@@ -476,24 +626,13 @@ function QuestionField({
           )}
         >
           {q.options.map((opt) => {
-            const isOn =
-              q.type === "chips"
-                ? value === opt
-                : selected.includes(opt);
+            const isOn = isOptionOn(opt);
             return (
               <button
                 key={opt}
                 type="button"
-                onClick={() => {
-                  if (q.type === "chips") onChips(opt);
-                  else onCheckbox(q, opt, !isOn);
-                }}
-                className={cn(
-                  "inline-flex items-center gap-2 rounded-full border px-3.5 py-2 text-sm transition-all",
-                  isOn
-                    ? "border-primary bg-primary text-primary-foreground"
-                    : "border-border bg-background text-foreground hover:border-primary/40"
-                )}
+                onClick={() => selectOption(opt)}
+                className={optionClass(isOn)}
               >
                 {q.type === "checkbox" && isOn ? (
                   <Check className="size-3.5" />
@@ -502,18 +641,31 @@ function QuestionField({
               </button>
             );
           })}
+          {customValues.map((opt) => (
+            <button
+              key={opt}
+              type="button"
+              onClick={() => removeCustom(opt)}
+              className={optionClass(true)}
+              aria-label={`Remove ${opt}`}
+            >
+              {q.type === "checkbox" ? <Check className="size-3.5" /> : null}
+              {opt}
+              <X className="size-3.5 opacity-80" />
+            </button>
+          ))}
         </div>
       ) : null}
 
       {q.type === "radio" && q.options ? (
         <div className="flex flex-wrap gap-2">
           {q.options.map((opt) => {
-            const isOn = value === opt;
+            const isOn = isOptionOn(opt);
             return (
               <button
                 key={opt}
                 type="button"
-                onClick={() => onRadio(opt)}
+                onClick={() => selectOption(opt)}
                 className={cn(
                   "rounded-full border px-4 py-2 text-sm font-medium transition-all",
                   isOn
@@ -525,6 +677,51 @@ function QuestionField({
               </button>
             );
           })}
+          {customValues.map((opt) => (
+            <button
+              key={opt}
+              type="button"
+              onClick={() => removeCustom(opt)}
+              className={cn(
+                "inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium",
+                "border-primary bg-primary text-primary-foreground"
+              )}
+              aria-label={`Remove ${opt}`}
+            >
+              {opt}
+              <X className="size-3.5 opacity-80" />
+            </button>
+          ))}
+        </div>
+      ) : null}
+
+      {hasOtherOption && isOtherOn ? (
+        <div className="flex gap-2">
+          <Label htmlFor={`${q.id}-other`} className="sr-only">
+            Add your own
+          </Label>
+          <Input
+            id={`${q.id}-other`}
+            type="text"
+            autoFocus
+            value={draft}
+            onChange={(e) => setDraft(e.target.value)}
+            onKeyDown={onDraftKeyDown}
+            disabled={atMax}
+            className="h-11 rounded-xl"
+            placeholder={atMax ? "Selection limit reached" : "Type and add/press enter"}
+          />
+          <Button
+            type="button"
+            variant="outline"
+            size="icon"
+            className="size-11 shrink-0 rounded-xl"
+            onClick={addCustom}
+            disabled={!draft.trim() || atMax}
+            aria-label="Add value"
+          >
+            <Plus className="size-4" />
+          </Button>
         </div>
       ) : null}
 

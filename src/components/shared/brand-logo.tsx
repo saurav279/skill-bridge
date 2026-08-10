@@ -19,6 +19,8 @@ export function BrandLogo({
   return (
     <Link
       href="/"
+      target="_blank"
+      rel="noopener noreferrer"
       className={cn("inline-flex items-center", className)}
       aria-label="Skill Bridge home"
     >

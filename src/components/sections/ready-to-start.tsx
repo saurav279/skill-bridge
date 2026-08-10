@@ -23,7 +23,7 @@ export function ReadyToStartCta() {
             <Button
               size="lg"
               className="h-12 rounded-full px-8 font-semibold uppercase tracking-wide"
-              render={<Link href="/assessment" />}
+              render={<Link href="/assessment" target="_blank" rel="noopener noreferrer"/>}
             >
               Start Assessment Questionnaire
             </Button>

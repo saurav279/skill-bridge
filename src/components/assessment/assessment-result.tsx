@@ -152,7 +152,7 @@ export function AssessmentResult({ id }: { id: string }) {
         </p>
         <Button
           className="mt-5 h-10 rounded-full px-5"
-          render={<Link href="/assessment" />}
+          render={<Link href="/assessment" target="_blank" rel="noopener noreferrer"/>}
         >
           Retake questionnaire
         </Button>
@@ -205,7 +205,7 @@ export function AssessmentResult({ id }: { id: string }) {
           </Button>
           <Button
             className="h-9 rounded-full px-4 font-semibold"
-            render={<Link href="/consultation" />}
+            render={<Link href="/consultation" target="_blank" rel="noopener noreferrer"/>}
           >
             Book call
             <ArrowRight className="size-4" />
