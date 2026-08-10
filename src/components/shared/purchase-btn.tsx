@@ -18,8 +18,8 @@ export function PurchaseButton({
     try {
       setLoading(true);
 
-      const successUrl = `${window.location.origin}/success`;
-      const cancelUrl = `${window.location.origin}/cancel`;
+      const successUrl = `${window.location.origin}`;
+      const cancelUrl = `${window.location.origin}`;
 
       const {
         data,
