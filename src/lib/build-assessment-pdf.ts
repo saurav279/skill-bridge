@@ -12,14 +12,17 @@ import {
   type RGB,
 } from "pdf-lib";
 import { company } from "@/data/company";
-import type {
-  EligibilityAssessment,
-  ScoreBreakdownItem,
-} from "@/lib/eligibility-assessment";
+import {
+  potentialFromScore,
+  starRatingFromScore,
+  type EligibilityAssessment,
+  type ScoreBreakdownItem,
+} from "@/types";
 
 const PAGE: [number, number] = [595.28, 841.89]; // A4
 const MARGIN = 44;
 const CONTENT_WIDTH = PAGE[0] - MARGIN * 2;
+const TARGET_SCORE = 75;
 
 const brand = rgb(0.0706, 0.0039, 0.9961); // #1201FE
 const ink = rgb(0.09, 0.09, 0.09);
@@ -30,22 +33,6 @@ const rule = rgb(0.9, 0.9, 0.91);
 const success = rgb(0.09, 0.64, 0.29);
 const warning = rgb(0.96, 0.62, 0.04);
 const danger = rgb(0.86, 0.15, 0.15);
-
-const ROADMAP_COPY: Record<string, string> = {
-  assessment:
-    "Your questionnaire answers have been scored against endorsement criteria.",
-  evidence:
-    "Collect letters, metrics, press, and work samples that map to each criterion.",
-  letters:
-    "Secure 2–3 strong recommenders who can independently verify your impact.",
-  narrative:
-    "Draft a criteria-mapped personal statement that ties evidence to the route.",
-  review:
-    "Walk through gaps and packaging with a consultant before you submit.",
-  stage1: "Submit Stage 1 endorsement with a complete, criteria-aligned file.",
-  endorsement: "Receive a decision from the endorsing body for your pathway.",
-  visa: "Apply for the Global Talent visa once endorsement is confirmed.",
-};
 
 const RADAR_LABELS: Record<string, string[]> = {
   leadership: ["Leadership"],
@@ -363,17 +350,17 @@ export async function buildAssessmentPdf(
 
   y = PAGE[1] - 122;
 
-  drawLines(
-    data.contactName
-      ? `Prepared for ${data.contactName}`
-      : "Prepared for candidate",
-    { size: 11, bold: true, gap: 2 }
-  );
+  drawLines("Prepared for candidate", { size: 11, bold: true, gap: 2 });
   drawLines(`Assessment ID  ·  ${data.id}`, {
     size: 8.5,
     color: muted,
     gap: 14,
   });
+
+  const { label: potentialLabel, probability } = potentialFromScore(
+    data.confidenceScore
+  );
+  const starRating = starRatingFromScore(data.confidenceScore);
 
   // ——— Score card (matches readiness score UI) ———
   const scoreCardH = 92;
@@ -410,7 +397,7 @@ export async function buildAssessmentPdf(
     font: fontBold,
     color: ink,
   });
-  page.drawText(sanitizePdfText(data.potentialLabel), {
+  page.drawText(sanitizePdfText(potentialLabel), {
     x: MARGIN + 18,
     y: scoreTop - 70,
     size: 10,
@@ -436,14 +423,14 @@ export async function buildAssessmentPdf(
     height: 8,
     color: brand,
   });
-  page.drawText(`Target ${data.targetScore}+`, {
+  page.drawText(`Target ${TARGET_SCORE}+`, {
     x: barX,
     y: barY - 16,
     size: 8.5,
     font,
     color: muted,
   });
-  const stage = `Stage 1 · ${data.probability}`;
+  const stage = `Stage 1 · ${probability}`;
   page.drawText(stage, {
     x: barX + barW - font.widthOfTextAtSize(stage, 8.5),
     y: barY - 16,
@@ -481,10 +468,10 @@ export async function buildAssessmentPdf(
       x: sx + starSize / 2,
       y: y + 1,
       size: starSize / 2,
-      color: i < data.starRating ? warning : rule,
+      color: i < starRating ? warning : rule,
     });
   }
-  page.drawText(`${data.starRating} / 5`, {
+  page.drawText(`${starRating} / 5`, {
     x: MARGIN + 5 * (starSize + starGap) + 6,
     y,
     size: 9,
@@ -500,7 +487,7 @@ export async function buildAssessmentPdf(
     lineHeight: 15,
   });
 
-  // Strongest / Needs attention — two columns
+  // Strongest / Improvements — two columns
   ensureSpace(120);
   const colGap = 16;
   const colW = (CONTENT_WIDTH - colGap) / 2;
@@ -561,8 +548,8 @@ export async function buildAssessmentPdf(
     success
   );
   const rightEnd = drawBulletColumn(
-    "Needs attention",
-    data.attentionAreas,
+    "Improvements",
+    data.improvements,
     rightX,
     colStartY,
     warning
@@ -672,80 +659,6 @@ export async function buildAssessmentPdf(
       dy -= lineH;
     }
     y = boxBottom - 10;
-  }
-
-  // ——— Roadmap ———
-  sectionTitle("Your Roadmap");
-  drawLines(
-    "A practical path from this assessment to Stage 1 endorsement and visa application. Timelines are estimates - we adjust them in a strategy session based on your evidence readiness.",
-    { size: 9, color: muted, gap: 12, lineHeight: 13 }
-  );
-
-  for (let i = 0; i < data.roadmap.length; i++) {
-    const step = data.roadmap[i];
-    const explanation =
-      ROADMAP_COPY[step.id] ??
-      "Complete this milestone before moving to the next stage.";
-    const expLines = wrapText(explanation, font, 9, CONTENT_WIDTH - 32);
-    const lineH = 12;
-    const titleH = 14;
-    const blockH = titleH + expLines.length * lineH + 14;
-
-    ensureSpace(blockH + 6);
-    const markerX = MARGIN + 5;
-    const markerY = y;
-    const accent = step.completed ? success : brand;
-
-    // Timeline marker — hollow circle (filled centre when complete)
-    page.drawCircle({
-      x: markerX,
-      y: markerY,
-      size: 4,
-      borderColor: accent,
-      borderWidth: 1.5,
-      color: white,
-    });
-    if (step.completed) {
-      page.drawCircle({
-        x: markerX,
-        y: markerY,
-        size: 2,
-        color: success,
-      });
-    }
-
-    if (i < data.roadmap.length - 1) {
-      page.drawLine({
-        start: { x: markerX, y: markerY - 6 },
-        end: { x: markerX, y: y - blockH + 6 },
-        thickness: 1,
-        color: rule,
-      });
-    }
-
-    const title = step.estimated
-      ? `${step.title}  ·  ${step.estimated}`
-      : step.title;
-    page.drawText(sanitizePdfText(title), {
-      x: MARGIN + 18,
-      y: markerY - 3,
-      size: 10,
-      font: fontBold,
-      color: step.completed ? success : ink,
-    });
-
-    let ey = markerY - titleH - 2;
-    for (const line of expLines) {
-      page.drawText(line, {
-        x: MARGIN + 18,
-        y: ey,
-        size: 9,
-        font,
-        color: muted,
-      });
-      ey -= lineH;
-    }
-    y -= blockH;
   }
 
   // ——— CTA ———

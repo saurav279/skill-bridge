@@ -1,0 +1,1 @@
+export type PackageName = "A" | "B" | "C";

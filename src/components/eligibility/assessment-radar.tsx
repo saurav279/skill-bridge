@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import type { ScoreBreakdownItem } from "@/lib/eligibility-assessment";
+import type { ScoreBreakdownItem } from "@/types";
 
 type Props = {
   items: ScoreBreakdownItem[];

@@ -94,3 +94,20 @@ export type ServicePackage = {
   videoTitle?: string;
   steps?: { title: string; detail: string }[];
 };
+
+export type {
+  PriorityLevel,
+  ProbabilityLabel,
+  ScoreBreakdownItem,
+  PriorityImprovement,
+  EligibilityAssessment,
+  AssessSectionAnswers,
+  AssessPayload,
+  AssessSummary,
+} from "./eligibility-assessment";
+
+export {
+  potentialFromScore,
+  starRatingFromScore,
+} from "./eligibility-assessment";
+

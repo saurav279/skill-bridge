@@ -17,17 +17,12 @@ export type EligibilityQuestion = {
   accept?: string[];
   optional?: boolean;
   tooltip?: string;
-  /** Scoring weight for future readiness score (0–1 scale contribution) */
-  weight?: number;
-  /** Optional AI prompt hint for advisors reviewing answers */
-  aiPrompt?: string;
 };
 
 export type EligibilitySection = {
   id: string;
   title: string;
   icon: string;
-  carousel?: boolean;
   description?: string;
   questions: EligibilityQuestion[];
 };
@@ -54,7 +49,7 @@ export const eligibilityRoutes: EligibilityRoute[] = [
       "evidence",
       "recommendationLetters",
       "futurePlans",
-      "resume",
+      "personalDetails",
     ],
   },
   {
@@ -71,7 +66,7 @@ export const eligibilityRoutes: EligibilityRoute[] = [
       "evidence",
       "recommendationLetters",
       "futurePlans",
-      "resume",
+      "personalDetails",
     ],
   },
   {
@@ -88,7 +83,7 @@ export const eligibilityRoutes: EligibilityRoute[] = [
       "evidence",
       "recommendationLetters",
       "futurePlans",
-      "resume",
+      "personalDetails",
     ],
   },
 ];
@@ -98,7 +93,6 @@ export const eligibilitySections: Record<string, EligibilitySection> = {
     id: "leadership",
     title: "Leadership",
     icon: "Users",
-    carousel: true,
     description: "Tell us about your role and leadership responsibilities.",
     questions: [
       {
@@ -106,7 +100,6 @@ export const eligibilitySections: Record<string, EligibilitySection> = {
         type: "checkbox",
         title: "Which best describes your current role?",
         maxSelection: 2,
-        weight: 0.8,
         tooltip: "Select up to two roles that best fit your profile.",
         options: [
           "Founder",
@@ -119,14 +112,11 @@ export const eligibilitySections: Record<string, EligibilitySection> = {
           "Research Lead",
           "Other",
         ],
-        aiPrompt:
-          "Summarise leadership seniority from selected roles for Exceptional Talent vs Promise framing.",
       },
       {
         id: "team_management",
         type: "radio",
         title: "Have you led a team?",
-        weight: 0.7,
         options: ["Yes", "No"],
       },
       {
@@ -134,14 +124,12 @@ export const eligibilitySections: Record<string, EligibilitySection> = {
         showIf: { team_management: "Yes" },
         type: "chips",
         title: "Team Size",
-        weight: 0.5,
         options: ["2-5", "6-10", "11-20", "20+"],
       },
       {
         id: "responsibilities",
         type: "checkbox",
         title: "Which responsibilities have you had?",
-        weight: 0.6,
         options: [
           "Hiring",
           "Architecture",
@@ -158,14 +146,12 @@ export const eligibilitySections: Record<string, EligibilitySection> = {
     id: "innovation",
     title: "Innovation",
     icon: "Sparkles",
-    carousel: true,
     description: "What have you built or shipped?",
     questions: [
       {
         id: "products",
         type: "checkbox",
         title: "Have you built any of these?",
-        weight: 0.9,
         options: [
           "Startup",
           "SaaS",
@@ -183,7 +169,6 @@ export const eligibilitySections: Record<string, EligibilitySection> = {
         id: "public_work",
         type: "radio",
         title: "Is your work publicly accessible?",
-        weight: 0.6,
         options: ["Yes", "No"],
       },
       {
@@ -191,7 +176,6 @@ export const eligibilitySections: Record<string, EligibilitySection> = {
         showIf: { public_work: "Yes" },
         type: "checkbox",
         title: "Where can we find it?",
-        weight: 0.5,
         options: [
           "GitHub",
           "Product Hunt",
@@ -210,14 +194,12 @@ export const eligibilitySections: Record<string, EligibilitySection> = {
     id: "research",
     title: "Research",
     icon: "BookOpen",
-    carousel: true,
     description: "Your academic and research contribution.",
     questions: [
       {
         id: "research_outputs",
         type: "checkbox",
         title: "Which research outputs have you produced?",
-        weight: 0.9,
         options: [
           "Peer-reviewed papers",
           "Citations / h-index evidence",
@@ -233,7 +215,6 @@ export const eligibilitySections: Record<string, EligibilitySection> = {
         id: "research_field",
         type: "chips",
         title: "Primary field",
-        weight: 0.4,
         options: [
           "AI / ML",
           "Life Sciences",
@@ -247,7 +228,6 @@ export const eligibilitySections: Record<string, EligibilitySection> = {
         id: "peer_review",
         type: "radio",
         title: "Have you peer-reviewed for journals or conferences?",
-        weight: 0.5,
         options: ["Yes", "No"],
       },
     ],
@@ -257,14 +237,12 @@ export const eligibilitySections: Record<string, EligibilitySection> = {
     id: "creativeWork",
     title: "Creative Work",
     icon: "Palette",
-    carousel: true,
     description: "Your creative practice and body of work.",
     questions: [
       {
         id: "creative_medium",
         type: "checkbox",
         title: "Which best describes your practice?",
-        weight: 0.8,
         options: [
           "Visual Arts",
           "Design",
@@ -281,7 +259,6 @@ export const eligibilitySections: Record<string, EligibilitySection> = {
         id: "exhibitions",
         type: "radio",
         title: "Have you exhibited, screened, or published publicly?",
-        weight: 0.7,
         options: ["Yes", "No"],
       },
       {
@@ -289,7 +266,6 @@ export const eligibilitySections: Record<string, EligibilitySection> = {
         showIf: { exhibitions: "Yes" },
         type: "checkbox",
         title: "Where has your work appeared?",
-        weight: 0.5,
         options: [
           "Gallery / Museum",
           "Festival",
@@ -307,14 +283,12 @@ export const eligibilitySections: Record<string, EligibilitySection> = {
     id: "impact",
     title: "Impact",
     icon: "TrendingUp",
-    carousel: true,
     description: "Measurable outcomes of your work.",
     questions: [
       {
         id: "impact_type",
         type: "checkbox",
         title: "What impact has your work made?",
-        weight: 0.9,
         options: [
           "Revenue Growth",
           "Cost Savings",
@@ -329,7 +303,6 @@ export const eligibilitySections: Record<string, EligibilitySection> = {
         id: "users",
         type: "chips",
         title: "Estimated Users",
-        weight: 0.7,
         options: ["<1k", "1k-10k", "10k-100k", "100k-1M", "1M+"],
       },
     ],
@@ -339,14 +312,12 @@ export const eligibilitySections: Record<string, EligibilitySection> = {
     id: "recognition",
     title: "Recognition",
     icon: "Award",
-    carousel: true,
     description: "Awards, speaking, and public recognition.",
     questions: [
       {
         id: "recognition",
         type: "checkbox",
         title: "Select all that apply",
-        weight: 0.85,
         options: [
           "Industry Award",
           "National Award",
@@ -366,14 +337,12 @@ export const eligibilitySections: Record<string, EligibilitySection> = {
     id: "publicProfile",
     title: "Public Profile",
     icon: "Globe",
-    carousel: true,
     description: "Where your professional presence lives online.",
     questions: [
       {
         id: "profiles",
         type: "checkbox",
         title: "Which professional profiles do you have?",
-        weight: 0.4,
         options: [
           "LinkedIn",
           "GitHub",
@@ -395,15 +364,14 @@ export const eligibilitySections: Record<string, EligibilitySection> = {
     id: "evidence",
     title: "Evidence",
     icon: "FileStack",
-    carousel: true,
     description: "What proof you can assemble for Stage 1.",
     questions: [
       {
         id: "evidence_available",
         type: "checkbox",
         title: "Which evidence can you provide?",
-        weight: 0.9,
-        tooltip: "Select everything you can realistically obtain within 8–12 weeks.",
+        tooltip:
+          "Select everything you can realistically obtain within 8–12 weeks.",
         options: [
           "Employment Letter",
           "Recommendation Letters",
@@ -417,8 +385,6 @@ export const eligibilitySections: Record<string, EligibilitySection> = {
           "Revenue Proof",
           "Funding Proof",
         ],
-        aiPrompt:
-          "Map selected evidence types to Digital Technology / research / arts criteria gaps.",
       },
     ],
   },
@@ -427,21 +393,18 @@ export const eligibilitySections: Record<string, EligibilitySection> = {
     id: "recommendationLetters",
     title: "Recommendation Letters",
     icon: "Mail",
-    carousel: true,
     description: "Recommenders who can speak to your impact.",
     questions: [
       {
         id: "recommendation",
         type: "radio",
         title: "Can you obtain recommendation letters?",
-        weight: 0.8,
         options: ["Yes", "Maybe", "No"],
       },
       {
         id: "recommenders",
         type: "checkbox",
         title: "Who could provide them?",
-        weight: 0.6,
         options: [
           "CEO",
           "CTO",
@@ -460,14 +423,12 @@ export const eligibilitySections: Record<string, EligibilitySection> = {
     id: "futurePlans",
     title: "Future Plans",
     icon: "Map",
-    carousel: true,
     description: "Why the UK — and when.",
     questions: [
       {
         id: "goal",
         type: "checkbox",
         title: "Why do you want to move to the UK?",
-        weight: 0.3,
         options: [
           "Career Growth",
           "Start a Business",
@@ -482,7 +443,6 @@ export const eligibilitySections: Record<string, EligibilitySection> = {
         id: "timeline",
         type: "radio",
         title: "When are you planning to apply?",
-        weight: 0.2,
         options: [
           "Within 3 months",
           "Within 6 months",
@@ -493,33 +453,29 @@ export const eligibilitySections: Record<string, EligibilitySection> = {
     ],
   },
 
-  resume: {
-    id: "resume",
-    title: "Upload Resume",
-    icon: "Upload",
-    carousel: true,
-    description: "Optional — helps us prepare for your discovery call.",
+  personalDetails: {
+    id: "personalDetails",
+    title: "Personal Details",
+    icon: "User",
+    description: "Your contact details and resume for the discovery call.",
     questions: [
       {
-        id: "resume_upload",
+        id: "name",
+        type: "text",
+        title: "Your full name",
+      },
+      {
+        id: "email",
+        type: "text",
+        title: "Your email",
+        tooltip: "We will use this to invite you to a free discovery call.",
+      },
+      {
+        id: "resume",
         type: "file",
         title: "Upload your resume",
         accept: [".pdf", ".doc", ".docx"],
         optional: true,
-        weight: 0.1,
-      },
-      {
-        id: "contact_name",
-        type: "text",
-        title: "Your full name",
-        weight: 0,
-      },
-      {
-        id: "contact_email",
-        type: "text",
-        title: "Your email",
-        weight: 0,
-        tooltip: "We will use this to invite you to a free discovery call.",
       },
     ],
   },
@@ -533,7 +489,6 @@ export function getSectionsForRoute(routeId: string): EligibilitySection[] {
     .filter(Boolean);
 }
 
-/** Evaluate showIf against current answers */
 export function isQuestionVisible(
   question: EligibilityQuestion,
   answers: Record<string, unknown>
@@ -552,40 +507,4 @@ export function isQuestionVisible(
     }
     return value === expected;
   });
-}
-
-/** Rough readiness score 0–100 from weighted answered questions */
-export function computeReadinessScore(
-  sections: EligibilitySection[],
-  answers: Record<string, unknown>
-): number {
-  let totalWeight = 0;
-  let earned = 0;
-
-  for (const section of sections) {
-    for (const q of section.questions) {
-      if (!isQuestionVisible(q, answers)) continue;
-      const w = q.weight ?? 0.5;
-      totalWeight += w;
-      const val = answers[q.id];
-      const filled =
-        val !== undefined &&
-        val !== null &&
-        val !== "" &&
-        !(Array.isArray(val) && val.length === 0) &&
-        !(val instanceof File === false && val === null);
-      if (filled) {
-        if (Array.isArray(val)) {
-          earned += w * Math.min(1, val.length / Math.max(1, (q.options?.length ?? 4) / 3));
-        } else if (typeof val === "string" && (val === "No" || val === "Just Exploring")) {
-          earned += w * 0.25;
-        } else {
-          earned += w;
-        }
-      }
-    }
-  }
-
-  if (totalWeight === 0) return 0;
-  return Math.round(Math.min(100, (earned / totalWeight) * 100));
 }

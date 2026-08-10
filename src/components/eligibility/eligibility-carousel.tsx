@@ -23,6 +23,7 @@ import {
   Sparkles,
   TrendingUp,
   Upload,
+  User,
   Users,
   type LucideIcon,
 } from "lucide-react";
@@ -30,16 +31,18 @@ import {
   eligibilityRoutes,
   getSectionsForRoute,
   isQuestionVisible,
-  computeReadinessScore,
   type EligibilityQuestion,
 } from "@/data/eligibility-questionnaire";
+import { createAssessment } from "@/api/useAssessment";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
+import type { AssessPayload, EligibilityAssessment } from "@/types";
 
 const ICONS: Record<string, LucideIcon> = {
   Users,
+  User,
   Sparkles,
   BookOpen,
   Palette,
@@ -54,14 +57,6 @@ const ICONS: Record<string, LucideIcon> = {
 
 type Answers = Record<string, unknown>;
 
-type AssessApiResponse = {
-  id: string;
-  confidenceScore: number;
-  summary: string;
-  improvements: string[];
-  nextSteps: string[];
-};
-
 type SubmitPhase = "form" | "loading" | "ready" | "error";
 
 export function EligibilityCarousel() {
@@ -69,7 +64,9 @@ export function EligibilityCarousel() {
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<Answers>({});
   const [phase, setPhase] = useState<SubmitPhase>("form");
-  const [assessment, setAssessment] = useState<AssessApiResponse | null>(null);
+  const [assessment, setAssessment] = useState<EligibilityAssessment | null>(
+    null
+  );
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [direction, setDirection] = useState<"next" | "prev">("next");
   const fileRef = useRef<HTMLInputElement>(null);
@@ -83,10 +80,6 @@ export function EligibilityCarousel() {
   const progress = sections.length
     ? Math.round(((step + 1) / sections.length) * 100)
     : 0;
-  const score = useMemo(
-    () => computeReadinessScore(sections, answers),
-    [sections, answers]
-  );
 
   function setAnswer(id: string, value: unknown) {
     setAnswers((prev) => ({ ...prev, [id]: value }));
@@ -116,43 +109,51 @@ export function EligibilityCarousel() {
     setSubmitError(null);
     setAssessment(null);
 
-    try {
-      const serializableAnswers: Record<string, unknown> = {};
-      for (const [key, value] of Object.entries(answers)) {
-        if (value instanceof File) {
-          serializableAnswers[key] = {
-            name: value.name,
-            size: value.size,
-            type: value.type,
-          };
-        } else {
-          serializableAnswers[key] = value;
-        }
+    function serializeAnswer(value: unknown) {
+      if (value instanceof File) {
+        return {
+          name: value.name,
+          size: value.size,
+          type: value.type,
+        };
+      }
+      if (value === undefined || value === null || value === "") {
+        return [];
+      }
+      if (Array.isArray(value) && value.length === 0) {
+        return [];
+      }
+      return value;
+    }
+
+    const payload: AssessPayload = { routeId };
+
+    for (const section of sections) {
+      const sectionAnswers: Record<string, unknown> = {};
+
+      for (const q of section.questions) {
+        const key = `${section.id}_${q.id}`;
+        const value = isQuestionVisible(q, answers)
+          ? answers[q.id]
+          : undefined;
+        sectionAnswers[key] = serializeAnswer(value);
       }
 
-      const res = await fetch("/api/eligibility/assess", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          routeId,
-          answers: serializableAnswers,
-          readinessScore: score,
-        }),
-      });
+      payload[section.id] = sectionAnswers;
+    }
 
-      if (!res.ok) {
-        throw new Error("Assessment request failed.");
-      }
+    const { success, data, error } = await createAssessment(payload);
 
-      const json = (await res.json()) as AssessApiResponse;
-      setAssessment(json);
-      setPhase("ready");
-    } catch (e) {
+    if (!success || !data) {
       setSubmitError(
-        e instanceof Error ? e.message : "Something went wrong. Please try again."
+        error ?? "Something went wrong. Please try again."
       );
       setPhase("error");
+      return;
     }
+
+    setAssessment(data);
+    setPhase("ready");
   }
 
   function goNext() {
@@ -241,7 +242,7 @@ export function EligibilityCarousel() {
   }
 
   if (phase === "ready" && assessment) {
-    const name = String(answers.contact_name ?? "there");
+    const name = String(answers.name ?? "there");
     return (
       <div
         className="rounded-2xl border border-primary/30 bg-primary/5 p-8 text-center shadow-soft sm:p-10"
@@ -416,9 +417,6 @@ export function EligibilityCarousel() {
           <ArrowLeft className="size-4" />
           Back
         </Button>
-        <p className="hidden text-xs text-muted-foreground sm:block">
-          Demo only · no data stored
-        </p>
         <Button
           type="button"
           className="h-10 rounded-full px-5 font-semibold uppercase tracking-wide"

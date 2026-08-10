@@ -10,34 +10,27 @@ import {
   Download,
   Loader2,
   Mail,
-  Rocket,
   Sparkles,
   Star,
   TrendingUp,
   Trophy,
 } from "lucide-react";
+import {
+  downloadAssessmentPdf,
+  emailAssessment,
+  getAssessment,
+} from "@/api/useAssessment";
 import { AssessmentRadar } from "@/components/eligibility/assessment-radar";
 import { Button } from "@/components/ui/button";
 import { FadeIn } from "@/components/shared/fade-in";
-import type { EligibilityAssessment } from "@/lib/eligibility-assessment";
-import { normalizeAssessment } from "@/lib/eligibility-assessment";
 import { cn } from "@/lib/utils";
+import {
+  potentialFromScore,
+  starRatingFromScore,
+  type EligibilityAssessment,
+} from "@/types";
 
-const ROADMAP_COPY: Record<string, string> = {
-  assessment:
-    "Your questionnaire answers have been scored against endorsement criteria.",
-  evidence:
-    "Collect letters, metrics, press, and work samples that map to each criterion.",
-  letters:
-    "Secure 2–3 strong recommenders who can independently verify your impact.",
-  narrative:
-    "Draft a criteria-mapped personal statement that ties evidence to the route.",
-  review:
-    "Walk through gaps and packaging with a consultant before you submit.",
-  stage1: "Submit Stage 1 endorsement with a complete, criteria-aligned file.",
-  endorsement: "Receive a decision from the endorsing body for your pathway.",
-  visa: "Apply for the Global Talent visa once endorsement is confirmed.",
-};
+const TARGET_SCORE = 75;
 
 function priorityMeta(priority: "high" | "medium" | "easy") {
   if (priority === "high") {
@@ -75,27 +68,18 @@ export function AssessmentResult({ id }: { id: string }) {
     async function load() {
       setLoading(true);
       setError(null);
-      try {
-        const res = await fetch(`/api/eligibility/${id}`);
-        if (!res.ok) {
-          throw new Error(
-            res.status === 404
-              ? "Assessment not found. Complete the questionnaire again."
-              : "Failed to load assessment."
-          );
-        }
-        const json = (await res.json()) as Partial<EligibilityAssessment> & {
-          id: string;
-          confidenceScore: number;
-        };
-        if (!cancelled) setData(normalizeAssessment(json));
-      } catch (e) {
-        if (!cancelled) {
-          setError(e instanceof Error ? e.message : "Something went wrong.");
-        }
-      } finally {
-        if (!cancelled) setLoading(false);
+
+      const result = await getAssessment(id);
+      if (cancelled) return;
+
+      if (!result.success || !result.data) {
+        setData(null);
+        setError(result.error ?? "Failed to load assessment.");
+      } else {
+        setData(result.data);
+        setError(null);
       }
+      setLoading(false);
     }
 
     void load();
@@ -108,15 +92,11 @@ export function AssessmentResult({ id }: { id: string }) {
     setPdfBusy(true);
     setActionMsg(null);
     try {
-      const res = await fetch(`/api/eligibility/${id}/pdf`, { method: "POST" });
-      if (!res.ok) {
-        const err = (await res.json().catch(() => null)) as {
-          error?: string;
-        } | null;
-        throw new Error(err?.error ?? "PDF generation failed.");
+      const result = await downloadAssessmentPdf(id);
+      if (!result.success || !result.data) {
+        throw new Error(result.error ?? "PDF generation failed.");
       }
-      const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
+      const url = URL.createObjectURL(result.data);
       const a = document.createElement("a");
       a.href = url;
       a.download = `skill-bridge-assessment-${id}.pdf`;
@@ -138,15 +118,15 @@ export function AssessmentResult({ id }: { id: string }) {
     setEmailBusy(true);
     setActionMsg(null);
     try {
-      const res = await fetch(`/api/eligibility/${id}/email`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: data?.contactEmail }),
-      });
-      const json = (await res.json()) as { message?: string };
-      setActionMsg(json.message ?? "Email request sent.");
-    } catch {
-      setActionMsg("Could not reach the email endpoint.");
+      const result = await emailAssessment(id);
+      if (!result.success) {
+        throw new Error(result.error ?? "Could not reach the email endpoint.");
+      }
+      setActionMsg(result.data?.message ?? "Email request sent.");
+    } catch (e) {
+      setActionMsg(
+        e instanceof Error ? e.message : "Could not reach the email endpoint."
+      );
     } finally {
       setEmailBusy(false);
     }
@@ -180,9 +160,13 @@ export function AssessmentResult({ id }: { id: string }) {
     );
   }
 
+  const { label: potentialLabel, probability } = potentialFromScore(
+    data.confidenceScore
+  );
+  const starRating = starRatingFromScore(data.confidenceScore);
+
   return (
     <div className="mx-auto max-w-5xl space-y-6 px-5 py-10 sm:px-6 sm:py-12 lg:px-8">
-      {/* Compact header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">
@@ -234,7 +218,6 @@ export function AssessmentResult({ id }: { id: string }) {
         </p>
       ) : null}
 
-      {/* Score + Breakdown (bars + radar) */}
       <div className="grid gap-4 md:grid-cols-12">
         <FadeIn className="md:col-span-4">
           <div className="flex h-full flex-col rounded-2xl border border-border bg-card p-5 shadow-soft sm:p-6">
@@ -248,9 +231,7 @@ export function AssessmentResult({ id }: { id: string }) {
               {data.confidenceScore}
               <span className="text-xl text-muted-foreground">%</span>
             </p>
-            <p className="mt-1 text-sm text-muted-foreground">
-              {data.potentialLabel}
-            </p>
+            <p className="mt-1 text-sm text-muted-foreground">{potentialLabel}</p>
             <div className="mt-4 h-2 overflow-hidden rounded-full bg-muted">
               <div
                 className="h-full rounded-full bg-primary"
@@ -258,8 +239,8 @@ export function AssessmentResult({ id }: { id: string }) {
               />
             </div>
             <div className="mt-3 flex justify-between text-xs text-muted-foreground">
-              <span>Target {data.targetScore}+</span>
-              <span>Stage 1 · {data.probability}</span>
+              <span>Target {TARGET_SCORE}+</span>
+              <span>Stage 1 · {probability}</span>
             </div>
           </div>
         </FadeIn>
@@ -280,7 +261,6 @@ export function AssessmentResult({ id }: { id: string }) {
         </FadeIn>
       </div>
 
-      {/* AI summary */}
       <FadeIn>
         <div className="rounded-2xl border border-border bg-card p-5 shadow-soft sm:p-6">
           <div className="flex flex-wrap items-center gap-3">
@@ -293,14 +273,14 @@ export function AssessmentResult({ id }: { id: string }) {
               </h2>
               <div
                 className="mt-0.5 flex gap-0.5"
-                aria-label={`${data.starRating} of 5 stars`}
+                aria-label={`${starRating} of 5 stars`}
               >
                 {Array.from({ length: 5 }).map((_, i) => (
                   <Star
                     key={i}
                     className={cn(
                       "size-3.5",
-                      i < data.starRating
+                      i < starRating
                         ? "fill-amber-400 text-amber-400"
                         : "text-muted"
                     )}
@@ -319,7 +299,10 @@ export function AssessmentResult({ id }: { id: string }) {
               </p>
               <ul className="mt-2 space-y-3">
                 {data.strengths.map((s) => (
-                  <li key={s} className="flex items-start gap-2 text-sm leading-relaxed">
+                  <li
+                    key={s}
+                    className="flex items-start gap-2 text-sm leading-relaxed"
+                  >
                     <CheckCircle2 className="mt-0.5 size-3.5 shrink-0 text-emerald-600" />
                     <span>{s}</span>
                   </li>
@@ -328,11 +311,14 @@ export function AssessmentResult({ id }: { id: string }) {
             </div>
             <div>
               <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-                Needs attention
+                Improvements
               </p>
               <ul className="mt-2 space-y-3">
-                {data.attentionAreas.map((s) => (
-                  <li key={s} className="flex items-start gap-2 text-sm leading-relaxed">
+                {data.improvements.map((s) => (
+                  <li
+                    key={s}
+                    className="flex items-start gap-2 text-sm leading-relaxed"
+                  >
                     <AlertTriangle className="mt-0.5 size-3.5 shrink-0 text-amber-500" />
                     <span>{s}</span>
                   </li>
@@ -346,7 +332,6 @@ export function AssessmentResult({ id }: { id: string }) {
         </div>
       </FadeIn>
 
-      {/* Priority improvements — 2 col */}
       <FadeIn>
         <div>
           <div className="mb-4 flex items-center gap-2">
@@ -384,76 +369,6 @@ export function AssessmentResult({ id }: { id: string }) {
               );
             })}
           </div>
-        </div>
-      </FadeIn>
-
-      {/* Roadmap */}
-      <FadeIn>
-        <div className="rounded-2xl border border-border bg-card p-5 shadow-soft sm:p-6">
-          <div className="mb-2 flex items-center gap-2">
-            <Rocket className="size-4 text-primary" />
-            <h2 className="text-base font-semibold tracking-tight">
-              Your Roadmap
-            </h2>
-          </div>
-          <p className="mb-6 max-w-2xl text-sm text-muted-foreground">
-            A practical path from this assessment to Stage 1 endorsement and
-            visa application. Timelines are estimates — we adjust them in a
-            strategy session based on your evidence readiness.
-          </p>
-          <ol className="space-y-0">
-            {data.roadmap.map((step, i) => {
-              const explanation =
-                ROADMAP_COPY[step.id] ??
-                "Complete this milestone before moving to the next stage.";
-              const isLast = i === data.roadmap.length - 1;
-              return (
-                <li key={step.id} className="flex gap-4">
-                  <div className="flex w-5 flex-col items-center">
-                    <span
-                      className={cn(
-                        "flex size-5 shrink-0 items-center justify-center rounded-full border-2 bg-background",
-                        step.completed
-                          ? "border-emerald-500"
-                          : "border-primary/40"
-                      )}
-                    >
-                      {step.completed ? (
-                        <CheckCircle2 className="size-3 text-emerald-600" />
-                      ) : (
-                        <span className="size-1.5 rounded-full bg-primary/70" />
-                      )}
-                    </span>
-                    {!isLast ? (
-                      <span className="mt-1 w-px flex-1 bg-border" />
-                    ) : null}
-                  </div>
-                  <div className={cn("min-w-0 flex-1", !isLast && "pb-5")}>
-                    <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
-                      <p
-                        className={cn(
-                          "text-sm font-semibold",
-                          step.completed
-                            ? "text-emerald-700 dark:text-emerald-400"
-                            : "text-foreground"
-                        )}
-                      >
-                        {step.title}
-                      </p>
-                      {step.estimated ? (
-                        <span className="text-xs text-muted-foreground">
-                          · {step.estimated}
-                        </span>
-                      ) : null}
-                    </div>
-                    <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-                      {explanation}
-                    </p>
-                  </div>
-                </li>
-              );
-            })}
-          </ol>
         </div>
       </FadeIn>
     </div>
