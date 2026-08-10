@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { Loader2 } from "lucide-react";
+import { submitContactUs } from "@/api/useContact";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,10 +15,44 @@ export function ContactForm() {
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
 
-  function onSubmit(e: FormEvent) {
+  const [error, setError] = useState<string | null>(null);
+
+  async function onSubmit(e: FormEvent) {
     e.preventDefault();
+    setSubmitting(true);
+    setError(null);
+
+    const { success, error: submitError,data } = await submitContactUs({
+      name: name.trim(),
+      email: email.trim(),
+      company: company.trim() || undefined,
+      subject: subject.trim(),
+      message: message.trim(),
+    });
+
+    setSubmitting(false);
+    setSuccessMessage(data?.message ?? "Message sent successfully");
+
+    if (!success) {
+      setError(submitError ?? "Something went wrong. Please try again.");
+      return;
+    }
+  
+
     setSubmitted(true);
+  }
+
+  function resetForm() {
+    setSubmitted(false);
+    setError(null);
+    setName("");
+    setEmail("");
+    setCompany("");
+    setSubject("");
+    setMessage("");
   }
 
   if (submitted) {
@@ -27,21 +63,14 @@ export function ContactForm() {
       >
         <p className="text-lg font-semibold tracking-tight">Message sent</p>
         <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-          Thanks for reaching out. This is a demo form — no message was
-          delivered. We’ll get back to you shortly in a live environment.
+          Thanks for reaching out. We’ll get back to you within one business
+          day.
         </p>
         <Button
           type="button"
           variant="outline"
           className="mt-6 h-10 rounded-xl"
-          onClick={() => {
-            setSubmitted(false);
-            setName("");
-            setEmail("");
-            setCompany("");
-            setSubject("");
-            setMessage("");
-          }}
+          onClick={resetForm}
         >
           Send another message
         </Button>
@@ -51,7 +80,7 @@ export function ContactForm() {
 
   return (
     <form
-      onSubmit={onSubmit}
+      onSubmit={(e) => void onSubmit(e)}
       className="space-y-5 rounded-2xl border border-border/80 bg-card p-6 shadow-soft sm:p-8"
       noValidate={false}
     >
@@ -67,6 +96,7 @@ export function ContactForm() {
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
+            disabled={submitting}
             className="h-11 rounded-xl"
           />
         </div>
@@ -81,6 +111,7 @@ export function ContactForm() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            disabled={submitting}
             className="h-11 rounded-xl"
           />
         </div>
@@ -97,6 +128,7 @@ export function ContactForm() {
             placeholder="Optional"
             value={company}
             onChange={(e) => setCompany(e.target.value)}
+            disabled={submitting}
             className="h-11 rounded-xl"
           />
         </div>
@@ -110,6 +142,7 @@ export function ContactForm() {
             value={subject}
             onChange={(e) => setSubject(e.target.value)}
             required
+            disabled={submitting}
             className="h-11 rounded-xl"
           />
         </div>
@@ -125,12 +158,30 @@ export function ContactForm() {
           onChange={(e) => setMessage(e.target.value)}
           required
           rows={6}
+          disabled={submitting}
           className="resize-y rounded-xl"
         />
       </div>
 
-      <Button type="submit" className="h-11 w-full rounded-xl sm:w-auto sm:px-8">
-        Send Message
+      {error ? (
+        <p className="text-sm text-destructive" role="alert">
+          {error}
+        </p>
+      ) : null}
+
+      <Button
+        type="submit"
+        className="h-11 w-full rounded-xl sm:w-auto sm:px-8"
+        disabled={submitting}
+      >
+        {submitting ? (
+          <>
+            <Loader2 className="size-4 animate-spin" />
+            Sending…
+          </>
+        ) : (
+          "Send Message"
+        )}
       </Button>
     </form>
   );
