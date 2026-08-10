@@ -81,7 +81,7 @@ export const packages: ServicePackage[] = [
       "Leadership in Tech Course",
       "DIY Membership Area",
       "Strategy Session",
-      "Eligibility & pathway assessment",
+      "Assessment & pathway assessment",
       "Written strategy memo",
       "Part support",
     ],
@@ -193,7 +193,7 @@ export const packages: ServicePackage[] = [
       {
         title: "Discovery & kickoff",
         detail:
-          "Eligibility conversation, goals, timeline, and consultant matching. We lock scope, milestones, and call cadence.",
+          "Assessment conversation, goals, timeline, and consultant matching. We lock scope, milestones, and call cadence.",
       },
       {
         title: "Criteria & narrative strategy",

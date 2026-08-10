@@ -15,7 +15,7 @@ import { company } from "@/data/company";
 import {
   potentialFromScore,
   starRatingFromScore,
-  type EligibilityAssessment,
+  type Assessment,
   type ScoreBreakdownItem,
 } from "@/types";
 
@@ -220,9 +220,9 @@ function drawRadar(
   }
 }
 
-/** Build PDF that mirrors the /eligibility/[id] report UI */
+/** Build PDF that mirrors the /assessment/[id] report UI */
 export async function buildAssessmentPdf(
-  data: EligibilityAssessment
+  data: Assessment
 ): Promise<Uint8Array> {
   const doc = await PDFDocument.create();
   let page = doc.addPage(PAGE);
@@ -326,7 +326,7 @@ export async function buildAssessmentPdf(
     font: fontBold,
     color: brand,
   });
-  page.drawText("Eligibility Assessment", {
+  page.drawText("Assessment", {
     x: MARGIN,
     y: PAGE[1] - 76,
     size: 11,

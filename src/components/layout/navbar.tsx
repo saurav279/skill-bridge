@@ -136,7 +136,7 @@ export function Navbar() {
             >
               <DropdownItem href="/resources">Insights & Guides</DropdownItem>
               <DropdownItem href="/resources#newsletters">Newsletters</DropdownItem>
-              <DropdownItem href="/eligibility">Eligibility Questionnaire</DropdownItem>
+              <DropdownItem href="/assessment">Assessment Questionnaire</DropdownItem>
             </Dropdown>
             <NavLink href="/contact" active={pathname === "/contact"}>
               Contact
@@ -148,9 +148,9 @@ export function Navbar() {
             <Button
               size="sm"
               className="hidden h-10 rounded-full px-4 text-xs font-semibold uppercase tracking-wide sm:inline-flex"
-              render={<Link href="/eligibility" />}
+              render={<Link href="/assessment" />}
             >
-              Eligibility Questionnaire
+              Assessment Questionnaire
             </Button>
             <Button
               variant="ghost"
@@ -195,9 +195,9 @@ export function Navbar() {
               <MobileLink href="/contact">Contact</MobileLink>
               <Button
                 className="mt-3 h-11 rounded-full font-semibold uppercase tracking-wide"
-                render={<Link href="/eligibility" />}
+                render={<Link href="/assessment" />}
               >
-                Eligibility Questionnaire
+                Assessment Questionnaire
               </Button>
             </div>
           </div>

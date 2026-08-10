@@ -2,15 +2,15 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { SectionTitle } from "@/components/shared/section-title";
 import { FadeIn } from "@/components/shared/fade-in";
-import { EligibilityCarousel } from "@/components/eligibility/eligibility-carousel";
+import { AssessmentCarousel } from "@/components/assessment/assessment-carousel";
 
 export const metadata: Metadata = {
-  title: "Eligibility Questionnaire",
+  title: "Assessment Questionnaire",
   description:
-    "Complete the Skill Bridge eligibility questionnaire for a free 15-minute UK Global Talent Visa discovery call.",
+    "Complete the Skill Bridge Assessment Questionnaire for a free 15-minute UK Global Talent Visa discovery call.",
 };
 
-export default function EligibilityPage() {
+export default function AssessmentPage() {
   return (
     <section className="py-16 md:py-24">
       <div className="container-page grid gap-12 md:grid-cols-12">
@@ -19,7 +19,7 @@ export default function EligibilityPage() {
             <SectionTitle
               as="h1"
               eyebrow="Free discovery call"
-              title="Eligibility Questionnaire"
+              title="Assessment Questionnaire"
               description="Pick your endorsement route, then swipe through a guided carousel. We’ll review fit for Stage 1 and invite you to a free 15-minute discovery call."
             />
             <ul className="mt-8 space-y-3 text-sm text-muted-foreground">
@@ -50,7 +50,7 @@ export default function EligibilityPage() {
         </div>
         <div className="md:col-span-7">
           <FadeIn delay={0.08}>
-            <EligibilityCarousel />
+            <AssessmentCarousel />
           </FadeIn>
         </div>
       </div>

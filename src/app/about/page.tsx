@@ -107,7 +107,7 @@ export default function AboutPage() {
               <Button
                 variant="outline"
                 className="mt-4 h-11 rounded-full px-6"
-                render={<Link href="/eligibility" />}
+                render={<Link href="/assessment" />}
               >
                 Book a discovery call with the team
               </Button>

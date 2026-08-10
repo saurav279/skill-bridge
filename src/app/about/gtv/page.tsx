@@ -39,9 +39,9 @@ export default function AboutGtvPage() {
             />
             <Button
               className="mt-8 h-11 rounded-full px-6 font-semibold uppercase tracking-wide"
-              render={<Link href="/eligibility" />}
+              render={<Link href="/assessment" />}
             >
-              Start Eligibility Questionnaire
+              Start Assessment Questionnaire
             </Button>
           </FadeIn>
         </div>

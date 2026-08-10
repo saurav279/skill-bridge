@@ -1,5 +1,5 @@
 /**
- * Master eligibility questionnaire config.
+ * Master assessment questionnaire config.
  * Frontend is fully data-driven — edit this file to add routes/questions.
  */
 
@@ -7,7 +7,7 @@ export type QuestionType = "checkbox" | "radio" | "chips" | "file" | "text";
 
 export type ShowIf = Record<string, string | string[]>;
 
-export type EligibilityQuestion = {
+export type AssessmentQuestion = {
   id: string;
   type: QuestionType;
   title: string;
@@ -19,22 +19,22 @@ export type EligibilityQuestion = {
   tooltip?: string;
 };
 
-export type EligibilitySection = {
+export type AssessmentSection = {
   id: string;
   title: string;
   icon: string;
   description?: string;
-  questions: EligibilityQuestion[];
+  questions: AssessmentQuestion[];
 };
 
-export type EligibilityRoute = {
+export type AssessmentRoute = {
   id: string;
   name: string;
   description: string;
   sections: string[];
 };
 
-export const eligibilityRoutes: EligibilityRoute[] = [
+export const AssessmentRoutes: AssessmentRoute[] = [
   {
     id: "digital-technology",
     name: "Digital Technology",
@@ -88,7 +88,7 @@ export const eligibilityRoutes: EligibilityRoute[] = [
   },
 ];
 
-export const eligibilitySections: Record<string, EligibilitySection> = {
+export const AssessmentSections: Record<string, AssessmentSection> = {
   leadership: {
     id: "leadership",
     title: "Leadership",
@@ -481,16 +481,16 @@ export const eligibilitySections: Record<string, EligibilitySection> = {
   },
 };
 
-export function getSectionsForRoute(routeId: string): EligibilitySection[] {
-  const route = eligibilityRoutes.find((r) => r.id === routeId);
+export function getSectionsForRoute(routeId: string): AssessmentSection[] {
+  const route = AssessmentRoutes.find((r) => r.id === routeId);
   if (!route) return [];
   return route.sections
-    .map((id) => eligibilitySections[id])
+    .map((id) => AssessmentSections[id])
     .filter(Boolean);
 }
 
 export function isQuestionVisible(
-  question: EligibilityQuestion,
+  question: AssessmentQuestion,
   answers: Record<string, unknown>
 ): boolean {
   if (!question.showIf) return true;

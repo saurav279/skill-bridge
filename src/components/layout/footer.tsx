@@ -23,7 +23,7 @@ const navigation = [
 ];
 
 const resourceLinks = [
-  { href: "/eligibility", label: "Eligibility Questionnaire" },
+  { href: "/assessment", label: "Assessment Questionnaire" },
   { href: "/resources", label: "Insights & Guides" },
   { href: "/resources#newsletters", label: "Newsletters" },
   { href: "/consultation", label: "Book Consultation" },

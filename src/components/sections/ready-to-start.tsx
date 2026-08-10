@@ -15,7 +15,7 @@ export function ReadyToStartCta() {
             Complete our questionnaire for a free 15-minute discovery call
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-background">
-            We&apos;ll discuss your eligibility and recommend the right package —
+            We&apos;ll discuss your assessment and recommend the right package —
             from Strategy Session to Full Review or Bespoke Coaching. All queries
             are replied to within 5 working days.
           </p>
@@ -23,9 +23,9 @@ export function ReadyToStartCta() {
             <Button
               size="lg"
               className="h-12 rounded-full px-8 font-semibold uppercase tracking-wide"
-              render={<Link href="/eligibility" />}
+              render={<Link href="/assessment" />}
             >
-              Start Eligibility Questionnaire
+              Start Assessment Questionnaire
             </Button>
             <a
               href={`mailto:${company.email}`}

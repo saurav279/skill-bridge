@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { buildAssessmentPdf } from "@/lib/build-assessment-pdf";
 import { getApiBaseUrl } from "@/services/fetchApi";
-import type { EligibilityAssessment } from "@/types";
+import type { Assessment } from "@/types";
 
 type Params = { params: Promise<{ id: string }> };
 
@@ -26,7 +26,7 @@ export async function POST(_request: Request, { params }: Params) {
       );
     }
 
-    const assessment = (await response.json()) as EligibilityAssessment;
+    const assessment = (await response.json()) as Assessment;
     const bytes = await buildAssessmentPdf(assessment);
     const filename = `skill-bridge-assessment-${id}.pdf`;
 

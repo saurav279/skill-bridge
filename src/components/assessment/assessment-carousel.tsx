@@ -28,17 +28,17 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import {
-  eligibilityRoutes,
+  AssessmentRoutes,
   getSectionsForRoute,
   isQuestionVisible,
-  type EligibilityQuestion,
-} from "@/data/eligibility-questionnaire";
+  type AssessmentQuestion,
+} from "@/data/assessment-questionnaire";
 import { createAssessment } from "@/api/useAssessment";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
-import type { AssessPayload, EligibilityAssessment } from "@/types";
+import type { AssessPayload, Assessment } from "@/types";
 
 const ICONS: Record<string, LucideIcon> = {
   Users,
@@ -59,12 +59,12 @@ type Answers = Record<string, unknown>;
 
 type SubmitPhase = "form" | "loading" | "ready" | "error";
 
-export function EligibilityCarousel() {
+export function AssessmentCarousel() {
   const [routeId, setRouteId] = useState<string | null>(null);
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<Answers>({});
   const [phase, setPhase] = useState<SubmitPhase>("form");
-  const [assessment, setAssessment] = useState<EligibilityAssessment | null>(
+  const [assessment, setAssessment] = useState<Assessment | null>(
     null
   );
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -86,7 +86,7 @@ export function EligibilityCarousel() {
   }
 
   function toggleCheckbox(
-    q: EligibilityQuestion,
+    q: AssessmentQuestion,
     option: string,
     checked: boolean
   ) {
@@ -199,7 +199,7 @@ export function EligibilityCarousel() {
         </h2>
         <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-muted-foreground">
           Analysing your{" "}
-          {eligibilityRoutes.find((r) => r.id === routeId)?.name} answers and
+          {AssessmentRoutes.find((r) => r.id === routeId)?.name} answers and
           mapping them to endorsement criteria. This usually takes a few
           seconds.
         </p>
@@ -255,13 +255,13 @@ export function EligibilityCarousel() {
           We have built your assessment, {name}
         </h2>
         <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-muted-foreground">
-          Your personalised eligibility summary is ready. Open it to review
+          Your personalised assessment summary is ready. Open it to review
           confidence score, improvements, and next steps.
         </p>
         <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
           <Button
             className="h-11 rounded-full px-6 font-semibold uppercase tracking-wide"
-            render={<Link href={`/eligibility/${assessment.id}`} />}
+            render={<Link href={`/assessment/${assessment.id}`} />}
           >
             View assessment
             <ArrowRight className="size-4" />
@@ -292,7 +292,7 @@ export function EligibilityCarousel() {
           We will tailor the carousel questions to your endorsement route.
         </p>
         <div className="mt-8 grid gap-3">
-          {eligibilityRoutes.map((route) => (
+          {AssessmentRoutes.map((route) => (
             <button
               key={route.id}
               type="button"
@@ -326,7 +326,7 @@ export function EligibilityCarousel() {
       <div className="border-b border-border/70 px-5 py-4 sm:px-8">
         <div className="flex items-center justify-between gap-3 text-xs">
           <span className="font-medium text-muted-foreground">
-            {eligibilityRoutes.find((r) => r.id === routeId)?.name}
+            {AssessmentRoutes.find((r) => r.id === routeId)?.name}
           </span>
           <span className="font-mono text-primary">
             {step + 1} / {sections.length}
@@ -440,9 +440,9 @@ function QuestionField({
   onFile,
   fileRef,
 }: {
-  question: EligibilityQuestion;
+  question: AssessmentQuestion;
   value: unknown;
-  onCheckbox: (q: EligibilityQuestion, option: string, checked: boolean) => void;
+  onCheckbox: (q: AssessmentQuestion, option: string, checked: boolean) => void;
   onRadio: (option: string) => void;
   onChips: (option: string) => void;
   onText: (value: string) => void;

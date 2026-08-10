@@ -33,15 +33,15 @@ export function ConversionHero() {
             <p className="mt-5 max-w-2xl text-base leading-relaxed text-white/75 sm:text-lg">
               Discover what is required to obtain the highly sought-after UK
               Global Talent Visa in Digital Technology — and complete our
-              eligibility questionnaire for a free 15-minute discovery call.
+              Assessment Questionnaire for a free 15-minute discovery call.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Button
                 size="lg"
                 className="h-12 rounded-full px-7 text-sm font-semibold uppercase tracking-wide"
-                render={<Link href="/eligibility" />}
+                render={<Link href="/assessment" />}
               >
-                Start Eligibility Questionnaire
+                Start Assessment Questionnaire
               </Button>
               <Button
                 size="lg"

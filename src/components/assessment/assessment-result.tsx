@@ -20,14 +20,14 @@ import {
   emailAssessment,
   getAssessment,
 } from "@/api/useAssessment";
-import { AssessmentRadar } from "@/components/eligibility/assessment-radar";
+import { AssessmentRadar } from "@/components/assessment/assessment-radar";
 import { Button } from "@/components/ui/button";
 import { FadeIn } from "@/components/shared/fade-in";
 import { cn } from "@/lib/utils";
 import {
   potentialFromScore,
   starRatingFromScore,
-  type EligibilityAssessment,
+  type Assessment,
 } from "@/types";
 
 const TARGET_SCORE = 75;
@@ -55,7 +55,7 @@ function priorityMeta(priority: "high" | "medium" | "easy") {
 }
 
 export function AssessmentResult({ id }: { id: string }) {
-  const [data, setData] = useState<EligibilityAssessment | null>(null);
+  const [data, setData] = useState<Assessment | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [pdfBusy, setPdfBusy] = useState(false);
@@ -152,7 +152,7 @@ export function AssessmentResult({ id }: { id: string }) {
         </p>
         <Button
           className="mt-5 h-10 rounded-full px-5"
-          render={<Link href="/eligibility" />}
+          render={<Link href="/assessment" />}
         >
           Retake questionnaire
         </Button>
@@ -173,7 +173,7 @@ export function AssessmentResult({ id }: { id: string }) {
             Global Talent Report
           </p>
           <h1 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">
-            Eligibility Assessment
+             Assessment
           </h1>
         </div>
         <div className="flex flex-wrap gap-2">

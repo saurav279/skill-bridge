@@ -1,19 +1,19 @@
 import { api, type ApiResponse } from "@/services/fetchApi";
 import type {
   AssessPayload,
-  EligibilityAssessment,
+  Assessment,
 } from "@/types";
 
 export async function createAssessment(
   payload: AssessPayload
-): Promise<ApiResponse<EligibilityAssessment>> {
-  return api.post<EligibilityAssessment, AssessPayload>("assessments", payload);
+): Promise<ApiResponse<Assessment>> {
+  return api.post<Assessment, AssessPayload>("assessments", payload);
 }
 
 export async function getAssessment(
   id: string
-): Promise<ApiResponse<EligibilityAssessment>> {
-  return api.get<EligibilityAssessment>(`assessments/${id}`);
+): Promise<ApiResponse<Assessment>> {
+  return api.get<Assessment>(`assessments/${id}`);
 }
 
 export async function emailAssessment(
@@ -31,7 +31,7 @@ export async function downloadAssessmentPdf(
   id: string
 ): Promise<ApiResponse<Blob>> {
   try {
-    const response = await fetch(`/api/eligibility/${id}/pdf`, {
+    const response = await fetch(`/api/assessment/${id}/pdf`, {
       method: "POST",
       headers: { Accept: "application/pdf" },
     });

@@ -24,7 +24,7 @@ export const caseStudies: CaseStudy[] = [
       "Speaking and community leadership curated for peer recognition",
     ],
     timeline: [
-      { label: "Week 1–2", detail: "Eligibility deep-dive and pathway selection" },
+      { label: "Week 1–2", detail: "Assessment deep-dive and pathway selection" },
       { label: "Week 3–6", detail: "Evidence matrix, letter outreach, statement drafts" },
       { label: "Week 7–9", detail: "Full pack review and submission" },
       { label: "Week 10–11", detail: "Endorsement decision and visa application" },

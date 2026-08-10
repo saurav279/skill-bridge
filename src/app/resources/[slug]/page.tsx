@@ -99,12 +99,12 @@ export default async function ResourceArticlePage({ params }: PageProps) {
                   Ready to apply this to your profile?
                 </p>
                 <p className="mt-2 text-sm text-muted-foreground">
-                  Complete the eligibility questionnaire for a free 15-minute
+                  Complete the Assessment Questionnaire for a free 15-minute
                   discovery call with Skill Bridge.
                 </p>
                 <Button
                   className="mt-4 h-10 rounded-full px-5 font-semibold uppercase tracking-wide"
-                  render={<Link href="/eligibility" />}
+                  render={<Link href="/assessment" />}
                 >
                   Start Questionnaire
                 </Button>

@@ -30,9 +30,9 @@ export default function AppealPage() {
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Button
                 className="h-11 rounded-full px-6 font-semibold uppercase tracking-wide"
-                render={<Link href="/eligibility" />}
+                render={<Link href="/assessment" />}
               >
-                Start Eligibility Questionnaire
+                Start Assessment Questionnaire
               </Button>
               <Button
                 variant="outline"
@@ -163,7 +163,7 @@ export default function AppealPage() {
                     <Button
                       className="mt-6 h-11 w-full rounded-full font-semibold uppercase tracking-wide"
                       variant={pkg.featured ? "default" : "outline"}
-                      render={<Link href="/eligibility" />}
+                      render={<Link href="/assessment" />}
                     >
                       Explore
                     </Button>

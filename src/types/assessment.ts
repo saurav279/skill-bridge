@@ -15,7 +15,7 @@ export type PriorityImprovement = {
 };
 
 /** Full assessment returned by POST/GET /assessments */
-export type EligibilityAssessment = {
+export type Assessment = {
   id: string;
   routeId: string;
   summary: string;
@@ -38,7 +38,7 @@ export type AssessPayload = {
 
 /** Subset commonly used after create */
 export type AssessSummary = Pick<
-  EligibilityAssessment,
+  Assessment,
   "id" | "confidenceScore" | "summary" | "improvements"
 >;
 

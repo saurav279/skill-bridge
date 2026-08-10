@@ -23,7 +23,7 @@ export const whyChooseUs: WhyChooseItem[] = [
   {
     title: "End-to-End Guidance",
     description:
-      "From eligibility review through submission and follow-up, you get a clear plan, deadlines, and expert review at every stage.",
+      "From assessment review through submission and follow-up, you get a clear plan, deadlines, and expert review at every stage.",
     icon: "guidance",
   },
   {
@@ -37,7 +37,7 @@ export const whyChooseUs: WhyChooseItem[] = [
 export const processSteps: ProcessStep[] = [
   {
     step: 1,
-    title: "Eligibility Review",
+    title: "Assessment Review",
     description:
       "We assess your career trajectory, recognition, and impact to determine the strongest Global Talent route.",
   },

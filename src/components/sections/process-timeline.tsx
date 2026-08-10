@@ -11,7 +11,7 @@ export function ProcessTimeline() {
           <FadeIn>
             <SectionTitle
               eyebrow="Our Process"
-              title="A clear path from eligibility to visa success."
+              title="A clear path from assessment to visa success."
               description="Five deliberate stages. No guesswork — just a structured engagement designed for high-stakes endorsement."
             />
           </FadeIn>

@@ -4,7 +4,7 @@ export const faqs: FAQ[] = [
   {
     question: "How do I start?",
     answer:
-      "Complete the Eligibility Questionnaire for a free 15-minute discovery call. We’ll discuss fit and recommend the right package — from Strategy Session to Full Review or Bespoke Coaching.",
+      "Complete the Assessment Questionnaire for a free 15-minute discovery call. We’ll discuss fit and recommend the right package — from Strategy Session to Full Review or Bespoke Coaching.",
   },
   {
     question: "What packages do you offer?",

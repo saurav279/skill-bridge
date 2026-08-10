@@ -95,9 +95,9 @@ export default async function PackageDetailPage({ params }: PageProps) {
                 <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                   <Button
                     className="h-11 rounded-full px-6 font-semibold uppercase tracking-wide"
-                    render={<Link href="/eligibility" />}
+                    render={<Link href="/assessment" />}
                   >
-                    Start Eligibility Questionnaire
+                    Start Assessment Questionnaire
                   </Button>
                   <Button
                     variant="outline"

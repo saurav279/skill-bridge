@@ -100,14 +100,14 @@ export type {
   ProbabilityLabel,
   ScoreBreakdownItem,
   PriorityImprovement,
-  EligibilityAssessment,
+  Assessment,
   AssessSectionAnswers,
   AssessPayload,
   AssessSummary,
-} from "./eligibility-assessment";
+} from "./assessment";
 
 export {
   potentialFromScore,
   starRatingFromScore,
-} from "./eligibility-assessment";
+} from "./assessment";
 
