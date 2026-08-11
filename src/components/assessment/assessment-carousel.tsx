@@ -32,6 +32,7 @@ import {
 } from "lucide-react";
 import {
   AssessmentRoutes,
+  areSectionsAnswered,
   getSectionsForRoute,
   isQuestionVisible,
   type AssessmentQuestion,
@@ -85,6 +86,14 @@ export function AssessmentCarousel() {
     ? Math.round(((step + 1) / sections.length) * 100)
     : 0;
 
+  const visibleQuestions = useMemo(
+    () => current?.questions.filter((q) => isQuestionVisible(q, answers)) ?? [],
+    [current, answers]
+  );
+
+  const isLastStep = sections.length > 0 && step >= sections.length - 1;
+  const canSubmit = areSectionsAnswered(sections, answers);
+
   function setAnswer(id: string, value: unknown) {
     setAnswers((prev) => ({ ...prev, [id]: value }));
   }
@@ -111,6 +120,11 @@ export function AssessmentCarousel() {
 
   async function submitAssessment() {
     if (!routeId) return;
+    if (!areSectionsAnswered(sections, answers)) {
+      setSubmitError("Please complete all required fields before submitting.");
+      return;
+    }
+
     setPhase("loading");
     setSubmitError(null);
     setAssessment(null);
@@ -155,8 +169,8 @@ export function AssessmentCarousel() {
 
 if (resumeFile instanceof File) {
   try {
-payload.resumeFileId = "https://res.cloudinary.com/dud6q9sp/raw/upload/v1786380068/qwrkjhflfqppisi8jgm2.pdf" 
-//||await uploadToCloudinary(resumeFile);
+//payload.resumeFileId = "https://res.cloudinary.com/dud6q9sp/raw/upload/v1786380068/qwrkjhflfqppisi8jgm2.pdf" 
+payload.resumeFileId = await uploadToCloudinary(resumeFile);
 
   } catch (e) {
     setSubmitError(
@@ -183,7 +197,8 @@ payload.resumeFileId = "https://res.cloudinary.com/dud6q9sp/raw/upload/v17863800
   }
 
   function goNext() {
-    if (step >= sections.length - 1) {
+    if (isLastStep) {
+      if (!canSubmit) return;
       void submitAssessment();
       return;
     }
@@ -343,8 +358,6 @@ payload.resumeFileId = "https://res.cloudinary.com/dud6q9sp/raw/upload/v17863800
   }
 
   const Icon = ICONS[current?.icon ?? "Users"] ?? Users;
-  const visibleQuestions =
-    current?.questions.filter((q) => isQuestionVisible(q, answers)) ?? [];
 
   return (
     <div className="overflow-hidden rounded-2xl border border-border/80 bg-card shadow-soft">
@@ -448,9 +461,10 @@ payload.resumeFileId = "https://res.cloudinary.com/dud6q9sp/raw/upload/v17863800
           type="button"
           className="h-10 rounded-full px-5 font-semibold uppercase tracking-wide"
           onClick={goNext}
+          disabled={isLastStep && !canSubmit}
         >
-          {step >= sections.length - 1 ? "Submit" : "Next"}
-          {step < sections.length - 1 ? <ArrowRight className="size-4" /> : null}
+          {isLastStep ? "Submit" : "Next"}
+          {!isLastStep ? <ArrowRight className="size-4" /> : null}
         </Button>
       </div>
     </div>
@@ -630,9 +644,13 @@ function QuestionField({
     <fieldset className="space-y-3">
       <legend className="text-sm font-semibold tracking-tight text-foreground">
         {q.title}
-        {q.optional ? (
+        {!q.optional ? (
+          <span className="ml-0.5 text-primary" aria-hidden>
+            *
+          </span>
+        ) : (
           <span className="ml-2 font-normal text-muted-foreground">(optional)</span>
-        ) : null}
+        )}
       </legend>
       {q.tooltip ? (
         <p className="text-xs text-muted-foreground">{q.tooltip}</p>

@@ -522,3 +522,59 @@ export function isQuestionVisible(
     return value === expected;
   });
 }
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const OTHER_OPTION = "Other";
+
+/** Required unless `optional: true`. */
+export function isQuestionAnswered(
+  question: AssessmentQuestion,
+  value: unknown
+): boolean {
+  if (question.optional) return true;
+
+  switch (question.type) {
+    case "text": {
+      const text = typeof value === "string" ? value.trim() : "";
+      if (!text) return false;
+      if (question.id.includes("email")) return EMAIL_RE.test(text);
+      return true;
+    }
+    case "radio":
+    case "chips": {
+      if (typeof value !== "string" || !value.trim()) return false;
+      return value !== OTHER_OPTION;
+    }
+    case "checkbox": {
+      if (!Array.isArray(value) || value.length === 0) return false;
+      return value.some(
+        (v) => typeof v === "string" && v.trim() !== "" && v !== OTHER_OPTION
+      );
+    }
+    case "file":
+      return (
+        value instanceof File ||
+        (typeof value === "string" && value.trim().length > 0)
+      );
+    default:
+      return false;
+  }
+}
+
+export function areQuestionsAnswered(
+  questions: AssessmentQuestion[],
+  answers: Record<string, unknown>
+): boolean {
+  return questions
+    .filter((q) => isQuestionVisible(q, answers))
+    .every((q) => isQuestionAnswered(q, answers[q.id]));
+}
+
+export function areSectionsAnswered(
+  sections: AssessmentSection[],
+  answers: Record<string, unknown>
+): boolean {
+  return sections.every((section) =>
+    areQuestionsAnswered(section.questions, answers)
+  );
+}

@@ -21,7 +21,7 @@ export function ConversionHero() {
       <div className="container-page relative grid min-h-[78vh] items-center gap-10 py-20 md:grid-cols-12 md:py-28">
         <div className="md:col-span-8 lg:col-span-7">
           <FadeIn>
-            <p className="mb-4 font-mono text-xs font-semibold uppercase tracking-[0.22em] text-primary">
+            <p className="mb-4 font-mono text-xs font-semibold uppercase tracking-[0.22em] text-white">
               UK Global Talent Visa Consultancy
             </p>
             <h1 className="text-white/90 text-4xl font-bold uppercase tracking-tight sm:text-5xl lg:text-6xl lg:leading-[1.05]">
