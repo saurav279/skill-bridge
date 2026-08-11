@@ -172,8 +172,8 @@ export function AssessmentResult({ id }: { id: string }) {
           <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">
             Global Talent Report
           </p>
-          <h1 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">
-             Assessment
+          <h1 className="mt-1 text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+            Assessment
           </h1>
         </div>
         <div className="flex flex-wrap gap-2">

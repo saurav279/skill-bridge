@@ -42,6 +42,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import type { AssessPayload, Assessment } from "@/types";
+import { uploadToCloudinary } from "@/services/cloudinary";
 
 const ICONS: Record<string, LucideIcon> = {
   Users,
@@ -72,7 +73,7 @@ export function AssessmentCarousel() {
   );
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [direction, setDirection] = useState<"next" | "prev">("next");
-  const fileRef = useRef<HTMLInputElement>(null);
+  const fileRef = useRef<HTMLInputElement | null>(null);
 
   const sections = useMemo(
     () => (routeId ? getSectionsForRoute(routeId) : []),
@@ -93,7 +94,9 @@ export function AssessmentCarousel() {
     option: string,
     checked: boolean
   ) {
-    const prev = (answers[q.id] as string[] | undefined) ?? [];
+    const prev = Array.isArray(answers[q.id])
+      ? (answers[q.id] as string[])
+      : [];
     let next: string[];
     if (checked) {
       next = [...prev, option];
@@ -129,6 +132,11 @@ export function AssessmentCarousel() {
       return value;
     }
 
+    const answersForSubmit: Answers = { ...answers };
+    const resumeFile = answers.resume;
+
+
+
     const payload: AssessPayload = { routeId };
 
     for (const section of sections) {
@@ -136,8 +144,8 @@ export function AssessmentCarousel() {
 
       for (const q of section.questions) {
         const key = `${section.id}_${q.id}`;
-        const value = isQuestionVisible(q, answers)
-          ? answers[q.id]
+        const value = isQuestionVisible(q, answersForSubmit)
+          ? answersForSubmit[q.id]
           : undefined;
         sectionAnswers[key] = serializeAnswer(value);
       }
@@ -145,6 +153,21 @@ export function AssessmentCarousel() {
       payload[section.id] = sectionAnswers;
     }
 
+if (resumeFile instanceof File) {
+  try {
+payload.resumeFileId = "https://res.cloudinary.com/dud6q9sp/raw/upload/v1786380068/qwrkjhflfqppisi8jgm2.pdf" 
+//||await uploadToCloudinary(resumeFile);
+
+  } catch (e) {
+    setSubmitError(
+      e instanceof Error
+        ? e.message
+        : "Could not upload your resume. Please try again."
+    );
+    setPhase("error");
+    return;
+  }
+}
     const { success, data, error } = await createAssessment(payload);
 
     if (!success || !data) {
@@ -466,7 +489,9 @@ function QuestionField({
 }) {
   const [draft, setDraft] = useState("");
   const [addingOther, setAddingOther] = useState(false);
-  const selected = (value as string[] | undefined) ?? [];
+  const selected = Array.isArray(value)
+    ? value.filter((v): v is string => typeof v === "string")
+    : [];
   const hasOtherOption = Boolean(q.options?.includes(OTHER_OPTION));
 
   const customValues =
@@ -478,8 +503,8 @@ function QuestionField({
 
   const isOtherOn =
     addingOther ||
-    selected.includes(OTHER_OPTION) ||
-    value === OTHER_OPTION ||
+    (q.type === "checkbox" && selected.includes(OTHER_OPTION)) ||
+    ((q.type === "chips" || q.type === "radio") && value === OTHER_OPTION) ||
     customValues.length > 0;
 
   const atMax =

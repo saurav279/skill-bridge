@@ -13,8 +13,8 @@ export default async function AssessmentPage({ params }: Props) {
   const { id } = await params;
 
   return (
-    <main className="bg-white">
+    <div className="bg-background">
       <AssessmentResult id={id} />
-    </main>
+    </div>
   );
 }
