@@ -13,6 +13,7 @@ import { howWeHelp } from "@/data/conversion";
 import { FadeIn } from "@/components/shared/fade-in";
 import { SectionTitle } from "@/components/shared/section-title";
 import { cn } from "@/lib/utils";
+import { BadgeText } from "../shared/badge";
 
 const icons = [
   ClipboardCheck,
@@ -118,9 +119,10 @@ export function HowWeHelpSection() {
                 <div className="mb-5 inline-flex size-14 items-center justify-center rounded-2xl bg-primary/10 text-primary">
                   <Icon className="size-7" aria-hidden />
                 </div>
-                <p className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-primary">
+                {/* <p className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-primary">
                   Step {active + 1} of {howWeHelp.length}
-                </p>
+                </p> */}
+                <BadgeText text={`Step ${active + 1} of ${howWeHelp.length}`} />
                 <h3 className="mt-2 text-2xl font-bold tracking-tight sm:text-3xl">
                   {current.title}
                 </h3>

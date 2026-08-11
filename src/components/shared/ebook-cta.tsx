@@ -5,6 +5,7 @@ import { ebook } from "@/data/content-extra";
 import { FadeIn } from "@/components/shared/fade-in";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { BadgeText } from "./badge";
 
 type EbookCtaProps = {
   className?: string;
@@ -30,9 +31,7 @@ export function EbookCta({ className, compact }: EbookCtaProps) {
             )}
           >
             <div className="md:col-span-7">
-              <p className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-primary">
-                Free resource
-              </p>
+             <BadgeText text="Free E-Book" />
               <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
                 {ebook.title}
               </h2>

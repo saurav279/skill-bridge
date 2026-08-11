@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { BadgeText } from "./badge";
 
 type TimelineItem = {
   title: string;
@@ -38,9 +39,10 @@ export function Timeline({ items, className, numbered = true }: TimelineProps) {
             </div>
             <div className="pb-2 pt-1.5">
               {item.meta ? (
-                <p className="mb-1 font-mono text-xs uppercase tracking-wider text-primary">
-                  {item.meta}
-                </p>
+                // <p className="mb-1 font-mono text-xs uppercase tracking-wider text-primary">
+                //   {item.meta}s
+                // </p>
+                <BadgeText text={item.meta} />
               ) : null}
               <h3 className="text-lg font-semibold tracking-tight sm:text-xl">
                 {item.title}

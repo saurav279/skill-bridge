@@ -140,7 +140,7 @@ export function Navbar() {
               active={pathname.startsWith("/resources")}
             >
               <DropdownItem href="/resources">Insights & Guides</DropdownItem>
-              <DropdownItem href="/resources#newsletters">Newsletters</DropdownItem>
+              {/* <DropdownItem href="/resources#newsletters">Newsletters</DropdownItem> */}
               <DropdownItem href="/assessment">Assessment Questionnaire</DropdownItem>
             </Dropdown>
             <NavLink href="/contact" active={pathname === "/contact"}>
@@ -196,7 +196,7 @@ export function Navbar() {
                 Resources
               </p>
               <MobileLink href="/resources">Insights & Guides</MobileLink>
-              <MobileLink href="/resources#newsletters">Newsletters</MobileLink>
+              {/* <MobileLink href="/resources#newsletters">Newsletters</MobileLink> */}
               <MobileLink href="/contact">Contact</MobileLink>
               <Button
                 className="mt-3 h-11 rounded-full font-semibold uppercase tracking-wide"

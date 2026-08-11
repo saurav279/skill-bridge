@@ -41,7 +41,7 @@ export function BenefitsSection() {
             return (
               <StaggerItem key={item.title}>
                 <div className="flex h-full flex-col rounded-2xl border border-border/80 bg-card p-6 text-center shadow-soft transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-elevated">
-                  <div className="mx-auto mb-4 flex size-12 items-center justify-center rounded-full bg-primary/10 text-primary">
+                  <div className="mx-auto mb-4 flex size-12 items-center justify-center rounded-full bg-primary/10 text-primary dark:text-white">
                     <Icon className="size-5" aria-hidden />
                   </div>
                   <h3 className="text-base font-semibold leading-snug tracking-tight">

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { PackageName } from "@/types/packages";
 import { PurchaseButton } from "./purchase-btn";
+import { BadgeText } from "./badge";
 
 type PackageCardProps = {
   pkg: ServicePackage;
@@ -28,9 +29,10 @@ export function PackageCard({ pkg, className }: PackageCardProps) {
         </span>
       ) : null}
 
-      <p className="font-mono text-xs uppercase tracking-wider text-primary">
-        {pkg.tagline}
-      </p>
+      {/* <p className="font-mono text-xs uppercase tracking-wider text-primary">
+        {pkg.tagline}sss
+      </p> */}
+      <BadgeText text={pkg.tagline} />
       <h3 className="mt-2 text-2xl font-semibold tracking-tight">{pkg.name}</h3>
       <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
         {pkg.description}

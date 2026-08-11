@@ -3,6 +3,7 @@ import Link from "next/link";
 import { team } from "@/data/team";
 import { Button } from "@/components/ui/button";
 import { FadeIn } from "@/components/shared/fade-in";
+import { BadgeText } from "../shared/badge";
 
 export function FounderBand() {
   const founder = team.find((m) => m.founder) ?? team[0];
@@ -25,9 +26,10 @@ export function FounderBand() {
         </div>
         <div className="md:col-span-7">
           <FadeIn delay={0.08}>
-            <p className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-primary">
+            {/* <p className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-primary">
               Meet the team
-            </p>
+            </p> */}
+            <BadgeText text="Meet the team" />
             <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
               Hi! We&apos;re Skill Bridge
             </h2>

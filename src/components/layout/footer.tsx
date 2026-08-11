@@ -51,14 +51,14 @@ export function Footer() {
             <ul className="mt-6 space-y-3 text-sm text-muted-foreground">
               <li className="flex gap-2.5">
                 <MapPin
-                  className="mt-0.5 size-4 shrink-0 text-primary"
+                  className="mt-0.5 size-4 shrink-0 text-primary dark:text-white"
                   aria-hidden
                 />
                 <span>{company.address}</span>
               </li>
               <li className="flex gap-2.5">
                 <Phone
-                  className="mt-0.5 size-4 shrink-0 text-primary"
+                  className="mt-0.5 size-4 shrink-0 text-primary dark:text-white"
                   aria-hidden
                 />
                 <a
@@ -70,7 +70,7 @@ export function Footer() {
               </li>
               <li className="flex gap-2.5">
                 <Mail
-                  className="mt-0.5 size-4 shrink-0 text-primary"
+                  className="mt-0.5 size-4 shrink-0 text-primary dark:text-white"
                   aria-hidden
                 />
                 <a
@@ -155,7 +155,7 @@ function FooterCol({
 }) {
   return (
     <div className={className}>
-      <p className="font-mono text-xs font-medium uppercase tracking-[0.16em] text-primary">
+      <p className="font-mono text-xs font-medium uppercase tracking-[0.16em] text-primary dark:text-white">
         {title}
       </p>
       <ul className="mt-4 space-y-2.5">

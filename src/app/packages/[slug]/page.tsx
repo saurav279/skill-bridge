@@ -20,6 +20,7 @@ import { createCheckoutSession } from "@/api/useStripe";
 import { PackageName } from "@/types/packages";
 import { PurchaseButton } from "@/components/shared/purchase-btn";
 import Image from "next/image";
+import { BadgeText } from "@/components/shared/badge";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -69,9 +70,10 @@ export default async function PackageDetailPage({ params }: PageProps) {
           <div className="grid items-start gap-10 lg:grid-cols-12">
             <div className="lg:col-span-6">
               <FadeIn>
-                <p className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-primary">
+                {/* <p className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-primary">
                   {pkg.tagline}
-                </p>
+                </p> */}
+                <BadgeText text={pkg.tagline} />
                 <h1 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
                   {pkg.name}
                 </h1>

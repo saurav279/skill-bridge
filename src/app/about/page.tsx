@@ -11,6 +11,7 @@ import { team, milestones } from "@/data/team";
 import { ceo, awards } from "@/data/content-extra";
 import { ReadyToStartCta } from "@/components/sections/ready-to-start";
 import { ConversionPackages } from "@/components/sections/conversion-packages";
+import { BadgeText } from "@/components/shared/badge";
 
 export const metadata: Metadata = {
   title: "About",
@@ -55,9 +56,10 @@ export default function AboutPage() {
           </div>
           <div className="md:col-span-7">
             <FadeIn delay={0.08}>
-              <p className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-primary">
-                CEO profile
-              </p>
+                  {/* <p className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-primary">
+                    CEO profile
+                  </p> */}
+              <BadgeText text="CEO profile" />
               <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
                 {ceo.name}
               </h2>
@@ -135,7 +137,8 @@ export default function AboutPage() {
                   <div className="mb-4 inline-flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
                     <Award className="size-5" aria-hidden />
                   </div>
-                  <p className="font-mono text-xs text-primary">{a.year}</p>
+                  {/* <p className="font-mono text-xs text-primary">{a.year}</p> */}
+                  <BadgeText text={a.year} />
                   <h3 className="mt-1 text-base font-semibold tracking-tight">
                     {a.title}
                   </h3>

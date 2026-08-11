@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
+import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 import Whatsapp from "@/components/layout/whatsapp";
 import { company } from "@/data/company";
@@ -136,6 +137,7 @@ export default function RootLayout({
             <Footer />
             <Whatsapp />
           </div>
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>

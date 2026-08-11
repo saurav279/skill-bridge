@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { BadgeText } from "./badge";
 
 type SectionTitleProps = {
   eyebrow?: string;
@@ -26,9 +27,7 @@ export function SectionTitle({
       )}
     >
       {eyebrow ? (
-        <p className="mb-3 font-mono text-xs font-medium uppercase tracking-[0.18em] text-primary">
-          {eyebrow}
-        </p>
+       <BadgeText text={eyebrow} />
       ) : null}
       <Tag
         className={cn(

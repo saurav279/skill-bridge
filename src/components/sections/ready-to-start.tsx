@@ -2,15 +2,14 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { FadeIn } from "@/components/shared/fade-in";
 import { company } from "@/data/company";
+import { BadgeText } from "../shared/badge";
 
 export function ReadyToStartCta() {
   return (
     <section className="border-t border-border/70 bg-muted/30 py-16 text-foreground md:py-20">
       <div className="container-page text-center">
         <FadeIn>
-          <p className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-primary">
-            Ready to start?
-          </p>
+        <BadgeText text="Ready to start?" />
           <h2 className="mx-auto mt-3 max-w-2xl text-balance text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
             Complete our questionnaire for a free 15-minute discovery call
           </h2>

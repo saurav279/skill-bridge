@@ -44,6 +44,7 @@ import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import type { AssessPayload, Assessment } from "@/types";
 import { uploadToCloudinary } from "@/services/cloudinary";
+import { BadgeText } from "../shared/badge";
 
 const ICONS: Record<string, LucideIcon> = {
   Users,
@@ -289,9 +290,10 @@ payload.resumeFileId = await uploadToCloudinary(resumeFile);
         className="rounded-2xl border border-primary/30 bg-primary/5 p-8 text-center shadow-soft sm:p-10"
         role="status"
       >
-        <p className="font-mono text-xs font-semibold uppercase tracking-wider text-primary">
+        {/* <p className="font-mono text-xs font-semibold uppercase tracking-wider text-primary">
           Assessment ready · {assessment.confidenceScore}/100
-        </p>
+        </p> */}
+        <BadgeText text={`Assessment ready · ${assessment.confidenceScore}/100`} />
         <h2 className="mt-3 text-2xl font-bold tracking-tight">
           We have built your assessment, {name}
         </h2>
@@ -323,9 +325,10 @@ payload.resumeFileId = await uploadToCloudinary(resumeFile);
   if (!routeId) {
     return (
       <div className="rounded-2xl border border-border/80 bg-card p-6 shadow-soft sm:p-8">
-        <p className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-primary">
+        {/* <p className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-primary">
           Step 0 · Choose your route
-        </p>
+        </p> */}
+        <BadgeText text="Step 0 · Choose your route" />
         <h2 className="mt-2 text-2xl font-bold tracking-tight">
           Which pathway fits you?
         </h2>
@@ -367,9 +370,11 @@ payload.resumeFileId = await uploadToCloudinary(resumeFile);
           <span className="font-medium text-muted-foreground">
             {AssessmentRoutes.find((r) => r.id === routeId)?.name}
           </span>
-          <span className="font-mono text-primary">
+          {/* <span className="font-mono text-primary">
             {step + 1} / {sections.length}
-          </span>
+          </span> */}
+          <BadgeText text={`${step + 1} / ${sections.length}`} />
+          {/* </span> */}
         </div>
         <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-muted">
           <div
