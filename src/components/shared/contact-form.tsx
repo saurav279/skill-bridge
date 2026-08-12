@@ -11,7 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 export function ContactForm() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [company, setCompany] = useState("");
+  // const [company, setCompany] = useState("");
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
   const [submitted, setSubmitted] = useState(false);
@@ -27,7 +27,7 @@ export function ContactForm() {
     const { success, error: submitError } = await submitContactUs({
       name: name.trim(),
       email: email.trim(),
-      company: company.trim() || undefined,
+      // company: company.trim() || undefined,
       subject: subject.trim(),
       message: message.trim(),
     });
@@ -48,7 +48,7 @@ export function ContactForm() {
     setError(null);
     setName("");
     setEmail("");
-    setCompany("");
+    // setCompany("");
     setSubject("");
     setMessage("");
   }
@@ -115,8 +115,8 @@ export function ContactForm() {
         </div>
       </div>
 
-      <div className="grid gap-5 sm:grid-cols-2">
-        <div className="space-y-2">
+      <div className="grid gap-5 sm:grid-cols-1">
+        {/* <div className="space-y-2">
           <Label htmlFor="contact-company">Company</Label>
           <Input
             id="contact-company"
@@ -129,7 +129,7 @@ export function ContactForm() {
             disabled={submitting}
             className="h-11 rounded-xl"
           />
-        </div>
+        </div> */}
         <div className="space-y-2">
           <Label htmlFor="contact-subject">Subject</Label>
           <Input

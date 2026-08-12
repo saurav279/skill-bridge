@@ -3,7 +3,7 @@ import { api, type ApiResponse } from "@/services/fetchApi";
 export type ContactUsPayload = {
   name: string;
   email: string;
-  company?: string;
+  // company?: string;
   subject: string;
   message: string;
 };
