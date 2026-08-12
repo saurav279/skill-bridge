@@ -26,6 +26,8 @@ export type Assessment = {
   confidenceScore: number;
   priorityImprovements: PriorityImprovement[];
   overallRecommendation: string;
+  createdAt: string;
+  customerEmail: string;
 };
 
 /** Per-section answers keyed as `section_question_id` */

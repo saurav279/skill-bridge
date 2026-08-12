@@ -11,11 +11,16 @@ import { PackageCard } from "../shared/package-card";
 type ConversionPackagesProps = {
   showIntro?: boolean;
   limit?: number;
+  data?:{
+    section_title: string;
+    section_description: string;
+  }
 };
 
 export function ConversionPackages({
   showIntro = true,
   limit,
+  data
 }: ConversionPackagesProps) {
 
   const list = limit ? packages.slice(0, limit) : packages;
@@ -30,8 +35,8 @@ export function ConversionPackages({
           <FadeIn>
             <SectionTitle
               eyebrow="Packages"
-              title="Choose your package"
-              description="From self-paced learning to bespoke 1-to-1 coaching — pick the support level that matches where you are in the Stage 1 endorsement journey."
+              title={data?.section_title || "Choose your package"}
+              description={data?.section_description || "From self-paced learning to bespoke 1-to-1 coaching — pick the support level that matches where you are in the Stage 1 endorsement journey."}
               align="center"
               className="mx-auto"
             />

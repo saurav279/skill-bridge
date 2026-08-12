@@ -29,6 +29,14 @@ import {
   starRatingFromScore,
   type Assessment,
 } from "@/types";
+import { format } from "date-fns";
+import { addBusinessDays } from "date-fns";
+import { ConversionPackages } from "../sections/conversion-packages";
+import { LatestInsightsSection } from "../sections/latest-insights";
+import { ReadyToStartCta } from "../sections/ready-to-start";
+import { EbookCta } from "../shared/ebook-cta";
+import { TestimonialsSection } from "../sections/testimonials";
+import { FeaturedStories } from "../sections/featured-stories";
 
 const TARGET_SCORE = 75;
 
@@ -166,7 +174,7 @@ export function AssessmentResult({ id }: { id: string }) {
   const starRating = starRatingFromScore(data.confidenceScore);
 
   return (
-    <div className="mx-auto max-w-5xl space-y-6 px-5 py-10 sm:px-6 sm:py-12 lg:px-8">
+    <div className="mx-auto max-w-7xl space-y-6 px-5 py-10 sm:px-6 sm:py-12 lg:px-8">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">
@@ -190,6 +198,7 @@ export function AssessmentResult({ id }: { id: string }) {
             )}
             Download PDF
           </Button>
+          <div className="flex flex-col items-center gap-2">
           <Button
             variant="outline"
             className="h-9 rounded-full px-4"
@@ -201,15 +210,32 @@ export function AssessmentResult({ id }: { id: string }) {
             ) : (
               <Mail className="size-4" />
             )}
-            Email
+            Resend Email
           </Button>
-          <Button
-            className="h-9 rounded-full px-4 font-semibold"
-            render={<Link href="/consultation" target="_blank" rel="noopener noreferrer"/>}
-          >
-            Book call
-            <ArrowRight className="size-4" />
-          </Button>
+          <span className="text-xs font-normal text-foreground leading-tight">
+             On {data.customerEmail}
+          </span>
+          </div>
+          {data.createdAt && (
+            <div className="flex flex-col items-center gap-2">
+            <Button
+          className="h-9 rounded-full px-4"
+            >
+              <Link href="/consultation" target="_blank" rel="noopener noreferrer" className="flex flex-col items-start">
+                <span className="flex items-center font-semibold">
+                  Book a  free call
+                  <ArrowRight className="ml-1 inline-block size-5 align-text-bottom" />
+                </span>
+               
+              </Link>
+            </Button>
+             <span className="text-xs font-normal text-foreground leading-tight">
+             For next {format(addBusinessDays(new Date(data.createdAt), 5), "EEE, MMM d")}
+          </span>
+          </div>
+          )}
+     
+     
         </div>
       </div>
       {actionMsg ? (
@@ -238,10 +264,10 @@ export function AssessmentResult({ id }: { id: string }) {
                 style={{ width: `${data.confidenceScore}%` }}
               />
             </div>
-            <div className="mt-3 flex justify-between text-xs text-muted-foreground">
+            {/* <div className="mt-3 flex justify-between text-xs text-muted-foreground">
               <span>Target {TARGET_SCORE}+</span>
               <span>Stage 1 · {probability}</span>
-            </div>
+            </div> */}
           </div>
         </FadeIn>
 
@@ -269,7 +295,7 @@ export function AssessmentResult({ id }: { id: string }) {
             </div>
             <div>
               <h2 className="text-base font-semibold tracking-tight">
-                AI Assessment Summary
+                 Assessment Summary
               </h2>
               <div
                 className="mt-0.5 flex gap-0.5"
@@ -370,6 +396,20 @@ export function AssessmentResult({ id }: { id: string }) {
             })}
           </div>
         </div>
+      </FadeIn>
+
+      <FadeIn>
+
+        
+      <ConversionPackages data={{section_title: "Next Steps", section_description: " Enhance your skills and boost your chances of success with our expert guidance and resources."}}/>
+
+<LatestInsightsSection />
+<EbookCta />
+
+{/* <ReadyToStartCta /> */}
+<FeaturedStories />
+<TestimonialsSection />
+
       </FadeIn>
     </div>
   );
