@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  useEffect,
   useMemo,
   useRef,
   useState,
@@ -23,6 +24,7 @@ import {
   Palette,
   Plus,
   Sparkles,
+  Trash2,
   TrendingUp,
   Upload,
   User,
@@ -45,6 +47,15 @@ import { cn } from "@/lib/utils";
 import type { AssessPayload, Assessment } from "@/types";
 import { uploadToCloudinary } from "@/services/cloudinary";
 import { BadgeText } from "../shared/badge";
+import {
+  clearAllAssessmentCache,
+  clearRouteCache,
+  deserializeAnswersFromCache,
+  hasAnyAssessmentCache,
+  readAssessmentCache,
+  saveRouteCache,
+  setAssessmentLastRouteId,
+} from "@/lib/assessment-cache";
 
 const ICONS: Record<string, LucideIcon> = {
   Users,
@@ -75,6 +86,8 @@ export function AssessmentCarousel() {
   );
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [direction, setDirection] = useState<"next" | "prev">("next");
+  const [hydrated, setHydrated] = useState(false);
+  const [hasCache, setHasCache] = useState(false);
   const fileRef = useRef<HTMLInputElement | null>(null);
 
   const sections = useMemo(
@@ -94,6 +107,58 @@ export function AssessmentCarousel() {
 
   const isLastStep = sections.length > 0 && step >= sections.length - 1;
   const canSubmit = areSectionsAnswered(sections, answers);
+
+  useEffect(() => {
+    const store = readAssessmentCache();
+    setHasCache(hasAnyAssessmentCache(store));
+
+    if (store.lastRouteId && store.routes[store.lastRouteId]) {
+      const cached = store.routes[store.lastRouteId];
+      const maxStep = Math.max(
+        0,
+        getSectionsForRoute(store.lastRouteId).length - 1
+      );
+      setRouteId(store.lastRouteId);
+      setStep(Math.min(Math.max(0, cached.step), maxStep));
+      setAnswers(deserializeAnswersFromCache(cached.answers));
+    }
+
+    setHydrated(true);
+  }, []);
+
+  useEffect(() => {
+    if (!hydrated || phase !== "form") return;
+
+    if (!routeId) {
+      setAssessmentLastRouteId(null);
+      setHasCache(hasAnyAssessmentCache());
+      return;
+    }
+
+    saveRouteCache(routeId, { step, answers });
+    setHasCache(true);
+  }, [hydrated, routeId, step, answers, phase]);
+
+  function clearCache() {
+    clearAllAssessmentCache();
+    setHasCache(false);
+    setRouteId(null);
+    setStep(0);
+    setAnswers({});
+    setPhase("form");
+    setAssessment(null);
+    setSubmitError(null);
+  }
+
+  function startRoute(nextRouteId: string) {
+    // Choosing a route always starts fresh and overwrites that route’s cache.
+    setRouteId(nextRouteId);
+    setStep(0);
+    setAnswers({});
+    setDirection("next");
+    saveRouteCache(nextRouteId, { step: 0, answers: {} });
+    setHasCache(true);
+  }
 
   function setAnswer(id: string, value: unknown) {
     setAnswers((prev) => ({ ...prev, [id]: value }));
@@ -195,6 +260,8 @@ payload.resumeFileId = await uploadToCloudinary(resumeFile);
 
     setAssessment(data);
     setPhase("ready");
+    clearRouteCache(routeId);
+    setHasCache(hasAnyAssessmentCache());
   }
 
   function goNext() {
@@ -226,27 +293,56 @@ payload.resumeFileId = await uploadToCloudinary(resumeFile);
     setAnswers({});
   }
 
+  function CacheToolbar() {
+    if (!hasCache) return null;
+    return (
+      <div className="mb-3 flex justify-end">
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          className="h-9 rounded-full px-3 text-xs"
+          onClick={clearCache}
+        >
+          <Trash2 className="size-3.5" />
+          Remove Assessment cache
+        </Button>
+      </div>
+    );
+  }
+
+  if (!hydrated) {
+    return (
+      <div className="flex min-h-[240px] items-center justify-center rounded-2xl border border-border/80 bg-card p-8 shadow-soft">
+        <Loader2 className="size-6 animate-spin text-primary" />
+      </div>
+    );
+  }
+
   if (phase === "loading") {
     return (
-      <div
-        className="rounded-2xl border border-border/80 bg-card p-8 text-center shadow-soft sm:p-12"
-        role="status"
-        aria-live="polite"
-      >
-        <div className="mx-auto flex size-14 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-          <Loader2 className="size-7 animate-spin" />
-        </div>
-        <h2 className="mt-5 text-2xl font-bold tracking-tight">
-          Building your assessment…
-        </h2>
-        <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-muted-foreground">
-          Analysing your{" "}
-          {AssessmentRoutes.find((r) => r.id === routeId)?.name} answers and
-          mapping them to endorsement criteria. This usually takes a few
-          seconds.
-        </p>
-        <div className="mx-auto mt-8 h-1.5 w-full max-w-xs overflow-hidden rounded-full bg-muted">
-          <div className="h-full w-2/3 animate-pulse rounded-full bg-primary" />
+      <div>
+        <CacheToolbar />
+        <div
+          className="rounded-2xl border border-border/80 bg-card p-8 text-center shadow-soft sm:p-12"
+          role="status"
+          aria-live="polite"
+        >
+          <div className="mx-auto flex size-14 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+            <Loader2 className="size-7 animate-spin" />
+          </div>
+          <h2 className="mt-5 text-2xl font-bold tracking-tight">
+            Building your assessment…
+          </h2>
+          <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-muted-foreground">
+            Analysing your{" "}
+            {AssessmentRoutes.find((r) => r.id === routeId)?.name} answers and
+            mapping them to endorsement criteria. This usually takes a few
+            seconds.
+          </p>
+          <div className="mx-auto mt-8 h-1.5 w-full max-w-xs overflow-hidden rounded-full bg-muted">
+            <div className="h-full w-2/3 animate-pulse rounded-full bg-primary" />
+          </div>
         </div>
       </div>
     );
@@ -254,30 +350,33 @@ payload.resumeFileId = await uploadToCloudinary(resumeFile);
 
   if (phase === "error") {
     return (
-      <div
-        className="rounded-2xl border border-border/80 bg-card p-8 text-center shadow-soft sm:p-10"
-        role="alert"
-      >
-        <h2 className="text-2xl font-bold tracking-tight">
-          Couldn’t build assessment
-        </h2>
-        <p className="mt-3 text-sm text-muted-foreground">
-          {submitError ?? "Please try again."}
-        </p>
-        <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
-          <Button
-            className="h-11 rounded-full px-6 font-semibold uppercase tracking-wide"
-            onClick={() => void submitAssessment()}
-          >
-            Retry
-          </Button>
-          <Button
-            variant="outline"
-            className="h-11 rounded-full px-6"
-            onClick={resetForm}
-          >
-            Start over
-          </Button>
+      <div>
+        <CacheToolbar />
+        <div
+          className="rounded-2xl border border-border/80 bg-card p-8 text-center shadow-soft sm:p-10"
+          role="alert"
+        >
+          <h2 className="text-2xl font-bold tracking-tight">
+            Couldn’t build assessment
+          </h2>
+          <p className="mt-3 text-sm text-muted-foreground">
+            {submitError ?? "Please try again."}
+          </p>
+          <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+            <Button
+              className="h-11 rounded-full px-6 font-semibold uppercase tracking-wide"
+              onClick={() => void submitAssessment()}
+            >
+              Retry
+            </Button>
+            <Button
+              variant="outline"
+              className="h-11 rounded-full px-6"
+              onClick={resetForm}
+            >
+              Start over
+            </Button>
+          </div>
         </div>
       </div>
     );
@@ -286,36 +385,36 @@ payload.resumeFileId = await uploadToCloudinary(resumeFile);
   if (phase === "ready" && assessment) {
     const name = String(answers.name ?? "there");
     return (
-      <div
-        className="rounded-2xl border border-primary/30 bg-primary/5 p-8 text-center shadow-soft sm:p-10"
-        role="status"
-      >
-        {/* <p className="font-mono text-xs font-semibold uppercase tracking-wider text-primary">
-          Assessment ready · {assessment.confidenceScore}/100
-        </p> */}
-        <BadgeText text={`Assessment ready · ${assessment.confidenceScore}/100`} />
-        <h2 className="mt-3 text-2xl font-bold tracking-tight">
-          We have built your assessment, {name}
-        </h2>
-        <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-muted-foreground">
-          Your personalised assessment summary is ready. Open it to review
-          confidence score, improvements, and next steps.
-        </p>
-        <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
-          <Button
-            className="h-11 rounded-full px-6 font-semibold uppercase tracking-wide"
-            render={<Link href={`/assessment/${assessment.id}`} target="_blank" rel="noopener noreferrer"/>}
-          >
-            View assessment
-            <ArrowRight className="size-4" />
-          </Button>
-          <Button
-            variant="outline"
-            className="h-11 rounded-full px-6"
-            onClick={resetForm}
-          >
-            Start over
-          </Button>
+      <div>
+        <CacheToolbar />
+        <div
+          className="rounded-2xl border border-primary/30 bg-primary/5 p-8 text-center shadow-soft sm:p-10"
+          role="status"
+        >
+          <BadgeText text={`Assessment ready · ${assessment.confidenceScore}/100`} />
+          <h2 className="mt-3 text-2xl font-bold tracking-tight">
+            We have built your assessment, {name}
+          </h2>
+          <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-muted-foreground">
+            Your personalised assessment summary is ready. Open it to review
+            confidence score, improvements, and next steps.
+          </p>
+          <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+            <Button
+              className="h-11 rounded-full px-6 font-semibold uppercase tracking-wide"
+              render={<Link href={`/assessment/${assessment.id}`} target="_blank" rel="noopener noreferrer"/>}
+            >
+              View assessment
+              <ArrowRight className="size-4" />
+            </Button>
+            <Button
+              variant="outline"
+              className="h-11 rounded-full px-6"
+              onClick={resetForm}
+            >
+              Start over
+            </Button>
+          </div>
         </div>
       </div>
     );
@@ -324,37 +423,33 @@ payload.resumeFileId = await uploadToCloudinary(resumeFile);
   /* Route picker */
   if (!routeId) {
     return (
-      <div className="rounded-2xl border border-border/80 bg-card p-6 shadow-soft sm:p-8">
-        {/* <p className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-primary">
-          Step 0 · Choose your route
-        </p> */}
-        <BadgeText text="Step 0 · Choose your route" />
-        <h2 className="mt-2 text-2xl font-bold tracking-tight">
-          Which pathway fits you?
-        </h2>
-        <p className="mt-2 text-sm text-muted-foreground">
-          We will tailor the carousel questions to your endorsement route.
-        </p>
-        <div className="mt-8 grid gap-3">
-          {AssessmentRoutes.map((route) => (
-            <button
-              key={route.id}
-              type="button"
-              onClick={() => {
-                setRouteId(route.id);
-                setStep(0);
-                setAnswers({});
-              }}
-              className="rounded-2xl border border-border/80 bg-background p-5 text-left transition-all hover:border-primary/40 hover:shadow-soft"
-            >
-              <span className="text-base font-semibold tracking-tight">
-                {route.name}
-              </span>
-              <p className="mt-1 text-sm text-muted-foreground">
-                {route.description}
-              </p>
-            </button>
-          ))}
+      <div>
+        <CacheToolbar />
+        <div className="rounded-2xl border border-border/80 bg-card p-6 shadow-soft sm:p-8">
+          <BadgeText text="Step 0 · Choose your route" />
+          <h2 className="mt-2 text-2xl font-bold tracking-tight">
+            Which pathway fits you?
+          </h2>
+          <p className="mt-2 text-sm text-muted-foreground">
+            We will tailor the carousel questions to your endorsement route.
+          </p>
+          <div className="mt-8 grid gap-3">
+            {AssessmentRoutes.map((route) => (
+              <button
+                key={route.id}
+                type="button"
+                onClick={() => startRoute(route.id)}
+                className="rounded-2xl border border-border/80 bg-background p-5 text-left transition-all hover:border-primary/40 hover:shadow-soft"
+              >
+                <span className="text-base font-semibold tracking-tight">
+                  {route.name}
+                </span>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  {route.description}
+                </p>
+              </button>
+            ))}
+          </div>
         </div>
       </div>
     );
@@ -363,7 +458,9 @@ payload.resumeFileId = await uploadToCloudinary(resumeFile);
   const Icon = ICONS[current?.icon ?? "Users"] ?? Users;
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-border/80 bg-card shadow-soft">
+    <div>
+      <CacheToolbar />
+      <div className="overflow-hidden rounded-2xl border border-border/80 bg-card shadow-soft">
       {/* Progress */}
       <div className="border-b border-border/70 px-5 py-4 sm:px-8">
         <div className="flex items-center justify-between gap-3 text-xs">
@@ -471,6 +568,7 @@ payload.resumeFileId = await uploadToCloudinary(resumeFile);
           {isLastStep ? "Submit" : "Next"}
           {!isLastStep ? <ArrowRight className="size-4" /> : null}
         </Button>
+      </div>
       </div>
     </div>
   );
