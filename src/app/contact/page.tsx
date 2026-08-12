@@ -26,7 +26,7 @@ export default function ContactPage() {
                 as="h1"
                 eyebrow="Contact"
                 title="We’re here to help"
-                description="Questions about fit, timelines, or working together? Send a message and we’ll respond within one business day."
+                description="Questions about fit, timelines, or working together? Send a message and we’ll respond within five business day."
               />
               <ul className="mt-10 space-y-5">
                 <li className="flex gap-3 text-sm text-muted-foreground">
