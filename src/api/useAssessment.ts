@@ -21,7 +21,7 @@ export async function emailAssessment(
   email?: string
 ): Promise<ApiResponse<{ message?: string }>> {
   return api.post<{ message?: string }, { email?: string }>(
-    `assessments/${id}/email`,
+    `/services/emails/assessments/${id}`,
     { email }
   );
 }
