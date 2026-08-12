@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
 import { resources } from "@/data/resources";
 import { FadeIn, StaggerChildren, StaggerItem } from "@/components/shared/fade-in";
 import { SectionTitle } from "@/components/shared/section-title";

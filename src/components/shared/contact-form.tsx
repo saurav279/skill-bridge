@@ -16,7 +16,6 @@ export function ContactForm() {
   const [message, setMessage] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [successMessage, setSuccessMessage] = useState("");
 
   const [error, setError] = useState<string | null>(null);
 
@@ -25,7 +24,7 @@ export function ContactForm() {
     setSubmitting(true);
     setError(null);
 
-    const { success, error: submitError,data } = await submitContactUs({
+    const { success, error: submitError } = await submitContactUs({
       name: name.trim(),
       email: email.trim(),
       company: company.trim() || undefined,
@@ -34,7 +33,6 @@ export function ContactForm() {
     });
 
     setSubmitting(false);
-    setSuccessMessage(data?.message ?? "Message sent successfully");
 
     if (!success) {
       setError(submitError ?? "Something went wrong. Please try again.");

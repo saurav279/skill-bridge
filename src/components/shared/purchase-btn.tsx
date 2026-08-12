@@ -13,6 +13,7 @@ export function PurchaseButton({
   packageName,
 }: PurchaseButtonProps) {
   const [loading, setLoading] = useState(false);
+  console.log(packageName);
 
   const handlePurchase = async () => {
     try {

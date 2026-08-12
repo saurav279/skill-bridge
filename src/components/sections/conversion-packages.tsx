@@ -1,11 +1,8 @@
 
-import { Check } from "lucide-react";
+
 import { packages } from "@/data/packages";
 import { FadeIn, StaggerChildren, StaggerItem } from "@/components/shared/fade-in";
 import { SectionTitle } from "@/components/shared/section-title";
-import { cn } from "@/lib/utils";
-import { PackageName } from "@/types/packages";
-import { PurchaseButton } from "../shared/purchase-btn";
 import { PackageCard } from "../shared/package-card";
 
 type ConversionPackagesProps = {
@@ -23,7 +20,7 @@ export function ConversionPackages({
   data
 }: ConversionPackagesProps) {
 
-  const list = limit ? packages.slice(0, limit) : packages;
+
 
 
 

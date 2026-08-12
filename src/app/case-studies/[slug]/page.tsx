@@ -6,7 +6,6 @@ import { ArrowLeft, Check } from "lucide-react";
 import { caseStudies, getCaseStudy } from "@/data/case-studies";
 import { SectionTitle } from "@/components/shared/section-title";
 import { Timeline } from "@/components/shared/timeline";
-import { FinalCTA } from "@/components/shared/final-cta";
 import { FadeIn } from "@/components/shared/fade-in";
 import { Button } from "@/components/ui/button";
 import { ConversionPackages } from "@/components/sections/conversion-packages";

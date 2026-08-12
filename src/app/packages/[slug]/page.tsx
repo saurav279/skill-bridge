@@ -2,7 +2,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, Check, Play } from "lucide-react";
+import { ArrowLeft, Check, } from "lucide-react";
 import {
   packages,
   getPackage,
@@ -14,9 +14,9 @@ import { Timeline } from "@/components/shared/timeline";
 import { FadeIn, StaggerChildren, StaggerItem } from "@/components/shared/fade-in";
 import { ReadyToStartCta } from "@/components/sections/ready-to-start";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+
 import { ConversionPackages } from "@/components/sections/conversion-packages";
-import { createCheckoutSession } from "@/api/useStripe";
+
 import { PackageName } from "@/types/packages";
 import { PurchaseButton } from "@/components/shared/purchase-btn";
 import Image from "next/image";

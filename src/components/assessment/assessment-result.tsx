@@ -33,12 +33,10 @@ import { format } from "date-fns";
 import { addBusinessDays } from "date-fns";
 import { ConversionPackages } from "../sections/conversion-packages";
 import { LatestInsightsSection } from "../sections/latest-insights";
-import { ReadyToStartCta } from "../sections/ready-to-start";
 import { EbookCta } from "../shared/ebook-cta";
 import { TestimonialsSection } from "../sections/testimonials";
 import { FeaturedStories } from "../sections/featured-stories";
 
-const TARGET_SCORE = 75;
 
 function priorityMeta(priority: "high" | "medium" | "easy") {
   if (priority === "high") {
@@ -168,7 +166,7 @@ export function AssessmentResult({ id }: { id: string }) {
     );
   }
 
-  const { label: potentialLabel, probability } = potentialFromScore(
+  const { label: potentialLabel } = potentialFromScore(
     data.confidenceScore
   );
   const starRating = starRatingFromScore(data.confidenceScore);

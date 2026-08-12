@@ -1,10 +1,6 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
-import { resources, newsletters } from "@/data/resources";
 import { SectionTitle } from "@/components/shared/section-title";
-import { FadeIn, StaggerChildren, StaggerItem } from "@/components/shared/fade-in";
-import { NewsletterSignup } from "@/components/shared/newsletter-signup";
+import { FadeIn } from "@/components/shared/fade-in";
 import { EbookCta } from "@/components/shared/ebook-cta";
 import { ReadyToStartCta } from "@/components/sections/ready-to-start";
 import { LatestInsightsSection } from "@/components/sections/latest-insights";

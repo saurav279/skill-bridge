@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { CheckCircle2, MailX } from "lucide-react";
-import { UnsubscribeEmailButton,SubscribeEmailButton } from "@/components/shared/email-preference-buttons";
+import { UnsubscribeEmailButton } from "@/components/shared/email-preference-buttons";
 import { BrandLogo } from "@/components/shared/brand-logo";
 import { Button } from "@/components/ui/button";
 
@@ -13,9 +13,7 @@ export function UnsubscribeView() {
   const email = searchParams.get("email")?.trim() ?? "";
   const [done, setDone] = useState(false);
 
-  const subscribeHref = email
-    ? `/subscribe?email=${encodeURIComponent(email)}`
-    : "/subscribe";
+
 
   return (
     <div className="relative flex min-h-[70vh] items-center justify-center px-4 py-16">

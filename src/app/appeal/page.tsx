@@ -7,7 +7,6 @@ import { SectionTitle } from "@/components/shared/section-title";
 import { FadeIn, StaggerChildren, StaggerItem } from "@/components/shared/fade-in";
 import { ReadyToStartCta } from "@/components/sections/ready-to-start";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import { PackageCard } from "@/components/shared/package-card";
 import { ServicePackage } from "@/types";
 import { EbookCta } from "@/components/shared/ebook-cta";
