@@ -49,7 +49,6 @@ import { uploadToCloudinary } from "@/services/cloudinary";
 import { BadgeText } from "../shared/badge";
 import {
   clearAllAssessmentCache,
-  clearRouteCache,
   deserializeAnswersFromCache,
   hasAnyAssessmentCache,
   readAssessmentCache,
@@ -260,8 +259,6 @@ payload.resumeFileId = await uploadToCloudinary(resumeFile);
 
     setAssessment(data);
     setPhase("ready");
-    clearRouteCache(routeId);
-    setHasCache(hasAnyAssessmentCache());
   }
 
   function goNext() {
