@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react
 import { ArrowLeft, ArrowRight, CalendarDays, Check, Loader2 } from "lucide-react";
 import {
   createConsultationCheckout,
+  createFreeConsultationCheckout,
   getAvailableSlots,
 } from "@/api/useCalendar";
 import { BadgeText } from "@/components/shared/badge";
@@ -20,6 +21,7 @@ import { toast } from "@/lib/toast";
 import { cn } from "@/lib/utils";
 import type { ConsultationPackage } from "@/data/consultation-packages";
 import type { BookingDetails, CalendarSlot } from "@/types/consultation";
+import { useRouter } from "next/navigation";
 
 const STEPS = ["Details", "Time", "Pay"] as const;
 const DESCRIPTION_MAX = 500;
@@ -99,6 +101,7 @@ export function BookingWizard({ pkg }: BookingWizardProps) {
   const [paying, setPaying] = useState(false);
   const [payError, setPayError] = useState<string | null>(null);
   const [detailsError, setDetailsError] = useState<string | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     setDraft(readDraft(pkg.id, minDate, maxDate));
@@ -142,6 +145,8 @@ export function BookingWizard({ pkg }: BookingWizardProps) {
     },
     [pkg.slotDurationMinutes]
   );
+
+  const isFreeConsultation = pkg.cost === 0;
 
   useEffect(() => {
     if (!hydrated || step !== 1) return;
@@ -205,36 +210,58 @@ export function BookingWizard({ pkg }: BookingWizardProps) {
     setPaying(true);
     setPayError(null);
 
-    const origin = window.location.origin;
-    const { success, data, error } = await createConsultationCheckout({
-      name: draft.name.trim(),
-      email: draft.email.trim(),
-      description: draft.description.trim(),
-      packageName: pkg.id,
-      startTime: draft.slot.startTime,
-      endTime: draft.slot.endTime,
-      successUrl: `${origin}/booking/success`,
-      cancelUrl: `${origin}/booking/cancel?package=${pkg.id}`,
-    });
-
-    if (!success || !data?.url) {
-      const message = error ?? "Checkout failed. Please try again.";
-      setPaying(false);
-      setPayError(message);
-
-      if (message.toLowerCase().includes(SLOT_TAKEN)) {
-        toast.error(
-          "That time is no longer available",
-          "Please pick another slot."
-        );
-        setDraft((prev) => ({ ...prev, slot: null }));
-        setStep(1);
-        await loadSlots(draft.date, { clearSlot: true });
+    //free consultation
+    if (isFreeConsultation) {
+      const { success, data, error } = await createFreeConsultationCheckout({
+        name: draft.name.trim(),
+        email: draft.email.trim(),
+        description: draft.description.trim(),
+        packageName: pkg.id,
+        startTime: draft.slot.startTime,
+        endTime: draft.slot.endTime,
+      });
+      if (!success || !data?.consultationId) {
+        setPayError(error ?? "Checkout failed. Please try again.");
+        setPaying(false);
+        return;
       }
-      return;
-    }
+      toast.success("Consultation booked successfully. Please check your email for the calendar invite.");
+      router.push("/consultations/success");
+    } else {
 
-    window.location.href = data.url;
+      //paid consultation
+      const origin = window.location.origin;
+      const { success, data, error } = await createConsultationCheckout({
+        name: draft.name.trim(),
+        email: draft.email.trim(),
+        description: draft.description.trim(),
+        packageName: pkg.id,
+        startTime: draft.slot.startTime,
+        endTime: draft.slot.endTime,
+        successUrl: `${origin}/consultations/success`,
+        cancelUrl: `${origin}/consultations/cancel?package=${pkg.id}`,
+      }
+      );
+
+      if (!success || !data?.url) {
+        const message = error ?? "Checkout failed. Please try again.";
+        setPaying(false);
+        setPayError(message);
+
+        if (message.toLowerCase().includes(SLOT_TAKEN)) {
+          toast.error(
+            "That time is no longer available",
+            "Please pick another slot."
+          );
+          setDraft((prev) => ({ ...prev, slot: null }));
+          setStep(1);
+          await loadSlots(draft.date, { clearSlot: true });
+        }
+        return;
+      }
+
+      window.location.href = data.url;
+    }
   }
 
   const progress = ((step + 1) / STEPS.length) * 100;
@@ -518,6 +545,7 @@ export function BookingWizard({ pkg }: BookingWizardProps) {
                 value={draft.slot?.label ?? "—"}
               />
               <SummaryRow label="Note" value={draft.description} />
+              {isFreeConsultation ? <SummaryRow label="Cost" value="Free" /> : <SummaryRow label="Cost" value={`£${pkg.cost}`} />}
             </dl>
 
             {payError ? (
@@ -537,7 +565,28 @@ export function BookingWizard({ pkg }: BookingWizardProps) {
                 <ArrowLeft className="size-4" />
                 Back
               </Button>
-              <Button
+
+              {isFreeConsultation ? (
+                <Button
+                  type="button"
+                  className="h-11 rounded-xl px-8"
+                  disabled={paying || !draft.slot}
+                  onClick={() => void onPay()}
+                >
+                {paying ? (
+                  <>
+                    <Loader2 className="size-4 animate-spin" />
+                    Processing…
+                  </>
+                ) : (
+                  <>
+                    <Check className="size-4" />
+                    Book Free Consultation
+                  </>
+                )}
+                </Button>
+              ) : (
+                <Button
                 type="button"
                 className="h-11 rounded-xl px-8"
                 disabled={paying || !draft.slot}
@@ -555,6 +604,8 @@ export function BookingWizard({ pkg }: BookingWizardProps) {
                   </>
                 )}
               </Button>
+              )}
+           
             </div>
           </div>
         ) : null}

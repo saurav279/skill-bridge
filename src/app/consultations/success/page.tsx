@@ -5,9 +5,9 @@ import { Button } from "@/components/ui/button";
 import { ClearBookingDraft } from "@/components/consultation/clear-booking-draft";
 
 export const metadata: Metadata = {
-  title: "Payment received",
+  title: "Consultation booked",
   description:
-    "Your consultation payment was received. A calendar invite will follow shortly.",
+    "Your consultation was booked. A calendar invite will follow shortly.",
 };
 
 export default function BookingSuccessPage() {
@@ -23,7 +23,7 @@ export default function BookingSuccessPage() {
             <Check className="size-5" />
           </div>
           <h1 className="mt-5 text-2xl font-bold tracking-tight sm:text-3xl">
-            Payment received
+            Consultation booked
           </h1>
           <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-muted-foreground sm:text-base">
             Thank you. Your consultation is being confirmed — you’ll receive a

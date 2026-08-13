@@ -20,7 +20,7 @@ export default function BookingIndexPage() {
           <SectionTitle
             as="h1"
             eyebrow="Consultation"
-            title="Choose a package"
+            title="Choose a consultation"
             description="Select the consultation you’d like to book. You’ll pick a UK time slot next, then pay securely with Stripe."
           />
         </FadeIn>
@@ -35,7 +35,7 @@ export default function BookingIndexPage() {
                     {pkg.tagline}
                   </p>
                   <h2 className="mt-2 text-xl font-semibold tracking-tight">
-                    {pkg.name}
+                    {pkg.name} {pkg.cost === 0 ? <span className="text-xs text-muted-foreground">Free</span> : <span className="text-xs text-muted-foreground">£{pkg.cost}</span>}
                   </h2>
                   <p className="mt-3 flex-1 text-sm leading-relaxed text-muted-foreground">
                     {pkg.description}
@@ -45,7 +45,7 @@ export default function BookingIndexPage() {
                   </p>
                   <Button
                     className="mt-6 h-11 w-full rounded-xl"
-                    render={<Link href={`/booking/${pkg.id}`} />}
+                    render={<Link href={`/consultations/${pkg.id}`} />}
                   >
                     Book {pkg.name}
                     <ArrowRight className="size-4" />

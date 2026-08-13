@@ -34,6 +34,8 @@ export default async function BookingPackagePage({ params }: PageProps) {
   const pkg = getConsultationPackage(package_name);
   if (!pkg) notFound();
 
+  const isFree = pkg.id === "free-strategy-call";
+
   return (
     <section className="py-16 md:py-24">
       <div className="container-page grid gap-12 md:grid-cols-12">
@@ -56,13 +58,13 @@ export default async function BookingPackagePage({ params }: PageProps) {
               </li>
               <li className="flex gap-2">
                 <span className="font-semibold text-primary">03</span>
-                Pay with Stripe — your calendar invite follows
+                {isFree ? "Your calendar invite follows" : "Pay with Stripe — your calendar invite follows"}
               </li>
             </ul>
             <p className="mt-8 text-sm text-muted-foreground">
               Prefer a different package?{" "}
               <Link
-                href="/booking"
+                href="/consultations"
                 className="font-medium text-primary underline-offset-4 hover:underline"
               >
                 View all packages

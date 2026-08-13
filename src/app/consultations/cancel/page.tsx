@@ -16,8 +16,8 @@ export default async function BookingCancelPage({ searchParams }: PageProps) {
   const { package: packageName } = await searchParams;
   const href =
     packageName && isConsultationPackageId(packageName)
-      ? `/booking/${packageName.toUpperCase()}`
-      : "/booking";
+      ? `/consultations/${packageName}`
+      : "/consultations";
 
   return (
     <section className="py-16 md:py-24">

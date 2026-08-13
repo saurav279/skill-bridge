@@ -11,6 +11,7 @@ import { ReadyToStartCta } from "@/components/sections/ready-to-start";
 import { FeaturedStories } from "@/components/sections/featured-stories";
 import { TestimonialsSection } from "@/components/sections/testimonials";
 import { FAQSection } from "@/components/sections/faq-section";
+import { StrategyCallCta } from "@/components/sections/strategy-call";
 
 export default function HomePage() {
   return (
@@ -22,6 +23,7 @@ export default function HomePage() {
    
       <HowWeHelpSection />
       <FounderBand />
+      <StrategyCallCta consultationPackage="paid-strategy-call" />
 
       <ConversionPackages />
 

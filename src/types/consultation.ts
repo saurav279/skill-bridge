@@ -1,4 +1,4 @@
-import type { PackageName } from "@/types/packages";
+import type { ConsultationPackageTypes } from "@/types/packages";
 
 export type CalendarSlot = {
   label: string;
@@ -16,7 +16,7 @@ export type CreateConsultationCheckoutPayload = {
   name: string;
   email: string;
   description: string;
-  packageName: PackageName;
+  packageName: ConsultationPackageTypes;
   startTime: string;
   endTime: string;
   successUrl: string;
@@ -31,4 +31,19 @@ export type BookingDetails = {
   name: string;
   email: string;
   description: string;
+};
+
+
+export type CreateFreeConsultationCheckoutResponse= {
+  consultationId: string;
+  htmlLink:string
+};
+
+export type CreateFreeConsultationCheckoutPayload = {
+  name: string;
+  email: string;
+  description: string;
+  packageName: ConsultationPackageTypes;
+  startTime: string;
+  endTime: string;
 };

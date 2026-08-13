@@ -149,7 +149,7 @@ export function Navbar() {
           </div>
 
           <div className="flex items-center gap-1.5">
-            <ThemeToggle />
+            {/* <ThemeToggle /> */}
             <Button
               size="sm"
               className="hidden h-10 rounded-full px-4 text-xs font-semibold uppercase tracking-wide sm:inline-flex"

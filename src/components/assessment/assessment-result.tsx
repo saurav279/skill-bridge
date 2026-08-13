@@ -8,6 +8,7 @@ import {
   Brain,
   CheckCircle2,
   Download,
+  Info,
   Loader2,
   Mail,
   Sparkles,
@@ -22,6 +23,11 @@ import {
 } from "@/api/useAssessment";
 import { AssessmentRadar } from "@/components/assessment/assessment-radar";
 import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { FadeIn } from "@/components/shared/fade-in";
 import { cn } from "@/lib/utils";
 import {
@@ -29,13 +35,14 @@ import {
   starRatingFromScore,
   type Assessment,
 } from "@/types";
-import { format } from "date-fns";
+import { format, isWithinInterval } from "date-fns";
 import { addBusinessDays } from "date-fns";
 import { ConversionPackages } from "../sections/conversion-packages";
 import { LatestInsightsSection } from "../sections/latest-insights";
 import { EbookCta } from "../shared/ebook-cta";
 import { TestimonialsSection } from "../sections/testimonials";
 import { FeaturedStories } from "../sections/featured-stories";
+import { StrategyCallCta } from "../sections/strategy-call";
 
 
 function priorityMeta(priority: "high" | "medium" | "easy") {
@@ -67,6 +74,7 @@ export function AssessmentResult({ id }: { id: string }) {
   const [pdfBusy, setPdfBusy] = useState(false);
   const [emailBusy, setEmailBusy] = useState(false);
   const [actionMsg, setActionMsg] = useState<string | null>(null);
+  const [freeCallAvailable, setFreeCallAvailable] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -84,6 +92,13 @@ export function AssessmentResult({ id }: { id: string }) {
       } else {
         setData(result.data);
         setError(null);
+        const createdAt = new Date(result.data.createdAt);
+        const freeCallDeadline = addBusinessDays(createdAt, 5);
+        const isWithinAWeek = isWithinInterval(new Date(), {
+          start: createdAt,
+          end: freeCallDeadline,
+        });
+        setFreeCallAvailable(isWithinAWeek);
       }
       setLoading(false);
     }
@@ -170,6 +185,7 @@ export function AssessmentResult({ id }: { id: string }) {
     data.confidenceScore
   );
   const starRating = starRatingFromScore(data.confidenceScore);
+  const next5WorkingDayDate = format(addBusinessDays(new Date(data.createdAt), 5), "EEE, MMM d")
 
   return (
     <div className="mx-auto max-w-7xl space-y-6 px-5 py-10 sm:px-6 sm:py-12 lg:px-8">
@@ -219,17 +235,30 @@ export function AssessmentResult({ id }: { id: string }) {
             <Button
           className="h-9 rounded-full px-4"
             >
-              <Link href="/consultation" target="_blank" rel="noopener noreferrer" className="flex flex-col items-start">
+              <Link href={freeCallAvailable ? "/consultations/free-strategy-call" : "/consultations/paid-strategy-call"} target="_blank" rel="noopener noreferrer" className="flex flex-col items-start">
                 <span className="flex items-center font-semibold">
-                  Book a  free call
+                  Book a {freeCallAvailable ? "free" : "paid"} call
                   <ArrowRight className="ml-1 inline-block size-5 align-text-bottom" />
                 </span>
                
               </Link>
             </Button>
-             <span className="text-xs font-normal text-foreground leading-tight">
-             For next {format(addBusinessDays(new Date(data.createdAt), 5), "EEE, MMM d")}
-          </span>
+           { freeCallAvailable && (
+            <span className="inline-flex items-center gap-1 text-xs font-normal leading-tight text-foreground">
+              For next {next5WorkingDayDate}
+              <Tooltip>
+                <TooltipTrigger
+                  className="inline-flex text-muted-foreground transition-colors hover:text-foreground"
+                  aria-label="Free call details"
+                >
+                  <Info className="size-3.5" />
+                </TooltipTrigger>
+                <TooltipContent>
+                  This strategy call is free and available for a limited time only.
+                </TooltipContent>
+              </Tooltip>
+            </span>
+           )}
           </div>
           )}
      
@@ -398,8 +427,10 @@ export function AssessmentResult({ id }: { id: string }) {
 
       <FadeIn>
 
+      <StrategyCallCta consultationPackage={freeCallAvailable ? "free-strategy-call" : "paid-strategy-call"}  nextSteps={true}/>
+
         
-      <ConversionPackages data={{section_title: "Next Steps", section_description: " Enhance your skills and boost your chances of success with our expert guidance and resources."}}/>
+      <ConversionPackages />
 
 <LatestInsightsSection />
 <EbookCta />

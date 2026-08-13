@@ -4,7 +4,7 @@ export const company = {
     address: "Waltham Cross, United Kingdom",
     phone: "+44 7417419007",
     email: "info@skillbridge.com",
-    website: "https://www.skillbridge.com",
+    website: "https://www.skillbridgeconsultations.com",
     whatsapp: "447417419007",
     socialLinks: {
         facebook: "https://www.facebook.com/skillbridge",

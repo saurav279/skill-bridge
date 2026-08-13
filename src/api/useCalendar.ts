@@ -3,6 +3,8 @@ import type {
   AvailableSlotsResponse,
   CreateConsultationCheckoutPayload,
   CreateConsultationCheckoutResponse,
+  CreateFreeConsultationCheckoutPayload,
+  CreateFreeConsultationCheckoutResponse,
 } from "@/types/consultation";
 
 export async function getAvailableSlots(params: {
@@ -24,4 +26,15 @@ export async function createConsultationCheckout(
     CreateConsultationCheckoutResponse,
     CreateConsultationCheckoutPayload
   >("services/calendar/stripe", payload);
+}
+
+
+
+export async function createFreeConsultationCheckout(
+  payload: CreateFreeConsultationCheckoutPayload
+): Promise<ApiResponse<CreateFreeConsultationCheckoutResponse>> {
+  return api.post<
+    CreateFreeConsultationCheckoutResponse,
+    CreateFreeConsultationCheckoutPayload
+  >("services/calendar/free", payload);
 }

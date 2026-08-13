@@ -75,13 +75,12 @@ function sanitizePdfText(text: string) {
 }
 
 function discoveryCallUrl() {
-  if (process.env.NEXT_PUBLIC_CALENDLY_URL) {
-    return process.env.NEXT_PUBLIC_CALENDLY_URL;
-  }
+
+
   const base = (
-    process.env.NEXT_PUBLIC_SITE_URL ?? company.website
+     company.website
   ).replace(/\/$/, "");
-  return `${base}/consultation`;
+  return `${base}/consultations/paid-strategy-call`;
 }
 
 function addLink(
