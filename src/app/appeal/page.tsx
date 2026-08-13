@@ -123,7 +123,7 @@ export default function AppealPage() {
           <StaggerChildren className="mt-12 grid gap-6 md:grid-cols-3">
             {appealPackages.map((pkg) => (
               <StaggerItem key={pkg.slug}>
-              <PackageCard pkg={pkg as ServicePackage} />
+              <PackageCard pkg={pkg as unknown as ServicePackage} />
               </StaggerItem>
             ))}
           </StaggerChildren>

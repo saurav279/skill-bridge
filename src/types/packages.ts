@@ -1,2 +1,2 @@
-export type PackageName = "free-strategy-call" | "A" |  "B" | "C";
+export type PackageNameTypes = "strategy-call" | "leadership-enhancement" |  "diy-membership" | "review-only" | "full-review" | "strategy-session" | "bespoke-coaching";
 export type ConsultationPackageTypes = "free-strategy-call" | "paid-strategy-call";

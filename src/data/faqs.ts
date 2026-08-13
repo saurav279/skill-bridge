@@ -9,7 +9,7 @@ export const faqs: FAQ[] = [
   {
     question: "What packages do you offer?",
     answer:
-      "Six options: Leadership in Tech Course (£799), DIY Membership (£999), Strategy Session (£1,950), Review Only (£3,500), Full Review (£5,500), and Bespoke 1-to-1 Coaching (£7,500).",
+      "Six options: Leadership Enhancement (£499), DIY Membership (£699), Strategy Session (£1,500), Review Only (£999), Full Review (£4,500), and Bespoke 1-to-1 Support (£5,999).",
   },
   {
     question: "What is the Global Talent Visa?",

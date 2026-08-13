@@ -3,10 +3,10 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { createCheckoutSession } from "@/api/useStripe";
-import { PackageName } from "@/types/packages";
+import { PackageNameTypes } from "@/types/packages";
 
 type PurchaseButtonProps = {
-  packageName: PackageName;
+  packageName: PackageNameTypes;
 };
 
 export function PurchaseButton({
@@ -27,7 +27,7 @@ export function PurchaseButton({
         success,
         error,
       } = await createCheckoutSession(
-        "A",
+        packageName,
         successUrl,
         cancelUrl
       );

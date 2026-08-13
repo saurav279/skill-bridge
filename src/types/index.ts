@@ -75,8 +75,13 @@ export type ValueItem = {
   icon: "integrity" | "transparency" | "expertise" | "client";
 };
 
+export type PackageFeature = {
+  label: string;
+  included: boolean;
+};
+
 export type ServicePackage = {
-  slug: string;
+  slug: string; //backend key
   name: string;
   tagline: string;
   description: string;
@@ -85,7 +90,7 @@ export type ServicePackage = {
   priceLabel?: string;
   priceNote?: string;
   featured?: boolean;
-  features: string[];
+  features: PackageFeature[];
   idealFor: string;
   ctaLabel: string;
   ctaHref?: string;

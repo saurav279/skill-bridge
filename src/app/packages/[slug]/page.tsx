@@ -2,7 +2,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, Check, } from "lucide-react";
+import { ArrowLeft, Check, X } from "lucide-react";
 import {
   packages,
   getPackage,
@@ -17,7 +17,7 @@ import { Button } from "@/components/ui/button";
 
 import { ConversionPackages } from "@/components/sections/conversion-packages";
 
-import { PackageName } from "@/types/packages";
+import { PackageNameTypes } from "@/types/packages";
 import { PurchaseButton } from "@/components/shared/purchase-btn";
 import Image from "next/image";
 import { BadgeText } from "@/components/shared/badge";
@@ -94,16 +94,29 @@ export default async function PackageDetailPage({ params }: PageProps) {
                 </p>
                 <ul className="mt-6 space-y-2.5">
                   {pkg.features.map((f) => (
-                    <li key={f} className="flex gap-2.5 text-sm">
-                      <Check className="mt-0.5 size-4 shrink-0 text-primary" />
-                      {f}
+                    <li
+                      key={`${f.included ? "in" : "ex"}-${f.label}`}
+                      className="flex gap-2.5 text-sm"
+                    >
+                      {f.included ? (
+                        <Check className="mt-0.5 size-4 shrink-0 text-primary" />
+                      ) : (
+                        <X className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
+                      )}
+                      <span
+                        className={
+                          f.included ? undefined : "text-muted-foreground"
+                        }
+                      >
+                        {f.label} 
+                      </span>
                     </li>
                   ))}
                 </ul>
                 <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                
                   <PurchaseButton
-  packageName={pkg.name as PackageName}
+  packageName={pkg.slug as PackageNameTypes}
 />
                   <Button
                       variant="outline"

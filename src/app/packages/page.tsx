@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 export const metadata: Metadata = {
   title: "Packages",
   description:
-    "Leadership Course, DIY Membership, Strategy Session, Review Only, Full Review, and Bespoke Coaching — Skill Bridge UK Global Talent Visa packages.",
+    "Leadership Enhancement, DIY Membership, Strategy Session, Review Only, Full Review, and Bespoke 1-to-1 Support — Skill Bridge UK Global Talent Visa packages.",
 };
 
 export default function PackagesPage() {

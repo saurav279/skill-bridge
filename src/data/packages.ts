@@ -1,7 +1,10 @@
-import type { ServicePackage } from "@/types";
+import type { PackageFeature, ServicePackage } from "@/types";
 
 const DEFAULT_VIDEO =
   "https://www.youtube.com/embed/ScMzIvxBSi4"; /* replace with your package walkthrough */
+
+const included = (label: string): PackageFeature => ({ label, included: true });
+const excluded = (label: string): PackageFeature => ({ label, included: false });
 
 /**
  * Package ladder aligned with michellehua.co.uk structure,
@@ -9,27 +12,30 @@ const DEFAULT_VIDEO =
  */
 export const packages: ServicePackage[] = [
   {
-    slug: "leadership-in-tech-course",
-    name: "Leadership in Tech Course",
+    slug: "leadership-enhancement",
+    name: "Leadership Enhancement",
     tagline: "Build the leadership narrative",
     description:
       "A self-paced course that helps you articulate leadership, impact, and innovation — the foundations endorsement panels look for in Digital Technology profiles.",
     overview:
-      "The Leadership in Tech Course is your foundation. You will learn how to frame leadership, innovation, and impact in language endorsement panels recognise — before you invest in heavier coaching. Complete modules at your own pace, then upgrade when you are ready for strategy or review.",
-    priceLabel: "£799",
+      "Leadership Enhancement is your foundation. You will learn how to frame leadership, innovation, and impact in language endorsement panels recognise — before you invest in heavier coaching. Complete modules at your own pace, then upgrade when you are ready for strategy or review.",
+    priceLabel: "£499",
     priceNote: "One-time",
     features: [
-      "Leadership in Tech Course access",
-      "Frameworks for impact & recognition",
-      "Self-paced modules",
-      "Part support via community prompts",
+      included("Leadership in Tech profile review"),
+      included("Frameworks for Impact & Recognition"),
+      included("Self-paced modules"),
+      included("Part support via media coverage"),
+      excluded("Full Review"),
+      excluded("Weekly Support"),
+      excluded("Full support through Endorsement Stage"),
     ],
     idealFor:
-      "Early-stage applicants who need to strengthen how they present leadership before a full strategy engagement.",
+      "Early-stage applicants who need to strengthen how they present leadership and public profile before a full strategy engagement.",
     ctaLabel: "Explore Course",
     ctaHref: "/packages/leadership-in-tech-course",
     videoEmbedUrl: DEFAULT_VIDEO,
-    videoTitle: "Leadership in Tech Course overview",
+    videoTitle: "Leadership Enhancement overview",
     steps: [
       { title: "Enrol & access", detail: "Get immediate access to the course modules and worksheets." },
       { title: "Build your narrative", detail: "Work through leadership, impact, and innovation frameworks with examples." },
@@ -45,14 +51,19 @@ export const packages: ServicePackage[] = [
       "Access Skill Bridge DIY resources — checklists, evidence templates, and structured prompts so you can prepare materials independently with expert frameworks.",
     overview:
       "DIY Membership gives you Skill Bridge templates without full 1:1 coaching. Use checklists, letter prompts, and criteria worksheets to organise your pack on your timeline — ideal if you are disciplined and want professional structure at a lower investment.",
-    priceLabel: "£999",
+    priceLabel: "£699",
     priceNote: "One-time",
     features: [
-      "Leadership in Tech Course",
-      "DIY Membership Area",
-      "Evidence & letter templates",
-      "Criteria mapping worksheets",
-      "Part support",
+      included("Leadership in Tech Course"),
+      included("DIY Membership Area"),
+      included("Evidence & letter templates"),
+      included("Criteria mapping worksheets"),
+      included("Part support"),
+      excluded("Extra Leadership Enhancement"),
+      excluded("Full Review"),
+      excluded("Weekly Support"),
+      excluded("Personalized Strategy"),
+      excluded("Full support through Endorsement Stage"),
     ],
     idealFor:
       "Self-starters who want professional templates and structure without full 1:1 coaching.",
@@ -75,18 +86,23 @@ export const packages: ServicePackage[] = [
       "A focused strategy engagement to map your profile against Global Talent criteria, identify gaps, and leave with a written pathway plan.",
     overview:
       "The Strategy Session is a clarity engagement. We assess Exceptional Talent vs Promise fit, prioritise evidence, and deliver a written memo so you know exactly what to strengthen — before committing to a full review or bespoke coaching.",
-    priceLabel: "£1,950",
+    priceLabel: "£1,500",
     priceNote: "One-time",
     features: [
-      "Leadership in Tech Course",
-      "DIY Membership Area",
-      "Strategy Session",
-      "Assessment & pathway assessment",
-      "Written strategy memo",
-      "Part support",
+      included("Leadership in Tech Course"),
+      included("DIY Membership Area"),
+      included("Strategy Session"),
+      included("Assessment & pathway assessment"),
+      included("Written strategy memo"),
+      included("Part support"),
+      included("Personalized Plan"),
+      excluded("Extra Leadership Enhancement"),
+      excluded("Full Review"),
+      excluded("Weekly Support"),
+      excluded("Full support through Endorsement Stage"),
     ],
     idealFor:
-      "Professionals who want a clear, evidence-driven plan before investing in a full review.",
+      "Professionals who want a clear, evidence-driven personalized plan before investing in a full review.",
     ctaLabel: "Explore Strategy Session",
     ctaHref: "/packages/strategy-session",
     videoEmbedUrl: DEFAULT_VIDEO,
@@ -106,15 +122,17 @@ export const packages: ServicePackage[] = [
       "Already drafting your endorsement materials? We review your statement, evidence structure, and letters — spotting gaps and strengthening presentation before you submit.",
     overview:
       "Review Only is for applicants who already have drafts. We stress-test your statement, evidence annexes, and letters against criteria — then give precise rewrite guidance so you submit with confidence.",
-    priceLabel: "£3,500",
+    priceLabel: "£999",
     priceNote: "One-time · Review focused",
     features: [
-      "Leadership in Tech Course",
-      "DIY Membership Area",
-      "Full pack review & sense-check",
-      "Gap analysis & rewrite guidance",
-      "Letter feedback",
-      "Part support",
+      included("Leadership Enhancement"),
+      included("DIY Membership Area"),
+      included("Full pack review & sense-check"),
+      included("Gap analysis & rewrite guidance"),
+      included("Letter feedback"),
+      included("Part support"),
+      excluded("Weekly Support"),
+      excluded("Full support through Endorsement Stage"),
     ],
     idealFor:
       "Applicants who have drafted materials and need an expert review before submission.",
@@ -136,22 +154,24 @@ export const packages: ServicePackage[] = [
     description:
       "Our most popular engagement: strategy, narrative drafting support, evidence architecture, letter guidance, and iterative review until your Stage 1 pack is endorsement-ready.",
     overview:
-      "Full Review combines strategy and iterative review. We help you shape narrative and evidence, guide letters, and run revision rounds until the pack is coherent, criteria-aligned, and ready for Stage 1 submission — without the intensity of weekly bespoke coaching.",
-    priceLabel: "£5,500",
+      "Full Review combines strategy and iterative review. We help you shape narrative and evidence, guide letters, and run revision rounds until the pack is coherent, criteria-aligned, and ready for Stage 1 submission — with weekly coaching across a four-week window.",
+    priceLabel: "£4,500",
     priceNote: "Installments available · Most popular",
     featured: true,
     features: [
-      "Leadership in Tech Course",
-      "DIY Membership Area",
-      "Strategy Session",
-      "Full review & revisions",
-      "Evidence pack assembly guidance",
-      "Letter strategy & review",
-      "Submission readiness support",
-      "Part-to-full support continuum",
+      included("Leadership Enhancement"),
+      included("DIY Membership Area"),
+      included("Strategy Session"),
+      included("Full review & revisions"),
+      included("Evidence pack assembly guidance"),
+      included("Letter strategy & review"),
+      included("Submission readiness support"),
+      included("Part-to-full support continuum"),
+      included("Weekly Support for 4 weeks"),
+      excluded("Full support through Endorsement Stage"),
     ],
     idealFor:
-      "Serious applicants who want structured strategy plus thorough review without full weekly coaching.",
+      "Serious applicants who want structured strategy plus thorough review with full weekly coaching.",
     ctaLabel: "Explore Full Review",
     ctaHref: "/packages/full-review",
     videoEmbedUrl: DEFAULT_VIDEO,
@@ -165,30 +185,31 @@ export const packages: ServicePackage[] = [
   },
   {
     slug: "bespoke-coaching",
-    name: "Bespoke 1-to-1 Coaching",
+    name: "Bespoke 1-to-1 Support",
     tagline: "Undivided attention, end-to-end",
     description:
       "White-glove coaching with dedicated sessions, full support across criteria, structure, evidence, letters, and submission — limited seats each month.",
     overview:
-      "Bespoke 1-to-1 Coaching is Skill Bridge’s highest-touch engagement. You work with a dedicated consultant through weekly (scoped) calls, full support across criteria selection, application structure, evidence architecture, recommendation letters, and submission readiness. Seats are limited so you get undivided attention — ideal for founders and senior talent who want a tightly managed path to Stage 1 endorsement.",
-    priceLabel: "£7,500",
+      "Bespoke 1-to-1 Support is Skill Bridge’s highest-touch engagement. You work with a dedicated consultant through unlimited weekly calls, full support across criteria selection, application structure, evidence architecture, recommendation letters, and the endorsement stage. Seats are limited so you get undivided attention — ideal for founders and senior talent who want a tightly managed path to Stage 1 endorsement.",
+    priceLabel: "£5,999",
     priceNote: "Installments available · Full support",
     features: [
-      "Leadership in Tech Course",
-      "DIY Membership Area",
-      "Strategy Session",
-      "Full Review Package inclusions",
-      "Bespoke 1-to-1 coaching calls",
-      "Full support through Stage 1",
-      "Priority turnaround",
-      "Dedicated consultant",
+      included("Leadership Enhancement"),
+      included("DIY Membership Area"),
+      included("Strategy Session"),
+      included("Full Review Package inclusions"),
+      included("Bespoke 1-to-1 coaching calls"),
+      included("Full support through Endorsement Stage"),
+      included("Priority turnaround"),
+      included("Dedicated consultant"),
+      included("Unlimited weekly calls"),
     ],
     idealFor:
-      "Founders and senior talent who want maximum support and a tightly managed path to endorsement.",
+      "Founders and senior talent who want maximum 1:1 support and a tightly managed path to endorsement.",
     ctaLabel: "Explore Bespoke Coaching",
     ctaHref: "/packages/bespoke-coaching",
     videoEmbedUrl: DEFAULT_VIDEO,
-    videoTitle: "Bespoke 1-to-1 Coaching — what to expect",
+    videoTitle: "Bespoke 1-to-1 Support — what to expect",
     steps: [
       {
         title: "Discovery & kickoff",

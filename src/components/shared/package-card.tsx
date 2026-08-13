@@ -1,9 +1,9 @@
 import Link from "next/link";
-import { Check } from "lucide-react";
+import { Check, X } from "lucide-react";
 import type { ServicePackage } from "@/types";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { PackageName } from "@/types/packages";
+import { PackageNameTypes  } from "@/types/packages";
 import { PurchaseButton } from "./purchase-btn";
 import { BadgeText } from "./badge";
 
@@ -53,11 +53,34 @@ export function PackageCard({ pkg, className }: PackageCardProps) {
 
       <ul className="mt-6 flex-1 space-y-3">
         {pkg.features.map((feature) => (
-          <li key={feature} className="flex gap-3 text-sm text-muted-foreground">
-            <span className="mt-0.5 inline-flex size-5 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
-              <Check className="size-3" aria-hidden />
+          <li
+            key={`${feature.included ? "in" : "ex"}-${feature.label}`}
+            className="flex gap-3 text-sm text-muted-foreground"
+          >
+            <span
+              className={cn(
+                "mt-0.5 inline-flex size-5 shrink-0 items-center justify-center rounded-full",
+                feature.included
+                  ? "bg-primary/10 text-primary"
+                  : "bg-muted text-muted-foreground"
+              )}
+            >
+              {feature.included ? (
+                <Check className="size-3" aria-hidden />
+              ) : (
+                <X className="size-3" aria-hidden />
+              )}
             </span>
-            <span className="leading-relaxed text-foreground/90">{feature}</span>
+            <span
+              className={cn(
+                "leading-relaxed",
+                feature.included
+                  ? "text-foreground/90"
+                  : "text-muted-foreground"
+              )}
+            >
+              {feature.label}
+            </span>
           </li>
         ))}
       </ul>
@@ -75,7 +98,7 @@ export function PackageCard({ pkg, className }: PackageCardProps) {
           {pkg.ctaLabel}
         </Button>}
         <PurchaseButton
-          packageName={pkg.name as PackageName}
+          packageName={pkg.slug as PackageNameTypes}
         />
       </div>
     </article>
