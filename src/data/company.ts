@@ -1,7 +1,7 @@
 export const company = {
     name: "Skill Bridge",
-    address: "48 Olympic Way, Wembley Park, Wembley HA9 0HS, United Kingdom",
-    phone: "+44 7417419007",
+    address: "Waltham Cross, United Kingdom",
+    phone: "+44 20 3327 4107",
     email: "contact@skillbridgeconsultants.com",
     website: "https://skillbridgeconsultants.com",
     whatsapp: "447417419007",
