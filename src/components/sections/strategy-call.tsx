@@ -7,7 +7,7 @@ import { ContactMap } from "../shared/contact-map";
 import { ContactForm } from "../shared/contact-form";
 
 export function FreeStrategyCallCta({customerDetails, assessmentId}: {customerDetails: {name: string, email: string, phone: string, livesInUk: boolean, currentVisa?: string}, assessmentId: string}) {
-  const subject = `Free Strategy Call — Let's Discuss Your UK Options (Assessment ${assessmentId})`;
+  const subject = `Free Discovery Call — Let's Discuss Your UK Options (Assessment ${assessmentId})`;
 
   const message = `Hi Skill Bridge,
   
@@ -26,7 +26,7 @@ export function FreeStrategyCallCta({customerDetails, assessmentId}: {customerDe
         <FadeIn delay={0.08}>
         <SectionTitle
               eyebrow="Next Step: Free Discovery Call"
-              title="Request a Free Strategy Call"
+              title="Request a Free Discovery Call"
               description="Let's discuss your UK options and explore the most suitable pathway for your profile."
               className="mb-8"
             />

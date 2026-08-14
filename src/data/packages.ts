@@ -21,7 +21,7 @@ export const packages: ServicePackage[] = [
       "A focused 30-minute consultation to review your profile, discuss Global Talent fit, and leave with a clear recommended next step.",
     overview:
       "The Strategy Call is a paid 30-minute 1:1. We review your background at a high level, discuss whether a Global Talent pathway is a strong fit, and recommend the right package — before you commit to a fuller engagement.",
-    priceLabel: "£100",
+    priceLabel: "£45",
     priceNote: "One-time · 30 minutes",
     slotDurationMinutes: DEFAULT_SLOT_MINUTES,
     features: [
