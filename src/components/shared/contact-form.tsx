@@ -10,27 +10,35 @@ import { Textarea } from "@/components/ui/textarea";
 import { IntakeProfileFields, RequiredMark } from "@/components/shared/intake-fields";
 import {
   currentVisaForPayload,
+  parseCurrentVisa,
   validateIntakeDetails,
 } from "@/lib/intake-details";
 import { cn } from "@/lib/utils";
 import type { ContactTalkPreference } from "@/api/useContact";
 import type { LivesInUk, UkVisaOption } from "@/types/consultation";
+import Link from "next/link";
 
 const TALK_PREFERENCES: { id: ContactTalkPreference; label: string }[] = [
   { id: "phone", label: "Phone" },
   { id: "google_meet", label: "Google Meet" },
 ];
 
-export function ContactForm() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [livesInUk, setLivesInUk] = useState<LivesInUk | "">("");
-  const [ukVisa, setUkVisa] = useState<UkVisaOption | "">("");
-  const [ukVisaOther, setUkVisaOther] = useState("");
+export function ContactForm({ defaultValues }: { defaultValues?: { name: string, email: string, phone: string, livesInUk: boolean, currentVisa?: string, subject: string, message: string } }) {
+  const [name, setName] = useState(defaultValues?.name || "");
+  const [email, setEmail] = useState(defaultValues?.email || "");
+  const [phone, setPhone] = useState(defaultValues?.phone || "");
+  const [livesInUk, setLivesInUk] = useState<LivesInUk | "">(
+    defaultValues ? (defaultValues.livesInUk ? "yes" : "no") : ""
+  );
+  const [ukVisa, setUkVisa] = useState<UkVisaOption | "">(
+    () => parseCurrentVisa(defaultValues?.currentVisa).ukVisa
+  );
+  const [ukVisaOther, setUkVisaOther] = useState(
+    () => parseCurrentVisa(defaultValues?.currentVisa).ukVisaOther
+  );
   const [prefered, setPrefered] = useState<ContactTalkPreference | "">("");
-  const [subject, setSubject] = useState("");
-  const [message, setMessage] = useState("");
+  const [subject, setSubject] = useState(defaultValues?.subject || "");
+  const [message, setMessage] = useState(defaultValues?.message || "");
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -45,7 +53,7 @@ export function ContactForm() {
 
   function onUkVisa(value: UkVisaOption) {
     setUkVisa(value);
-    if (value !== "other") setUkVisaOther("");
+    if (value !== "Others") setUkVisaOther("");
   }
 
   async function onSubmit(e: FormEvent) {
@@ -122,16 +130,23 @@ export function ContactForm() {
       >
         <p className="text-lg font-semibold tracking-tight">Message sent</p>
         <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-          Thanks for reaching out. We’ll get back to you within one business
-          day.
+          Thanks for reaching out. Our team will review your message and get back to
+          you within 5 business days.
+        </p>
+
+        <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+          Need personalised guidance sooner? Book a 1:1 strategy call and get your personalized slot to discuss
+          your assessment, explore your UK options, and get clear on your next steps
+          with our team.
         </p>
         <Button
           type="button"
-          variant="outline"
-          className="mt-6 h-10 rounded-xl"
+
+          className="mt-6 h-10 rounded-xl px-6"
           onClick={resetForm}
+          render={<Link href="/packages/strategy-call" target="_blank" rel="noopener noreferrer" />}
         >
-          Send another message
+          Book a paid strategy call
         </Button>
       </div>
     );
@@ -143,7 +158,7 @@ export function ContactForm() {
       className="space-y-5 rounded-2xl border border-border/80 bg-card p-6 shadow-soft sm:p-8"
     >
       <div className="grid gap-5 sm:grid-cols-2">
-        <div className="space-y-2">
+        {!defaultValues?.name && <div className="space-y-2">
           <Label htmlFor="contact-name">
             Name
             <RequiredMark />
@@ -160,8 +175,8 @@ export function ContactForm() {
             disabled={submitting}
             className="h-11 rounded-xl"
           />
-        </div>
-        <div className="space-y-2">
+        </div>}
+        {!defaultValues?.email && <div className="space-y-2">
           <Label htmlFor="contact-email">
             Email
             <RequiredMark />
@@ -178,10 +193,10 @@ export function ContactForm() {
             disabled={submitting}
             className="h-11 rounded-xl"
           />
-        </div>
+        </div>}
       </div>
 
-      <IntakeProfileFields
+      {!defaultValues?.phone && <IntakeProfileFields
         phone={phone}
         livesInUk={livesInUk}
         ukVisa={ukVisa}
@@ -191,36 +206,9 @@ export function ContactForm() {
         onLivesInUk={onLivesInUk}
         onUkVisa={onUkVisa}
         onUkVisaOther={setUkVisaOther}
-      />
+      />}
 
-      <fieldset className="space-y-3" disabled={submitting}>
-        <legend className="text-sm font-medium">
-          How would you prefer to talk?
-          <RequiredMark />
-        </legend>
-        <div className="flex flex-wrap gap-2">
-          {TALK_PREFERENCES.map((option) => {
-            const selected = prefered === option.id;
-            return (
-              <button
-                key={option.id}
-                type="button"
-                aria-pressed={selected}
-                disabled={submitting}
-                onClick={() => setPrefered(option.id)}
-                className={cn(
-                  "rounded-full border px-4 py-2 text-sm font-medium transition-all disabled:opacity-50",
-                  selected
-                    ? "border-primary bg-primary text-primary-foreground"
-                    : "border-border bg-background hover:border-primary/40"
-                )}
-              >
-                {option.label}
-              </button>
-            );
-          })}
-        </div>
-      </fieldset>
+
 
       <div className="space-y-2">
         <Label htmlFor="contact-subject">
@@ -257,6 +245,34 @@ export function ContactForm() {
           className="resize-y rounded-xl"
         />
       </div>
+      <fieldset className="space-y-3" disabled={submitting}>
+        <legend className="text-sm font-medium">
+          How would you prefer to talk?
+          <RequiredMark />
+        </legend>
+        <div className="flex flex-wrap gap-2">
+          {TALK_PREFERENCES.map((option) => {
+            const selected = prefered === option.id;
+            return (
+              <button
+                key={option.id}
+                type="button"
+                aria-pressed={selected}
+                disabled={submitting}
+                onClick={() => setPrefered(option.id)}
+                className={cn(
+                  "rounded-full border px-4 py-2 text-sm font-medium transition-all disabled:opacity-50",
+                  selected
+                    ? "border-primary bg-primary text-primary-foreground"
+                    : "border-border bg-background hover:border-primary/40"
+                )}
+              >
+                {option.label}
+              </button>
+            );
+          })}
+        </div>
+      </fieldset>
 
       {error ? (
         <p className="text-sm text-destructive" role="alert">

@@ -6,9 +6,9 @@ const PHONE_MIN_DIGITS = 10;
 const PHONE_MAX_DIGITS = 15;
 
 export const VISA_OPTIONS: { id: UkVisaOption; label: string }[] = [
-  { id: "psw", label: "PSW" },
-  { id: "skill-visa", label: "Skill visa" },
-  { id: "other", label: "Others" },
+  { id: "PSW", label: "PSW" },
+  { id: "Skill visa", label: "Skill visa" },
+  { id: "Others", label: "Others" },
 ];
 
 export type IntakeDetails = {
@@ -20,15 +20,35 @@ export type IntakeDetails = {
   ukVisaOther: string;
 };
 
+export function parseCurrentVisa(value: string | undefined | null): {
+  ukVisa: UkVisaOption | "";
+  ukVisaOther: string;
+} {
+  if (!value) return { ukVisa: "", ukVisaOther: "" };
+  if (value === "PSW" || value === "psw") {
+    return { ukVisa: "PSW", ukVisaOther: "" };
+  }
+  if (value === "Skill visa" || value === "skill-visa") {
+    return { ukVisa: "Skill visa", ukVisaOther: "" };
+  }
+  if (value === "Others" || value === "other") {
+    return { ukVisa: "Others", ukVisaOther: "" };
+  }
+  return { ukVisa: "Others", ukVisaOther: value };
+}
+
 export function currentVisaForPayload(details: {
   livesInUk: LivesInUk | "";
   ukVisa: UkVisaOption | "";
   ukVisaOther: string;
 }): string | undefined {
   if (details.livesInUk !== "yes") return undefined;
-  if (details.ukVisa === "psw") return "PSW";
-  if (details.ukVisa === "skill-visa") return "Skill visa";
-  if (details.ukVisa === "other") return details.ukVisaOther.trim() || undefined;
+  if (details.ukVisa === "PSW" || details.ukVisa === "Skill visa") {
+    return details.ukVisa;
+  }
+  if (details.ukVisa === "Others") {
+    return details.ukVisaOther.trim() || undefined;
+  }
   return undefined;
 }
 
@@ -64,7 +84,7 @@ export function validateIntakeDetails(details: IntakeDetails): string | null {
   }
   if (
     details.livesInUk === "yes" &&
-    details.ukVisa === "other" &&
+    details.ukVisa === "Others" &&
     !details.ukVisaOther.trim()
   ) {
     return "Please specify your visa.";

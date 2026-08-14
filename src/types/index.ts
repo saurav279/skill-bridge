@@ -80,6 +80,7 @@ export type PackageFeature = {
   included: boolean;
 };
 
+
 export type ServicePackage = {
   slug: string; //backend key
   name: string;

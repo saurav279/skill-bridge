@@ -109,7 +109,7 @@ export function IntakeProfileFields({
               );
             })}
           </div>
-          {ukVisa === "other" ? (
+          {ukVisa === "Others" ? (
             <div className="space-y-2">
               <Label htmlFor="intake-visa-other" className="sr-only">
                 Specify your visa

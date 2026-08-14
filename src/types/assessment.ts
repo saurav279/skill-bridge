@@ -28,6 +28,10 @@ export type Assessment = {
   overallRecommendation: string;
   createdAt: string;
   customerEmail: string;
+  customerName: string;
+  customerPhone: string;
+  customerLivesInUk: boolean;
+  customerCurrentVisa?: string;
 };
 
 /** Per-section answers keyed as `section_question_id` */

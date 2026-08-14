@@ -42,7 +42,7 @@ import { LatestInsightsSection } from "../sections/latest-insights";
 import { EbookCta } from "../shared/ebook-cta";
 import { TestimonialsSection } from "../sections/testimonials";
 import { FeaturedStories } from "../sections/featured-stories";
-import { StrategyCallCta } from "../sections/strategy-call";
+import { FreeStrategyCallCta } from "../sections/strategy-call";
 
 
 function priorityMeta(priority: "high" | "medium" | "easy") {
@@ -427,8 +427,7 @@ export function AssessmentResult({ id }: { id: string }) {
 
       <FadeIn>
 
-      <StrategyCallCta variant={freeCallAvailable ? "contact" : "strategy-call"} nextSteps={true} />
-
+{freeCallAvailable && <FreeStrategyCallCta customerDetails={{name: data.customerName, email: data.customerEmail, phone: data.customerPhone, livesInUk: data.customerLivesInUk, currentVisa: data.customerCurrentVisa}} assessmentId={id} />}
         
       <ConversionPackages />
 

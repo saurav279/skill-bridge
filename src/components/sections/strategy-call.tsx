@@ -1,62 +1,47 @@
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
+
 import { FadeIn } from "@/components/shared/fade-in";
 import { company } from "@/data/company";
-import { BadgeText } from "../shared/badge";
-import { getPackage } from "@/data/packages";
 
-type StrategyCallCtaProps = {
-  variant: "contact" | "strategy-call";
-  nextSteps?: boolean;
-};
+import { SectionTitle } from "../shared/section-title";
+import { ContactMap } from "../shared/contact-map";
+import { ContactForm } from "../shared/contact-form";
 
-export function StrategyCallCta({ variant, nextSteps }: StrategyCallCtaProps) {
-  const isContact = variant === "contact";
-  const pkg = getPackage("strategy-call");
-  const href = isContact ? "/contact" : "/packages/strategy-call";
-  const name = isContact ? "Free Strategy Call" : (pkg?.name ?? "Strategy Call");
-  const title = nextSteps
-    ? `Next Step: ${name}`
-    : isContact
-      ? "Get in touch with Skill Bridge"
-      : `Book a ${pkg?.name ?? "Strategy Call"}`;
-  const description = isContact
-    ? "Questions about fit, timelines, or working together? Send a message and we’ll respond within one business day."
-    : (pkg?.description ?? "");
+export function FreeStrategyCallCta({customerDetails, assessmentId}: {customerDetails: {name: string, email: string, phone: string, livesInUk: boolean, currentVisa?: string}, assessmentId: string}) {
+  const subject = `Free Strategy Call — Let's Discuss Your UK Options (Assessment ${assessmentId})`;
+
+  const message = `Hi Skill Bridge,
+  
+  I’ve completed my assessment (ID: ${assessmentId}) and would like to request for my free strategy call.
+  
+  I’d like to understand my results, explore the most suitable UK pathway for my profile, and learn what I should do next.
+  
+  Please let me know the next available time for a quick call.
+  
+  Thank you!`;
 
   return (
-    <section className="border-t border-border/70 bg-muted/30 py-16 text-foreground md:py-20">
-      <div className="container-page text-center">
-        <FadeIn>
-          <BadgeText text={name} />
-          <h2 className="mx-auto mt-3 max-w-2xl text-balance text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-            {title}
-          </h2>
-          <p className="mx-auto mt-4 max-w-xl text-muted-foreground">
-            {description}
-          </p>
-          <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <Button
-              size="lg"
-              className="h-12 rounded-full px-8 font-semibold uppercase tracking-wide"
-              render={
-                <Link
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                />
-              }
-            >
-              {isContact ? "Contact us" : `Book ${pkg?.name ?? "Strategy Call"}`}
-            </Button>
-            <a
-              href={`mailto:${company.email}`}
-              className="inline-flex h-12 items-center justify-center rounded-full border border-border px-8 text-sm font-semibold uppercase tracking-wide text-foreground transition-colors hover:bg-muted"
-            >
-              Email {company.name}
-            </a>
-          </div>
+    <section className="border-t border-border/70 bg-muted/20 pb-20 pt-12 md:pb-28 md:pt-16">
+      <div className="container-page">
+
+        <FadeIn delay={0.08}>
+        <SectionTitle
+              eyebrow="Next Step: Free Discovery Call"
+              title="Request a Free Strategy Call"
+              description="Let's discuss your UK options and explore the most suitable pathway for your profile."
+              className="mb-8"
+            />
+          <ContactForm defaultValues={{
+            name: customerDetails.name,
+            email: customerDetails.email,
+            phone: customerDetails.phone,
+            livesInUk: customerDetails.livesInUk,
+            currentVisa: customerDetails.currentVisa ?? "",
+            message: message,
+            subject: subject,
+          }} />
+
         </FadeIn>
+
       </div>
     </section>
   );

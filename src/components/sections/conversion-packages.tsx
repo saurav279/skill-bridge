@@ -19,10 +19,8 @@ export function ConversionPackages({
   limit,
   data
 }: ConversionPackagesProps) {
-
-
-
-
+  const skipPackageSlugs = ["strategy-call"];
+  const filteredPackages = packages.filter((pkg) => !skipPackageSlugs.includes(pkg.slug));
 
 
   return (
@@ -42,7 +40,7 @@ export function ConversionPackages({
 
         <StaggerChildren className="mt-12 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
         
-          {packages.map((pkg) => (
+          {filteredPackages.map((pkg) => (
             <StaggerItem key={pkg.slug}>
               <PackageCard pkg={pkg} />
             </StaggerItem>

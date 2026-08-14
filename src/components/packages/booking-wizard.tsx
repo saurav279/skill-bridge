@@ -18,6 +18,7 @@ import { cn } from "@/lib/utils";
 import { IntakeProfileFields, RequiredMark } from "@/components/shared/intake-fields";
 import {
   currentVisaForPayload,
+  parseCurrentVisa,
   validateIntakeDetails,
 } from "@/lib/intake-details";
 import type { ServicePackage } from "@/types";
@@ -77,9 +78,7 @@ function asLivesInUk(value: unknown): LivesInUk | "" {
 }
 
 function asUkVisa(value: unknown): UkVisaOption | "" {
-  return value === "psw" || value === "skill-visa" || value === "other"
-    ? value
-    : "";
+  return parseCurrentVisa(typeof value === "string" ? value : "").ukVisa;
 }
 
 function visaSummary(draft: BookingDetails): string {
@@ -243,7 +242,7 @@ export function BookingWizard({ pkg }: BookingWizardProps) {
     setDraft((prev) => ({
       ...prev,
       ukVisa: value,
-      ukVisaOther: value === "other" ? prev.ukVisaOther : "",
+      ukVisaOther: value === "Others" ? prev.ukVisaOther : "",
     }));
   }
 
@@ -273,7 +272,7 @@ export function BookingWizard({ pkg }: BookingWizardProps) {
       packageName: pkg.slug as PackageNameTypes,
       startTime: draft.slot.startTime,
       endTime: draft.slot.endTime,
-      successUrl: `${origin}/packages/success`,
+      successUrl: `${origin}/packages/success?package=${pkg.slug}`,
       cancelUrl: `${origin}/packages/cancel?package=${pkg.slug}`,
     });
 
