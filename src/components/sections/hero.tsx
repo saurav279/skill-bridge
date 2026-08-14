@@ -24,9 +24,9 @@ export function Hero() {
               <Button
                 size="lg"
                 className="h-11 rounded-xl px-6"
-                render={<Link href="/consultation" target="_blank" rel="noopener noreferrer"/>}
+                render={<Link href="/contact" target="_blank" rel="noopener noreferrer"/>}
               >
-                Book Free Consultation
+                Contact Us
               </Button>
               <Button
                 size="lg"

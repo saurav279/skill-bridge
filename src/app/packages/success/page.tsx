@@ -2,15 +2,15 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ClearBookingDraft } from "@/components/consultation/clear-booking-draft";
+import { ClearBookingDraft } from "@/components/packages/clear-booking-draft";
 
 export const metadata: Metadata = {
-  title: "Consultation booked",
+  title: "Package booked",
   description:
-    "Your consultation was booked. A calendar invite will follow shortly.",
+    "Your package was booked. A calendar invite will follow shortly.",
 };
 
-export default function BookingSuccessPage() {
+export default function PackageBookingSuccessPage() {
   return (
     <section className="py-16 md:py-24">
       <ClearBookingDraft />
@@ -23,10 +23,10 @@ export default function BookingSuccessPage() {
             <Check className="size-5" />
           </div>
           <h1 className="mt-5 text-2xl font-bold tracking-tight sm:text-3xl">
-            Consultation booked
+            You’re booked
           </h1>
           <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-muted-foreground sm:text-base">
-            Thank you. Your consultation is being confirmed — you’ll receive a
+            Thank you. Your kickoff call is being confirmed — you’ll receive a
             calendar invite shortly. No need to book the slot again from this
             page.
           </p>

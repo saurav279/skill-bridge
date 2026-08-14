@@ -1,4 +1,4 @@
-import type { ConsultationPackageTypes } from "@/types/packages";
+import type { PackageNameTypes } from "@/types/packages";
 
 export type CalendarSlot = {
   label: string;
@@ -12,38 +12,33 @@ export type AvailableSlotsResponse = {
   slots: CalendarSlot[];
 };
 
-export type CreateConsultationCheckoutPayload = {
+export type LivesInUk = "yes" | "no";
+export type UkVisaOption = "psw" | "skill-visa" | "other";
+
+export type CreatePackageCheckoutPayload = {
   name: string;
   email: string;
+  phone: string;
+  livesInUk: boolean;
+  currentVisa?: string;
   description: string;
-  packageName: ConsultationPackageTypes;
+  packageName: PackageNameTypes;
   startTime: string;
   endTime: string;
   successUrl: string;
   cancelUrl: string;
 };
 
-export type CreateConsultationCheckoutResponse = {
+export type CreatePackageCheckoutResponse = {
   url: string;
 };
 
 export type BookingDetails = {
   name: string;
   email: string;
+  phone: string;
+  livesInUk: LivesInUk | "";
+  ukVisa: UkVisaOption | "";
+  ukVisaOther: string;
   description: string;
-};
-
-
-export type CreateFreeConsultationCheckoutResponse= {
-  consultationId: string;
-  htmlLink:string
-};
-
-export type CreateFreeConsultationCheckoutPayload = {
-  name: string;
-  email: string;
-  description: string;
-  packageName: ConsultationPackageTypes;
-  startTime: string;
-  endTime: string;
 };

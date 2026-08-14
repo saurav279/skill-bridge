@@ -3,23 +3,37 @@ import { Button } from "@/components/ui/button";
 import { FadeIn } from "@/components/shared/fade-in";
 import { company } from "@/data/company";
 import { BadgeText } from "../shared/badge";
-import { ConsultationPackageTypes } from "@/types/packages";
-import { getConsultationPackage } from "@/data/consultation-packages";
+import { getPackage } from "@/data/packages";
 
+type StrategyCallCtaProps = {
+  variant: "contact" | "strategy-call";
+  nextSteps?: boolean;
+};
 
-export function StrategyCallCta({consultationPackage, nextSteps}:{consultationPackage:ConsultationPackageTypes, nextSteps?:boolean}) {
-    const pkg = getConsultationPackage(consultationPackage);
-    const href = consultationPackage === "free-strategy-call" ? "/consultations/free-strategy-call" : "/consultations/paid-strategy-call";
+export function StrategyCallCta({ variant, nextSteps }: StrategyCallCtaProps) {
+  const isContact = variant === "contact";
+  const pkg = getPackage("strategy-call");
+  const href = isContact ? "/contact" : "/packages/strategy-call";
+  const name = isContact ? "Free Strategy Call" : (pkg?.name ?? "Strategy Call");
+  const title = nextSteps
+    ? `Next Step: ${name}`
+    : isContact
+      ? "Get in touch with Skill Bridge"
+      : `Book a ${pkg?.name ?? "Strategy Call"}`;
+  const description = isContact
+    ? "Questions about fit, timelines, or working together? Send a message and we’ll respond within one business day."
+    : (pkg?.description ?? "");
+
   return (
     <section className="border-t border-border/70 bg-muted/30 py-16 text-foreground md:py-20">
       <div className="container-page text-center">
         <FadeIn>
-        <BadgeText text={pkg?.name ?? ""} />
+          <BadgeText text={name} />
           <h2 className="mx-auto mt-3 max-w-2xl text-balance text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-            {nextSteps ? ` Next Step: ${pkg?.name}` : pkg?.heading}
+            {title}
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-muted-foreground">
-           {pkg?.description}
+            {description}
           </p>
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Button
@@ -33,7 +47,7 @@ export function StrategyCallCta({consultationPackage, nextSteps}:{consultationPa
                 />
               }
             >
-              Book {pkg?.name}
+              {isContact ? "Contact us" : `Book ${pkg?.name ?? "Strategy Call"}`}
             </Button>
             <a
               href={`mailto:${company.email}`}

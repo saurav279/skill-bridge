@@ -94,6 +94,8 @@ export type ServicePackage = {
   idealFor: string;
   ctaLabel: string;
   ctaHref?: string;
+  /** Slot length in minutes when booking a kickoff call. */
+  slotDurationMinutes: number;
   /** YouTube (or other) embed URL for the reference video */
   videoEmbedUrl?: string;
   videoTitle?: string;

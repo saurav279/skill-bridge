@@ -80,7 +80,7 @@ function discoveryCallUrl() {
   const base = (
      company.website
   ).replace(/\/$/, "");
-  return `${base}/consultations/paid-strategy-call`;
+  return `${base}/packages/strategy-call`;
 }
 
 function addLink(

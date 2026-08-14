@@ -89,14 +89,12 @@ export default function ContactPage() {
                 </li>
               </ul>
               <p className="mt-8 text-sm text-muted-foreground">
-                Want to book a 1:1 consultation?{" "}
+                Want to book a 1:1 strategy call?{" "}
                 <Link
-                  href="/consultations/paid-strategy-call"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href="/packages/strategy-call"
                   className="font-medium text-primary underline-offset-4 hover:underline"
                 >
-                  Book a paid consultation
+                  Book a Strategy Call
                 </Link>
                 .
               </p>

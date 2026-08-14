@@ -235,9 +235,9 @@ export function AssessmentResult({ id }: { id: string }) {
             <Button
           className="h-9 rounded-full px-4"
             >
-              <Link href={freeCallAvailable ? "/consultations/free-strategy-call" : "/consultations/paid-strategy-call"} target="_blank" rel="noopener noreferrer" className="flex flex-col items-start">
+              <Link href={freeCallAvailable ? "/contact" : "/packages/strategy-call"} target="_blank" rel="noopener noreferrer" className="flex flex-col items-start">
                 <span className="flex items-center font-semibold">
-                  Book a {freeCallAvailable ? "free" : "paid"} call
+                  {freeCallAvailable ? "Contact us" : "Book a Strategy Call"}
                   <ArrowRight className="ml-1 inline-block size-5 align-text-bottom" />
                 </span>
                
@@ -254,7 +254,7 @@ export function AssessmentResult({ id }: { id: string }) {
                   <Info className="size-3.5" />
                 </TooltipTrigger>
                 <TooltipContent>
-                  This strategy call is free and available for a limited time only.
+                  This complimentary window is limited — reach out and we’ll take it from there.
                 </TooltipContent>
               </Tooltip>
             </span>
@@ -427,7 +427,7 @@ export function AssessmentResult({ id }: { id: string }) {
 
       <FadeIn>
 
-      <StrategyCallCta consultationPackage={freeCallAvailable ? "free-strategy-call" : "paid-strategy-call"}  nextSteps={true}/>
+      <StrategyCallCta variant={freeCallAvailable ? "contact" : "strategy-call"} nextSteps={true} />
 
         
       <ConversionPackages />

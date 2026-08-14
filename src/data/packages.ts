@@ -10,7 +10,51 @@ const excluded = (label: string): PackageFeature => ({ label, included: false })
  * Package ladder aligned with michellehua.co.uk structure,
  * rebranded for Skill Bridge.
  */
+const DEFAULT_SLOT_MINUTES = 30;
+
 export const packages: ServicePackage[] = [
+  {
+    slug: "strategy-call",
+    name: "Strategy Call",
+    tagline: "Start here",
+    description:
+      "A focused 30-minute consultation to review your profile, discuss Global Talent fit, and leave with a clear recommended next step.",
+    overview:
+      "The Strategy Call is a paid 30-minute 1:1. We review your background at a high level, discuss whether a Global Talent pathway is a strong fit, and recommend the right package — before you commit to a fuller engagement.",
+    priceLabel: "£100",
+    priceNote: "One-time · 30 minutes",
+    slotDurationMinutes: DEFAULT_SLOT_MINUTES,
+    features: [
+      included("30-minute 1:1 consultation"),
+      included("High-level profile review"),
+      included("Pathway fit discussion"),
+      included("Recommended next package"),
+      included("Calendar invite after payment"),
+      excluded("Written strategy memo"),
+      excluded("Full Review"),
+      excluded("Weekly Support"),
+    ],
+    idealFor:
+      "Anyone who wants an honest read on fit and next steps before investing in a course, review, or coaching package.",
+    ctaLabel: "Book Strategy Call",
+    ctaHref: "/packages/strategy-call",
+    videoEmbedUrl: DEFAULT_VIDEO,
+    videoTitle: "Strategy Call overview",
+    steps: [
+      {
+        title: "Share your details",
+        detail: "Tell us your name, email, and a short note on what you’d like to cover.",
+      },
+      {
+        title: "Pick a UK time slot",
+        detail: "Choose a 30-minute slot. Times are shown in Europe/London.",
+      },
+      {
+        title: "Pay and join",
+        detail: "Pay securely with Stripe. Your calendar invite follows once payment is confirmed.",
+      },
+    ],
+  },
   {
     slug: "leadership-enhancement",
     name: "Leadership Enhancement",
@@ -32,8 +76,9 @@ export const packages: ServicePackage[] = [
     ],
     idealFor:
       "Early-stage applicants who need to strengthen how they present leadership and public profile before a full strategy engagement.",
+    slotDurationMinutes: DEFAULT_SLOT_MINUTES,
     ctaLabel: "Explore Course",
-    ctaHref: "/packages/leadership-in-tech-course",
+    ctaHref: "/packages/leadership-enhancement",
     videoEmbedUrl: DEFAULT_VIDEO,
     videoTitle: "Leadership Enhancement overview",
     steps: [
@@ -67,6 +112,7 @@ export const packages: ServicePackage[] = [
     ],
     idealFor:
       "Self-starters who want professional templates and structure without full 1:1 coaching.",
+    slotDurationMinutes: DEFAULT_SLOT_MINUTES,
     ctaLabel: "Explore DIY Membership",
     ctaHref: "/packages/diy-membership",
     videoEmbedUrl: DEFAULT_VIDEO,
@@ -103,6 +149,7 @@ export const packages: ServicePackage[] = [
     ],
     idealFor:
       "Professionals who want a clear, evidence-driven personalized plan before investing in a full review.",
+    slotDurationMinutes: DEFAULT_SLOT_MINUTES,
     ctaLabel: "Explore Strategy Session",
     ctaHref: "/packages/strategy-session",
     videoEmbedUrl: DEFAULT_VIDEO,
@@ -136,6 +183,7 @@ export const packages: ServicePackage[] = [
     ],
     idealFor:
       "Applicants who have drafted materials and need an expert review before submission.",
+    slotDurationMinutes: DEFAULT_SLOT_MINUTES,
     ctaLabel: "Explore Review Only",
     ctaHref: "/packages/review-only",
     videoEmbedUrl: DEFAULT_VIDEO,
@@ -172,6 +220,7 @@ export const packages: ServicePackage[] = [
     ],
     idealFor:
       "Serious applicants who want structured strategy plus thorough review with full weekly coaching.",
+    slotDurationMinutes: DEFAULT_SLOT_MINUTES,
     ctaLabel: "Explore Full Review",
     ctaHref: "/packages/full-review",
     videoEmbedUrl: DEFAULT_VIDEO,
@@ -206,6 +255,7 @@ export const packages: ServicePackage[] = [
     ],
     idealFor:
       "Founders and senior talent who want maximum 1:1 support and a tightly managed path to endorsement.",
+    slotDurationMinutes: DEFAULT_SLOT_MINUTES,
     ctaLabel: "Explore Bespoke Coaching",
     ctaHref: "/packages/bespoke-coaching",
     videoEmbedUrl: DEFAULT_VIDEO,

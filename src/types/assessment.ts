@@ -35,7 +35,8 @@ export type AssessSectionAnswers = Record<string, unknown>;
 
 export type AssessPayload = {
   routeId: string;
-  [sectionId: string]: string | AssessSectionAnswers;
+  resumeLink?: string;
+  [sectionId: string]: string | AssessSectionAnswers | undefined;
 };
 
 /** Subset commonly used after create */

@@ -33,18 +33,16 @@ export default function AssessmentPage() {
               </li>
               <li className="flex gap-2">
                 <span className="font-semibold text-primary">03</span>
-                Get a readiness score and book a call
+                Get a readiness score and next steps
               </li>
             </ul>
             <p className="mt-8 text-sm text-muted-foreground">
               Prefer to speak now?{" "}
               <Link
-                href="/consultation"
-                target="_blank"
-                rel="noopener noreferrer"
+                href="/contact"
                 className="font-medium text-primary underline-offset-4 hover:underline"
               >
-                Open the calendar
+                Contact us
               </Link>
               .
             </p>

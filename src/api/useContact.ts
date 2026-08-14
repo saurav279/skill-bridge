@@ -1,9 +1,14 @@
 import { api, type ApiResponse } from "@/services/fetchApi";
 
+export type ContactTalkPreference = "phone" | "google_meet";
+
 export type ContactUsPayload = {
   name: string;
   email: string;
-  // company?: string;
+  phone: string;
+  livesInUk: boolean;
+  currentVisa?: string;
+  prefered: ContactTalkPreference;
   subject: string;
   message: string;
 };

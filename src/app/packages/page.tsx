@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 export const metadata: Metadata = {
   title: "Packages",
   description:
-    "Leadership Enhancement, DIY Membership, Strategy Session, Review Only, Full Review, and Bespoke 1-to-1 Support — Skill Bridge UK Global Talent Visa packages.",
+    "Strategy Call, Leadership Enhancement, DIY Membership, Strategy Session, Review Only, Full Review, and Bespoke 1-to-1 Support — Skill Bridge UK Global Talent Visa packages.",
 };
 
 export default function PackagesPage() {
@@ -21,8 +21,8 @@ export default function PackagesPage() {
             <SectionTitle
               as="h1"
               eyebrow="Packages"
-              title="Six ways to work with Skill Bridge"
-              description="From a leadership course and DIY templates to strategy, review, and bespoke 1-to-1 coaching — choose the support that matches your Stage 1 journey."
+              title="Ways to work with Skill Bridge"
+              description="From a focused strategy call and leadership course to DIY templates, review, and bespoke 1-to-1 coaching — choose the support that matches your Stage 1 journey."
             />
             <Button
               className="mt-8 h-11 rounded-full px-6 font-semibold uppercase tracking-wide"

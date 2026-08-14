@@ -33,7 +33,7 @@ export function ConversionPackages({
             <SectionTitle
               eyebrow="Packages"
               title={data?.section_title || "Choose your package"}
-              description={data?.section_description || "From self-paced learning to bespoke 1-to-1 coaching — pick the support level that matches where you are in the Stage 1 endorsement journey."}
+              description={data?.section_description || "From a focused strategy call to bespoke 1-to-1 coaching — pick the support level that matches where you are in the Stage 1 endorsement journey."}
               align="center"
               className="mx-auto"
             />

@@ -3,7 +3,9 @@
  * Frontend is fully data-driven — edit this file to add routes/questions.
  */
 
-export type QuestionType = "checkbox" | "radio" | "chips" | "file" | "text";
+import { isCompletePhoneNumber } from "@/lib/intake-details";
+
+export type QuestionType = "checkbox" | "radio" | "chips" | "file" | "text" | "phone";
 
 export type ShowIf = Record<string, string | string[]>;
 
@@ -482,7 +484,31 @@ export const AssessmentSections: Record<string, AssessmentSection> = {
         id: "email",
         type: "text",
         title: "Your email",
-        tooltip: "We will use this to invite you to a free discovery call.",
+        tooltip: "We will use this to send your assessment results.",
+      },
+      {
+        id: "phone",
+        type: "phone",
+        title: "Phone",
+      },
+      {
+        id: "livesInUk",
+        type: "radio",
+        title: "Do you live in the UK?",
+        options: ["Yes", "No"],
+      },
+      {
+        id: "ukVisa",
+        type: "radio",
+        title: "Which visa are you on?",
+        options: ["PSW", "Skill visa", "Others"],
+        showIf: { livesInUk: "Yes" },
+      },
+      {
+        id: "ukVisaOther",
+        type: "text",
+        title: "Please specify your visa",
+        showIf: { ukVisa: "Others" },
       },
       {
         id: "resume",
@@ -539,6 +565,9 @@ export function isQuestionAnswered(
       if (!text) return false;
       if (question.id.includes("email")) return EMAIL_RE.test(text);
       return true;
+    }
+    case "phone": {
+      return typeof value === "string" && isCompletePhoneNumber(value);
     }
     case "radio":
     case "chips": {

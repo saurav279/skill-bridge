@@ -3,7 +3,7 @@ import { Check, X } from "lucide-react";
 import type { ServicePackage } from "@/types";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { PackageNameTypes  } from "@/types/packages";
+import { PackageNameTypes } from "@/types/packages";
 import { PurchaseButton } from "./purchase-btn";
 import { BadgeText } from "./badge";
 
@@ -89,17 +89,17 @@ export function PackageCard({ pkg, className }: PackageCardProps) {
         <span className="font-medium text-foreground">Ideal for: </span>
         {pkg.idealFor}
       </p>}
-      <div className="flex flex-col gap-2 mt-4">
- { pkg.ctaHref &&      <Button
-          className="mt-6 h-11 w-full rounded-xl"
-          variant="outline"
-          render={<Link href={pkg.ctaHref} target="_blank" rel="noopener noreferrer" />}
-        >
-          {pkg.ctaLabel}
-        </Button>}
-        <PurchaseButton
-          packageName={pkg.slug as PackageNameTypes}
-        />
+      <div className="mt-6 flex flex-col gap-2">
+        {pkg.ctaHref ? (
+          <Button
+            className="h-11 w-full rounded-xl"
+            render={<Link href={pkg.ctaHref} />}
+          >
+            {pkg.ctaLabel}
+          </Button>
+        ) : (
+          <PurchaseButton packageName={pkg.slug as PackageNameTypes} />
+        )}
       </div>
     </article>
   );

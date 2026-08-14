@@ -27,7 +27,7 @@ const resourceLinks = [
   { href: "/assessment", label: "Assessment Questionnaire" },
   { href: "/resources", label: "Insights & Guides" },
   // { href: "/resources#newsletters", label: "Newsletters" },
-  { href: "/consultation", label: "Book Consultation" },
+  { href: "/packages/strategy-call", label: "Book Strategy Call" },
   { href: "/contact", label: "Contact Us" },
 ];
 

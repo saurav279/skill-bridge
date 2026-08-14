@@ -1,10 +1,8 @@
 import { api, type ApiResponse } from "@/services/fetchApi";
 import type {
   AvailableSlotsResponse,
-  CreateConsultationCheckoutPayload,
-  CreateConsultationCheckoutResponse,
-  CreateFreeConsultationCheckoutPayload,
-  CreateFreeConsultationCheckoutResponse,
+  CreatePackageCheckoutPayload,
+  CreatePackageCheckoutResponse,
 } from "@/types/consultation";
 
 export async function getAvailableSlots(params: {
@@ -19,22 +17,11 @@ export async function getAvailableSlots(params: {
   });
 }
 
-export async function createConsultationCheckout(
-  payload: CreateConsultationCheckoutPayload
-): Promise<ApiResponse<CreateConsultationCheckoutResponse>> {
+export async function createPackageCheckout(
+  payload: CreatePackageCheckoutPayload
+): Promise<ApiResponse<CreatePackageCheckoutResponse>> {
   return api.post<
-    CreateConsultationCheckoutResponse,
-    CreateConsultationCheckoutPayload
+    CreatePackageCheckoutResponse,
+    CreatePackageCheckoutPayload
   >("services/calendar/stripe", payload);
-}
-
-
-
-export async function createFreeConsultationCheckout(
-  payload: CreateFreeConsultationCheckoutPayload
-): Promise<ApiResponse<CreateFreeConsultationCheckoutResponse>> {
-  return api.post<
-    CreateFreeConsultationCheckoutResponse,
-    CreateFreeConsultationCheckoutPayload
-  >("services/calendar/free", payload);
 }

@@ -2,11 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react";
 import { ArrowLeft, ArrowRight, CalendarDays, Check, Loader2 } from "lucide-react";
-import {
-  createConsultationCheckout,
-  createFreeConsultationCheckout,
-  getAvailableSlots,
-} from "@/api/useCalendar";
+import { createPackageCheckout, getAvailableSlots } from "@/api/useCalendar";
 import { BadgeText } from "@/components/shared/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,22 +15,26 @@ import {
 } from "@/lib/uk-date";
 import { toast } from "@/lib/toast";
 import { cn } from "@/lib/utils";
-import type { ConsultationPackage } from "@/data/consultation-packages";
-import type { BookingDetails, CalendarSlot } from "@/types/consultation";
-import { useRouter } from "next/navigation";
+import { IntakeProfileFields, RequiredMark } from "@/components/shared/intake-fields";
+import {
+  currentVisaForPayload,
+  validateIntakeDetails,
+} from "@/lib/intake-details";
+import type { ServicePackage } from "@/types";
+import type { PackageNameTypes } from "@/types/packages";
+import type { BookingDetails, CalendarSlot, LivesInUk, UkVisaOption } from "@/types/consultation";
 
 const STEPS = ["Details", "Time", "Pay"] as const;
 const DESCRIPTION_MAX = 500;
 const DATE_WINDOW_DAYS = 60;
 /** First bookable UK calendar day is tomorrow, not today. */
 const FIRST_BOOKABLE_OFFSET_DAYS = 1;
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const SLOT_TAKEN = "already booked";
 
 type StepIndex = 0 | 1 | 2;
 
 type BookingWizardProps = {
-  pkg: ConsultationPackage;
+  pkg: ServicePackage;
 };
 
 type Draft = BookingDetails & {
@@ -47,7 +47,44 @@ function storageKey(packageId: string) {
 }
 
 function emptyDraft(date: string): Draft {
-  return { name: "", email: "", description: "", date, slot: null };
+  return {
+    name: "",
+    email: "",
+    phone: "",
+    livesInUk: "",
+    ukVisa: "",
+    ukVisaOther: "",
+    description: "",
+    date,
+    slot: null,
+  };
+}
+
+function readStoredPhone(parsed: Partial<Draft> & { phoneCountryCode?: string }) {
+  if (typeof parsed.phone === "string" && parsed.phone.startsWith("+")) {
+    return parsed.phone;
+  }
+  const national =
+    typeof parsed.phone === "string" ? parsed.phone.replace(/\D/g, "") : "";
+  const code =
+    typeof parsed.phoneCountryCode === "string" ? parsed.phoneCountryCode : "";
+  if (code && national) return `${code}${national}`;
+  return "";
+}
+
+function asLivesInUk(value: unknown): LivesInUk | "" {
+  return value === "yes" || value === "no" ? value : "";
+}
+
+function asUkVisa(value: unknown): UkVisaOption | "" {
+  return value === "psw" || value === "skill-visa" || value === "other"
+    ? value
+    : "";
+}
+
+function visaSummary(draft: BookingDetails): string {
+  if (draft.livesInUk !== "yes") return "—";
+  return currentVisaForPayload(draft) ?? "—";
 }
 
 function readDraft(
@@ -71,6 +108,11 @@ function readDraft(
     return {
       name: typeof parsed.name === "string" ? parsed.name : "",
       email: typeof parsed.email === "string" ? parsed.email : "",
+      phone: readStoredPhone(parsed),
+      livesInUk: asLivesInUk(parsed.livesInUk),
+      ukVisa: asUkVisa(parsed.ukVisa),
+      ukVisaOther:
+        typeof parsed.ukVisaOther === "string" ? parsed.ukVisaOther : "",
       description:
         typeof parsed.description === "string" ? parsed.description : "",
       date,
@@ -101,17 +143,16 @@ export function BookingWizard({ pkg }: BookingWizardProps) {
   const [paying, setPaying] = useState(false);
   const [payError, setPayError] = useState<string | null>(null);
   const [detailsError, setDetailsError] = useState<string | null>(null);
-  const router = useRouter();
 
   useEffect(() => {
-    setDraft(readDraft(pkg.id, minDate, maxDate));
+    setDraft(readDraft(pkg.slug, minDate, maxDate));
     setHydrated(true);
-  }, [pkg.id, minDate, maxDate]);
+  }, [pkg.slug, minDate, maxDate]);
 
   useEffect(() => {
     if (!hydrated) return;
-    sessionStorage.setItem(storageKey(pkg.id), JSON.stringify(draft));
-  }, [draft, hydrated, pkg.id]);
+    sessionStorage.setItem(storageKey(pkg.slug), JSON.stringify(draft));
+  }, [draft, hydrated, pkg.slug]);
 
   const loadSlots = useCallback(
     async (date: string, options?: { clearSlot?: boolean }) => {
@@ -146,8 +187,6 @@ export function BookingWizard({ pkg }: BookingWizardProps) {
     [pkg.slotDurationMinutes]
   );
 
-  const isFreeConsultation = pkg.cost === 0;
-
   useEffect(() => {
     if (!hydrated || step !== 1) return;
     void loadSlots(draft.date);
@@ -158,18 +197,12 @@ export function BookingWizard({ pkg }: BookingWizardProps) {
   }
 
   function validateDetails(): boolean {
-    const name = draft.name.trim();
-    const email = draft.email.trim();
+    const intakeError = validateIntakeDetails(draft);
+    if (intakeError) {
+      setDetailsError(intakeError);
+      return false;
+    }
     const description = draft.description.trim();
-
-    if (!name) {
-      setDetailsError("Please enter your name.");
-      return false;
-    }
-    if (!EMAIL_PATTERN.test(email)) {
-      setDetailsError("Please enter a valid email address.");
-      return false;
-    }
     if (!description) {
       setDetailsError("Please add a short note about what you’d like to cover.");
       return false;
@@ -190,9 +223,28 @@ export function BookingWizard({ pkg }: BookingWizardProps) {
       ...prev,
       name: prev.name.trim(),
       email: prev.email.trim(),
+      phone: prev.phone,
+      ukVisaOther: prev.ukVisaOther.trim(),
       description: prev.description.trim(),
     }));
     setStep(1);
+  }
+
+  function onLivesInUk(value: LivesInUk) {
+    setDraft((prev) => ({
+      ...prev,
+      livesInUk: value,
+      ukVisa: value === "yes" ? prev.ukVisa : "",
+      ukVisaOther: value === "yes" ? prev.ukVisaOther : "",
+    }));
+  }
+
+  function onUkVisa(value: UkVisaOption) {
+    setDraft((prev) => ({
+      ...prev,
+      ukVisa: value,
+      ukVisaOther: value === "other" ? prev.ukVisaOther : "",
+    }));
   }
 
   function onDateChange(next: string) {
@@ -210,58 +262,39 @@ export function BookingWizard({ pkg }: BookingWizardProps) {
     setPaying(true);
     setPayError(null);
 
-    //free consultation
-    if (isFreeConsultation) {
-      const { success, data, error } = await createFreeConsultationCheckout({
-        name: draft.name.trim(),
-        email: draft.email.trim(),
-        description: draft.description.trim(),
-        packageName: pkg.id,
-        startTime: draft.slot.startTime,
-        endTime: draft.slot.endTime,
-      });
-      if (!success || !data?.consultationId) {
-        setPayError(error ?? "Checkout failed. Please try again.");
-        setPaying(false);
-        return;
+    const origin = window.location.origin;
+    const { success, data, error } = await createPackageCheckout({
+      name: draft.name.trim(),
+      email: draft.email.trim(),
+      phone: draft.phone,
+      livesInUk: draft.livesInUk === "yes",
+      currentVisa: currentVisaForPayload(draft),
+      description: draft.description.trim(),
+      packageName: pkg.slug as PackageNameTypes,
+      startTime: draft.slot.startTime,
+      endTime: draft.slot.endTime,
+      successUrl: `${origin}/packages/success`,
+      cancelUrl: `${origin}/packages/cancel?package=${pkg.slug}`,
+    });
+
+    if (!success || !data?.url) {
+      const message = error ?? "Checkout failed. Please try again.";
+      setPaying(false);
+      setPayError(message);
+
+      if (message.toLowerCase().includes(SLOT_TAKEN)) {
+        toast.error(
+          "That time is no longer available",
+          "Please pick another slot."
+        );
+        setDraft((prev) => ({ ...prev, slot: null }));
+        setStep(1);
+        await loadSlots(draft.date, { clearSlot: true });
       }
-      toast.success("Consultation booked successfully. Please check your email for the calendar invite.");
-      router.push("/consultations/success");
-    } else {
-
-      //paid consultation
-      const origin = window.location.origin;
-      const { success, data, error } = await createConsultationCheckout({
-        name: draft.name.trim(),
-        email: draft.email.trim(),
-        description: draft.description.trim(),
-        packageName: pkg.id,
-        startTime: draft.slot.startTime,
-        endTime: draft.slot.endTime,
-        successUrl: `${origin}/consultations/success`,
-        cancelUrl: `${origin}/consultations/cancel?package=${pkg.id}`,
-      }
-      );
-
-      if (!success || !data?.url) {
-        const message = error ?? "Checkout failed. Please try again.";
-        setPaying(false);
-        setPayError(message);
-
-        if (message.toLowerCase().includes(SLOT_TAKEN)) {
-          toast.error(
-            "That time is no longer available",
-            "Please pick another slot."
-          );
-          setDraft((prev) => ({ ...prev, slot: null }));
-          setStep(1);
-          await loadSlots(draft.date, { clearSlot: true });
-        }
-        return;
-      }
-
-      window.location.href = data.url;
+      return;
     }
+
+    window.location.href = data.url;
   }
 
   const progress = ((step + 1) / STEPS.length) * 100;
@@ -313,7 +346,10 @@ export function BookingWizard({ pkg }: BookingWizardProps) {
 
             <div className="grid gap-5 sm:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="booking-name">Name</Label>
+                <Label htmlFor="booking-name">
+                  Name
+                  <RequiredMark />
+                </Label>
                 <Input
                   id="booking-name"
                   name="name"
@@ -327,7 +363,10 @@ export function BookingWizard({ pkg }: BookingWizardProps) {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="booking-email">Email</Label>
+                <Label htmlFor="booking-email">
+                  Email
+                  <RequiredMark />
+                </Label>
                 <Input
                   id="booking-email"
                   name="email"
@@ -341,6 +380,17 @@ export function BookingWizard({ pkg }: BookingWizardProps) {
                 />
               </div>
             </div>
+
+            <IntakeProfileFields
+              phone={draft.phone}
+              livesInUk={draft.livesInUk}
+              ukVisa={draft.ukVisa}
+              ukVisaOther={draft.ukVisaOther}
+              onPhone={(value) => updateDraft("phone", value)}
+              onLivesInUk={onLivesInUk}
+              onUkVisa={onUkVisa}
+              onUkVisaOther={(value) => updateDraft("ukVisaOther", value)}
+            />
 
             <div className="space-y-2">
               <div className="flex items-center justify-between gap-3">
@@ -536,6 +586,14 @@ export function BookingWizard({ pkg }: BookingWizardProps) {
               <SummaryRow label="Package" value={pkg.name} />
               <SummaryRow label="Name" value={draft.name} />
               <SummaryRow label="Email" value={draft.email} />
+              <SummaryRow label="Phone" value={draft.phone} />
+              <SummaryRow
+                label="Lives in UK"
+                value={draft.livesInUk === "yes" ? "Yes" : "No"}
+              />
+              {draft.livesInUk === "yes" ? (
+                <SummaryRow label="Current visa" value={visaSummary(draft)} />
+              ) : null}
               <SummaryRow
                 label="Date"
                 value={formatUkCalendarDate(draft.date)}
@@ -545,7 +603,7 @@ export function BookingWizard({ pkg }: BookingWizardProps) {
                 value={draft.slot?.label ?? "—"}
               />
               <SummaryRow label="Note" value={draft.description} />
-              {isFreeConsultation ? <SummaryRow label="Cost" value="Free" /> : <SummaryRow label="Cost" value={`£${pkg.cost}`} />}
+              <SummaryRow label="Cost" value={pkg.priceLabel ?? "—"} />
             </dl>
 
             {payError ? (
@@ -565,28 +623,7 @@ export function BookingWizard({ pkg }: BookingWizardProps) {
                 <ArrowLeft className="size-4" />
                 Back
               </Button>
-
-              {isFreeConsultation ? (
-                <Button
-                  type="button"
-                  className="h-11 rounded-xl px-8"
-                  disabled={paying || !draft.slot}
-                  onClick={() => void onPay()}
-                >
-                {paying ? (
-                  <>
-                    <Loader2 className="size-4 animate-spin" />
-                    Processing…
-                  </>
-                ) : (
-                  <>
-                    <Check className="size-4" />
-                    Book Free Consultation
-                  </>
-                )}
-                </Button>
-              ) : (
-                <Button
+              <Button
                 type="button"
                 className="h-11 rounded-xl px-8"
                 disabled={paying || !draft.slot}
@@ -604,8 +641,6 @@ export function BookingWizard({ pkg }: BookingWizardProps) {
                   </>
                 )}
               </Button>
-              )}
-           
             </div>
           </div>
         ) : null}

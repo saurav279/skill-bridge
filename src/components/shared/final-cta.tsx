@@ -11,7 +11,7 @@ type FinalCTAProps = {
 
 export function FinalCTA({
   title = "Ready to Begin Your Global Talent Journey?",
-  description = "Book a free consultation. We’ll assess your profile and outline a clear, evidence-driven path forward.",
+  description = "Book a Strategy Call. We’ll assess your profile and outline a clear, evidence-driven path forward.",
   className,
 }: FinalCTAProps) {
   return (
@@ -34,9 +34,9 @@ export function FinalCTA({
                 <Button
                   size="lg"
                   className="h-11 rounded-xl px-6 text-sm"
-                  render={<Link href="/consultation" target="_blank" rel="noopener noreferrer"/>}
+                  render={<Link href="/packages/strategy-call" target="_blank" rel="noopener noreferrer"/>}
                 >
-                  Book Consultation
+                  Book Strategy Call
                 </Button>
                 <Button
                   size="lg"

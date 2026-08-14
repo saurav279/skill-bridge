@@ -23,7 +23,7 @@ export default function HomePage() {
    
       <HowWeHelpSection />
       <FounderBand />
-      <StrategyCallCta consultationPackage="paid-strategy-call" />
+      <StrategyCallCta variant="strategy-call" />
 
       <ConversionPackages />
 

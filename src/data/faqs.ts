@@ -4,12 +4,12 @@ export const faqs: FAQ[] = [
   {
     question: "How do I start?",
     answer:
-      "Complete the Assessment Questionnaire for a free 15-minute discovery call. We’ll discuss fit and recommend the right package — from Strategy Session to Full Review or Bespoke Coaching.",
+      "Complete the Assessment Questionnaire, then get in touch. We’ll discuss fit and recommend the right package — from a Strategy Call to Full Review or Bespoke Coaching.",
   },
   {
     question: "What packages do you offer?",
     answer:
-      "Six options: Leadership Enhancement (£499), DIY Membership (£699), Strategy Session (£1,500), Review Only (£999), Full Review (£4,500), and Bespoke 1-to-1 Support (£5,999).",
+      "Seven options: Strategy Call (£100), Leadership Enhancement (£499), DIY Membership (£699), Strategy Session (£1,500), Review Only (£999), Full Review (£4,500), and Bespoke 1-to-1 Support (£5,999).",
   },
   {
     question: "What is the Global Talent Visa?",
@@ -37,8 +37,8 @@ export const faqs: FAQ[] = [
       "No ethical consultancy can guarantee outcomes. We do maintain a high historical approval rate by being selective about fit and rigorous about evidence quality before submission.",
   },
   {
-    question: "What happens in the free consultation?",
+    question: "What happens in the Strategy Call?",
     answer:
-      "A focused conversation on your background, likely pathway, evidence gaps, and whether Skill Bridge is the right partner. You’ll leave with clarity — even if we recommend waiting.",
+      "A focused 30-minute conversation on your background, likely pathway, evidence gaps, and whether Skill Bridge is the right partner. You’ll leave with a recommended next package — even if we recommend waiting.",
   },
 ];

@@ -46,6 +46,7 @@ import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import type { AssessPayload, Assessment } from "@/types";
 import { uploadToCloudinary } from "@/services/cloudinary";
+import { PhoneInputField } from "@/components/shared/phone-input";
 import { BadgeText } from "../shared/badge";
 import {
   clearAllAssessmentCache,
@@ -160,7 +161,17 @@ export function AssessmentCarousel() {
   }
 
   function setAnswer(id: string, value: unknown) {
-    setAnswers((prev) => ({ ...prev, [id]: value }));
+    setAnswers((prev) => {
+      const next = { ...prev, [id]: value };
+      if (id === "livesInUk" && value !== "Yes") {
+        delete next.ukVisa;
+        delete next.ukVisaOther;
+      }
+      if (id === "ukVisa" && value !== "Others") {
+        delete next.ukVisaOther;
+      }
+      return next;
+    });
   }
 
   function toggleCheckbox(
@@ -222,11 +233,30 @@ export function AssessmentCarousel() {
       const sectionAnswers: Record<string, unknown> = {};
 
       for (const q of section.questions) {
+        if (
+          section.id === "personalDetails" &&
+          (q.id === "resume" || q.id === "ukVisaOther")
+        ) {
+          continue;
+        }
         const key = `${section.id}_${q.id}`;
-        const value = isQuestionVisible(q, answersForSubmit)
+        let value = isQuestionVisible(q, answersForSubmit)
           ? answersForSubmit[q.id]
           : undefined;
+        if (
+          section.id === "personalDetails" &&
+          q.id === "ukVisa" &&
+          value === "Others"
+        ) {
+          const other = String(answers.ukVisaOther ?? "").trim();
+          if (other) value = other;
+        }
         sectionAnswers[key] = serializeAnswer(value);
+      }
+
+      if (section.id === "personalDetails") {
+        sectionAnswers.phone =
+          typeof answers.phone === "string" ? answers.phone : "";
       }
 
       payload[section.id] = sectionAnswers;
@@ -234,8 +264,8 @@ export function AssessmentCarousel() {
 
 if (resumeFile instanceof File) {
   try {
-//payload.resumeFileId = "https://res.cloudinary.com/dud6q9sp/raw/upload/v1786380068/qwrkjhflfqppisi8jgm2.pdf" 
-payload.resumeFileId = await uploadToCloudinary(resumeFile);
+//payload.resumeLink = "https://res.cloudinary.com/dud6q9sp/raw/upload/v1786380068/qwrkjhflfqppisi8jgm2.pdf" 
+payload.resumeLink = await uploadToCloudinary(resumeFile);
 
   } catch (e) {
     setSubmitError(
@@ -880,9 +910,26 @@ function QuestionField({
             value={String(value ?? "")}
             onChange={(e) => onText(e.target.value)}
             className="h-11 rounded-xl"
-            placeholder={q.id.includes("email") ? "you@company.com" : "Your answer"}
+            placeholder={
+              q.id.includes("email")
+                ? "you@company.com"
+                : q.id === "name"
+                  ? "Your full name"
+                  : q.id === "ukVisaOther"
+                    ? "Please specify your visa"
+                    : "Your answer"
+            }
           />
         </div>
+      ) : null}
+
+      {q.type === "phone" ? (
+        <PhoneInputField
+          id={q.id}
+          value={typeof value === "string" ? value : ""}
+          onChange={onText}
+          required={!q.optional}
+        />
       ) : null}
 
       {q.type === "file" ? (
