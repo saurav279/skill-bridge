@@ -29,11 +29,11 @@ export const values: ValueItem[] = [
 
 export const team: TeamMember[] = [
   {
-    name: "Elena Voss",
-    role: "Founder & Principal Consultant",
+    name: "Nabila Farzin",
+    role: "Founder & CEO",
     bio: "Former product and policy advisor who built Skill Bridge to give exceptional talent a strategy firm — not a paperwork mill.",
     image:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=800&h=800&fit=crop&q=80",
+      "/ceo-primary.png",
     founder: true,
   },
   {

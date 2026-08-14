@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Children, useEffect, useState, type ReactNode } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ChevronDown, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
@@ -17,6 +18,15 @@ const aboutLinks = [
   { href: "/about/gtv", label: "UK Global Talent Visa" },
 ];
 
+const resourceLinks = [
+  { href: "/resources", label: "Insights & Guides" },
+  { href: "/assessment", label: "Assessment Questionnaire" },
+];
+
+type MobileSection = "about" | "packages" | "resources" | null;
+
+const easeOut = [0.22, 1, 0.36, 1] as const;
+
 export function Navbar() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
@@ -24,6 +34,8 @@ export function Navbar() {
   const [aboutOpen, setAboutOpen] = useState(false);
   const [packagesOpen, setPackagesOpen] = useState(false);
   const [resourcesOpen, setResourcesOpen] = useState(false);
+  const [mobileSection, setMobileSection] = useState<MobileSection>(null);
+  const reduceMotion = useReducedMotion();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -37,6 +49,7 @@ export function Navbar() {
     setAboutOpen(false);
     setPackagesOpen(false);
     setResourcesOpen(false);
+    setMobileSection(null);
   }, [pathname]);
 
   const hideChrome = pathname === "/login" || pathname === "/register";
@@ -163,50 +176,118 @@ export function Navbar() {
               className="lg:hidden"
               aria-label={open ? "Close menu" : "Open menu"}
               aria-expanded={open}
-              onClick={() => setOpen((v) => !v)}
+              onClick={() => {
+                setOpen((v) => !v);
+                setMobileSection(null);
+              }}
             >
               {open ? <X className="size-5" /> : <Menu className="size-5" />}
             </Button>
           </div>
         </nav>
 
-        {open ? (
-          <div className="border-t border-border/60 bg-background lg:hidden">
-            <div className="container-page flex flex-col gap-1 py-4">
-              <MobileLink href="/">Home</MobileLink>
-              <p className="px-3 pt-2 text-xs font-semibold uppercase tracking-wider text-primary">
-                About
-              </p>
-              {aboutLinks.map((l) => (
-                <MobileLink key={l.href} href={l.href}>
-                  {l.label}
+        <AnimatePresence initial={false}>
+          {open ? (
+            <motion.div
+              key="mobile-nav"
+              initial={reduceMotion ? false : { height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={reduceMotion ? undefined : { height: 0, opacity: 0 }}
+              transition={{ duration: reduceMotion ? 0 : 0.32, ease: easeOut }}
+              className="overflow-hidden border-t border-border/60 bg-background lg:hidden"
+            >
+              <div className="container-page flex max-h-[min(34rem,calc(100dvh-5.5rem))] flex-col gap-0.5 overflow-y-auto py-4">
+                <MobileLink href="/" active={pathname === "/"}>
+                  Home
                 </MobileLink>
-              ))}
-              <p className="px-3 pt-2 text-xs font-semibold uppercase tracking-wider text-primary">
-                Packages
-              </p>
-              {packages.map((p) => (
-                <MobileLink key={p.slug} href={`/packages/${p.slug}`}>
-                  {p.name}
+
+                <MobileNavGroup
+                  id="about"
+                  label="About"
+                  open={mobileSection === "about"}
+                  onToggle={() =>
+                    setMobileSection((s) => (s === "about" ? null : "about"))
+                  }
+                  active={pathname.startsWith("/about")}
+                >
+                  {aboutLinks.map((l) => (
+                    <MobileLink key={l.href} href={l.href} nested>
+                      {l.label}
+                    </MobileLink>
+                  ))}
+                </MobileNavGroup>
+
+                <MobileNavGroup
+                  id="packages"
+                  label="Packages"
+                  open={mobileSection === "packages"}
+                  onToggle={() =>
+                    setMobileSection((s) =>
+                      s === "packages" ? null : "packages"
+                    )
+                  }
+                  active={pathname.startsWith("/packages")}
+                >
+                  {packages.map((p) => (
+                    <MobileLink
+                      key={p.slug}
+                      href={`/packages/${p.slug}`}
+                      nested
+                    >
+                      {p.name}
+                    </MobileLink>
+                  ))}
+                  <MobileLink href="/packages" nested>
+                    Compare all packages
+                  </MobileLink>
+                </MobileNavGroup>
+
+                <MobileNavGroup
+                  id="resources"
+                  label="Resources"
+                  open={mobileSection === "resources"}
+                  onToggle={() =>
+                    setMobileSection((s) =>
+                      s === "resources" ? null : "resources"
+                    )
+                  }
+                  active={pathname.startsWith("/resources")}
+                >
+                  {resourceLinks.map((l) => (
+                    <MobileLink key={l.href} href={l.href} nested>
+                      {l.label}
+                    </MobileLink>
+                  ))}
+                </MobileNavGroup>
+
+                <MobileLink
+                  href="/case-studies"
+                  active={pathname.startsWith("/case-studies")}
+                >
+                  Success Stories
                 </MobileLink>
-              ))}
-              <MobileLink href="/case-studies">Success Stories</MobileLink>
-              <MobileLink href="/appeal">Appeal</MobileLink>
-              <p className="px-3 pt-2 text-xs font-semibold uppercase tracking-wider text-primary">
-                Resources
-              </p>
-              <MobileLink href="/resources">Insights & Guides</MobileLink>
-              {/* <MobileLink href="/resources#newsletters">Newsletters</MobileLink> */}
-              <MobileLink href="/contact">Contact</MobileLink>
-              <Button
-                className="mt-3 h-11 rounded-full font-semibold uppercase tracking-wide"
-                render={<Link href="/assessment" target="_blank" rel="noopener noreferrer"/>}
-              >
-                Assessment Questionnaire
-              </Button>
-            </div>
-          </div>
-        ) : null}
+                <MobileLink href="/appeal" active={pathname === "/appeal"}>
+                  Appeal
+                </MobileLink>
+                <MobileLink href="/contact" active={pathname === "/contact"}>
+                  Contact
+                </MobileLink>
+                <Button
+                  className="mt-3 h-11 rounded-full font-semibold uppercase tracking-wide"
+                  render={
+                    <Link
+                      href="/assessment"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    />
+                  }
+                >
+                  Assessment Questionnaire
+                </Button>
+              </div>
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
       </div>
     </header>
   );
@@ -301,19 +382,114 @@ function DropdownItem({
   );
 }
 
+function MobileNavGroup({
+  id,
+  label,
+  open,
+  onToggle,
+  active,
+  children,
+}: {
+  id: string;
+  label: string;
+  open: boolean;
+  onToggle: () => void;
+  active?: boolean;
+  children: ReactNode;
+}) {
+  const reduce = useReducedMotion();
+  const panelId = `mobile-nav-${id}`;
+
+  return (
+    <div>
+      <button
+        type="button"
+        aria-expanded={open}
+        aria-controls={panelId}
+        onClick={onToggle}
+        className={cn(
+          "flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+          open || active
+            ? "bg-primary/10 text-primary"
+            : "text-foreground hover:bg-muted"
+        )}
+      >
+        {label}
+        <ChevronDown
+          className={cn(
+            "size-4 shrink-0 opacity-70 transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]",
+            open && "rotate-180"
+          )}
+        />
+      </button>
+      <motion.div
+        id={panelId}
+        role="region"
+        inert={!open || undefined}
+        initial={false}
+        animate={{
+          height: open ? "auto" : 0,
+          opacity: open ? 1 : 0,
+        }}
+        transition={{
+          duration: reduce ? 0 : 0.3,
+          ease: easeOut,
+        }}
+        className="overflow-hidden"
+      >
+        <motion.div
+          initial={false}
+          animate={open ? "open" : "closed"}
+          variants={{
+            open: {
+              transition: { staggerChildren: 0.045, delayChildren: 0.05 },
+            },
+            closed: {
+              transition: { staggerChildren: 0.02, staggerDirection: -1 },
+            },
+          }}
+          className="mb-1 ml-3 mt-1 flex flex-col gap-0.5 border-l border-primary/20 pl-2"
+        >
+          {Children.map(children, (child) => (
+            <motion.div
+              variants={{
+                open: { opacity: 1, x: 0 },
+                closed: { opacity: 0, x: -10 },
+              }}
+              transition={{ duration: reduce ? 0 : 0.22, ease: easeOut }}
+            >
+              {child}
+            </motion.div>
+          ))}
+        </motion.div>
+      </motion.div>
+    </div>
+  );
+}
+
 function MobileLink({
   href,
   children,
+  nested,
+  active,
 }: {
   href: string;
   children: React.ReactNode;
+  nested?: boolean;
+  active?: boolean;
 }) {
   return (
     <Link
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="rounded-lg px-3 py-2.5 text-sm font-medium text-foreground hover:bg-muted"
+      className={cn(
+        "rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+        nested
+          ? "text-foreground/80 hover:bg-primary/10 hover:text-primary"
+          : "text-foreground hover:bg-muted",
+        active && "bg-primary/10 text-primary"
+      )}
     >
       {children}
     </Link>

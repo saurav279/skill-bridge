@@ -10,8 +10,14 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import {
   addCalendarDays,
+  addWeekdays,
+  clampToWeekday,
   formatUkCalendarDate,
   getUkToday,
+  isUkWeekendInstant,
+  isWeekendDate,
+  nextWeekdayOnOrAfter,
+  previousWeekdayOnOrBefore,
 } from "@/lib/uk-date";
 import { toast } from "@/lib/toast";
 import { cn } from "@/lib/utils";
@@ -98,8 +104,7 @@ function readDraft(
     const parsed = JSON.parse(raw) as Partial<Draft>;
     const storedDate =
       typeof parsed.date === "string" ? parsed.date : minDate;
-    const date =
-      storedDate < minDate || storedDate > maxDate ? minDate : storedDate;
+    const date = clampToWeekday(storedDate, minDate, maxDate);
     const slot =
       parsed.slot && typeof parsed.slot.startTime === "string"
         ? parsed.slot
@@ -125,11 +130,15 @@ function readDraft(
 export function BookingWizard({ pkg }: BookingWizardProps) {
   const today = useMemo(() => getUkToday(), []);
   const minDate = useMemo(
-    () => addCalendarDays(today, FIRST_BOOKABLE_OFFSET_DAYS),
+    () =>
+      nextWeekdayOnOrAfter(
+        addCalendarDays(today, FIRST_BOOKABLE_OFFSET_DAYS)
+      ),
     [today]
   );
   const maxDate = useMemo(
-    () => addCalendarDays(today, DATE_WINDOW_DAYS),
+    () =>
+      previousWeekdayOnOrBefore(addCalendarDays(today, DATE_WINDOW_DAYS)),
     [today]
   );
 
@@ -161,6 +170,12 @@ export function BookingWizard({ pkg }: BookingWizardProps) {
         setDraft((prev) => ({ ...prev, slot: null }));
       }
 
+      if (isWeekendDate(date)) {
+        setSlots([]);
+        setSlotsLoading(false);
+        return;
+      }
+
       const { success, data, error } = await getAvailableSlots({
         date,
         duration: pkg.slotDurationMinutes,
@@ -174,10 +189,13 @@ export function BookingWizard({ pkg }: BookingWizardProps) {
         return;
       }
 
-      setSlots(data.slots);
+      const weekdaySlots = data.slots.filter(
+        (slot) => !isUkWeekendInstant(slot.startTime)
+      );
+      setSlots(weekdaySlots);
       setDraft((prev) => {
         if (!prev.slot) return prev;
-        const stillOpen = data.slots.some(
+        const stillOpen = weekdaySlots.some(
           (slot) => slot.startTime === prev.slot?.startTime
         );
         return stillOpen ? prev : { ...prev, slot: null };
@@ -247,8 +265,8 @@ export function BookingWizard({ pkg }: BookingWizardProps) {
   }
 
   function onDateChange(next: string) {
-    if (next < minDate || next > maxDate) return;
-    setDraft((prev) => ({ ...prev, date: next, slot: null }));
+    const date = clampToWeekday(next, minDate, maxDate);
+    setDraft((prev) => ({ ...prev, date, slot: null }));
   }
 
   async function onPay() {
@@ -439,8 +457,8 @@ export function BookingWizard({ pkg }: BookingWizardProps) {
                 Choose a time
               </h2>
               <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
-                Times are in the UK ({pkg.slotDurationMinutes}-minute slots).
-                We’ll keep the slot you pick exactly as returned.
+                Times are in the UK ({pkg.slotDurationMinutes}-minute slots),
+                Monday to Friday. Weekend dates are not available.
               </p>
             </div>
 
@@ -451,9 +469,11 @@ export function BookingWizard({ pkg }: BookingWizardProps) {
                   variant="outline"
                   size="icon"
                   className="size-10 rounded-xl"
-                  disabled={draft.date <= minDate || slotsLoading}
+                  disabled={
+                    addWeekdays(draft.date, -1) < minDate || slotsLoading
+                  }
                   onClick={() =>
-                    onDateChange(addCalendarDays(draft.date, -1))
+                    onDateChange(addWeekdays(draft.date, -1))
                   }
                   aria-label="Previous day"
                 >
@@ -467,9 +487,11 @@ export function BookingWizard({ pkg }: BookingWizardProps) {
                   variant="outline"
                   size="icon"
                   className="size-10 rounded-xl"
-                  disabled={draft.date >= maxDate || slotsLoading}
+                  disabled={
+                    addWeekdays(draft.date, 1) > maxDate || slotsLoading
+                  }
                   onClick={() =>
-                    onDateChange(addCalendarDays(draft.date, 1))
+                    onDateChange(addWeekdays(draft.date, 1))
                   }
                   aria-label="Next day"
                 >

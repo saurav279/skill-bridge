@@ -14,16 +14,16 @@ export const ebook = {
 };
 
 export const ceo = {
-  name: "Elena Voss",
+  name: "Nabila Farzin",
   title: "Founder & CEO",
   image:
-    "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=1000&h=1200&fit=crop&q=80",
+    "/ceo-primary.png",
   shortBio:
-    "Elena founded Skill Bridge to give exceptional talent a strategy firm — not a paperwork mill. She leads every major engagement standard and coaches consultants on evidence architecture.",
+    "Nabila founded Skill Bridge to give exceptional talent a strategy firm — not a paperwork mill. She leads every major engagement standard and coaches consultants on evidence architecture.",
   longBio: [
-    "Elena Voss is Founder & CEO of Skill Bridge. After years advising product and policy leaders on how excellence is evaluated internationally, she built Skill Bridge to raise the standard of Global Talent Visa Stage 1 preparation.",
+    "Nabila Farzin is Founder & CEO of Skill Bridge. After years advising product and policy leaders on how excellence is evaluated internationally, she built Skill Bridge to raise the standard of Global Talent Visa Stage 1 preparation.",
     "She specialises in Digital Technology pathways for founders, engineers, researchers, and design leaders — with a focus on criteria mapping, narrative clarity, and reviewer-ready evidence packs.",
-    "Under her leadership, Skill Bridge maintains selective intake, transparent scopes, and a high guided success rate. Elena speaks regularly on talent mobility, evidence strategy, and building recognition that panels can trust.",
+    "Under her leadership, Skill Bridge maintains selective intake, transparent scopes, and a high guided success rate. Nabila speaks regularly on talent mobility, evidence strategy, and building recognition that panels can trust.",
   ],
   highlights: [
     "Founded Skill Bridge as a Stage 1 endorsement consultancy",
