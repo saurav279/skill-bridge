@@ -13,7 +13,7 @@ export type AvailableSlotsResponse = {
 };
 
 export type LivesInUk = "yes" | "no";
-export type UkVisaOption = "PSW visa" | "Skill visa" | "Dependent visa" | "Student visa" |  "Others";
+export type UkVisaOption = "PSW Visa" | "Skill Worker Visa" | "Dependent Visa" | "Student Visa" |  "Others";
 
 export type CreatePackageCheckoutPayload = {
   name: string;

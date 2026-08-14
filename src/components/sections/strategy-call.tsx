@@ -7,15 +7,15 @@ import { ContactMap } from "../shared/contact-map";
 import { ContactForm } from "../shared/contact-form";
 
 export function FreeStrategyCallCta({customerDetails, assessmentId}: {customerDetails: {name: string, email: string, phone: string, livesInUk: boolean, currentVisa?: string}, assessmentId: string}) {
-  const subject = `Free Discovery Call — Let's Discuss Your UK Options (Assessment ${assessmentId})`;
+  const subject = `Requesting Free Discovery Call — ${customerDetails.name}`;
 
   const message = `Hi Skill Bridge,
   
-  I’ve completed my assessment (ID: ${assessmentId}) and would like to request for my free strategy call.
+  I’ve completed my assessment and would like to request for my free strategy call.
   
   I’d like to understand my results, explore the most suitable UK pathway for my profile, and learn what I should do next.
   
-  Please let me know the next available time for a quick call.
+  I'm ok with phone call.
   
   Thank you!`;
 

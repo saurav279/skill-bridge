@@ -33,7 +33,7 @@ export default function AssessmentPage() {
               </li>
               <li className="flex gap-2">
                 <span className="font-semibold text-primary">03</span>
-                Get a readiness score and next steps
+                Get a confidence score and next steps
               </li>
             </ul>
             <p className="mt-8 text-sm text-muted-foreground">

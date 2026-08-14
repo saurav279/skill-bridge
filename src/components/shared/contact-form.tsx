@@ -20,7 +20,7 @@ import Link from "next/link";
 
 const TALK_PREFERENCES: { id: ContactTalkPreference; label: string }[] = [
   { id: "phone", label: "Phone" },
-  { id: "google_meet", label: "Google Meet" },
+  // { id: "google_meet", label: "Google Meet" },
 ];
 
 export function ContactForm({ defaultValues }: { defaultValues?: { name: string, email: string, phone: string, livesInUk: boolean, currentVisa?: string, subject: string, message: string } }) {
@@ -36,7 +36,7 @@ export function ContactForm({ defaultValues }: { defaultValues?: { name: string,
   const [ukVisaOther, setUkVisaOther] = useState(
     () => parseCurrentVisa(defaultValues?.currentVisa).ukVisaOther
   );
-  const [prefered, setPrefered] = useState<ContactTalkPreference | "">("");
+  const [prefered, setPrefered] = useState<ContactTalkPreference | "">("phone");
   const [subject, setSubject] = useState(defaultValues?.subject || "");
   const [message, setMessage] = useState(defaultValues?.message || "");
   const [submitted, setSubmitted] = useState(false);
@@ -248,7 +248,7 @@ export function ContactForm({ defaultValues }: { defaultValues?: { name: string,
       <fieldset className="space-y-3" disabled={submitting}>
         <legend className="text-sm font-medium">
           How would you prefer to talk?
-          <RequiredMark />
+          {/* <RequiredMark /> */}
         </legend>
         <div className="flex flex-wrap gap-2">
           {TALK_PREFERENCES.map((option) => {

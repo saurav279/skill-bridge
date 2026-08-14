@@ -411,7 +411,7 @@ export function BookingWizard({ pkg }: BookingWizardProps) {
 
             <div className="space-y-2">
               <div className="flex items-center justify-between gap-3">
-                <Label htmlFor="booking-description">What should we cover?<RequiredMark /></Label>
+                <Label htmlFor="booking-description">What you want to discuss with us?<RequiredMark /></Label>
                 <span className="font-mono text-[11px] text-muted-foreground">
                   {draft.description.length}/{DESCRIPTION_MAX}
                 </span>

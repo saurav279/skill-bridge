@@ -501,7 +501,7 @@ export const AssessmentSections: Record<string, AssessmentSection> = {
         id: "ukVisa",
         type: "radio",
         title: "Which visa are you on?",
-        options: ["PSW", "Skill visa", "Others"],
+        options: ["PSW Visa", "Skill Worker Visa", "Dependent Visa", "Student Visa", "Others"],
         showIf: { livesInUk: "Yes" },
       },
       {
@@ -514,7 +514,7 @@ export const AssessmentSections: Record<string, AssessmentSection> = {
         id: "resume",
         type: "file",
         title: "Upload your resume",
-        accept: [".pdf", ".doc", ".docx"],
+        accept: [".pdf"],
         optional: true,
       },
     ],

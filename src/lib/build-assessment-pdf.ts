@@ -382,7 +382,7 @@ export async function buildAssessmentPdf(
     color: brand,
   });
 
-  page.drawText("READINESS SCORE", {
+  page.drawText("CONFIDENCE SCORE", {
     x: MARGIN + 18,
     y: scoreTop - 22,
     size: 8,

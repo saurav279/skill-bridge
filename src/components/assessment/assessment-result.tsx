@@ -294,7 +294,7 @@ export function AssessmentResult({ id }: { id: string }) {
             <div className="flex items-center gap-2 text-primary">
               <Trophy className="size-4" />
               <p className="font-mono text-[11px] font-semibold uppercase tracking-wider">
-                Readiness score
+                Confidence score
               </p>
             </div>
             <p className="mt-3 text-5xl font-bold tracking-tight">

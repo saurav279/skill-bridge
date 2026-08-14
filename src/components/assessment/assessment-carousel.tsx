@@ -952,7 +952,7 @@ function QuestionField({
             {value instanceof File ? (
               <span className="font-medium text-foreground">{value.name}</span>
             ) : (
-              <span>Click to upload PDF or Word resume</span>
+              <span>Click to upload PDF</span>
             )}
           </button>
         </div>
