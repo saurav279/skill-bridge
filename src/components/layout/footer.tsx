@@ -12,7 +12,7 @@ const companyLinks = [
   { href: "/packages", label: "Packages" },
   { href: "/appeal", label: "Appeal" },
   { href: "/case-studies", label: "Case Studies" },
-  { href: "/login", label: "Client Login" },
+  // { href: "/login", label: "Client Login" },
 ];
 
 const navigation = [

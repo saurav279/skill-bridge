@@ -662,7 +662,7 @@ export async function buildAssessmentPdf(
 
   // ——— CTA ———
   y -= 10;
-  const btnLabel = "Book a discovery call";
+  const btnLabel = "Book a Strategy Call";
   const btnH = 34;
   const btnTextW = fontBold.widthOfTextAtSize(btnLabel, 11);
   const btnW = Math.min(CONTENT_WIDTH, btnTextW + 44);
@@ -685,7 +685,7 @@ export async function buildAssessmentPdf(
   addLink(doc, page, MARGIN, btnY, btnW, btnH, discoveryCallUrl());
   y = btnY - 16;
   drawLines(
-    "Free strategy call · Review your score, evidence plan, and next steps",
+    "Paid Strategy Call · Review your score, evidence plan, and next steps",
     { size: 8, color: muted, gap: 0 }
   );
 

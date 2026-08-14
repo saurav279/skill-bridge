@@ -43,6 +43,7 @@ import { EbookCta } from "../shared/ebook-cta";
 import { TestimonialsSection } from "../sections/testimonials";
 import { FeaturedStories } from "../sections/featured-stories";
 import { FreeStrategyCallCta } from "../sections/strategy-call";
+import { ReadyForStrategyCall } from "../sections/ready-for-strategy-call";
 
 
 function priorityMeta(priority: "high" | "medium" | "easy") {
@@ -173,7 +174,7 @@ export function AssessmentResult({ id }: { id: string }) {
         </p>
         <Button
           className="mt-5 h-10 rounded-full px-5"
-          render={<Link href="/assessment" target="_blank" rel="noopener noreferrer"/>}
+          render={<Link href="/assessment" target="_blank" rel="noopener noreferrer" />}
         >
           Retake questionnaire
         </Button>
@@ -213,56 +214,72 @@ export function AssessmentResult({ id }: { id: string }) {
             Download PDF
           </Button>
           <div className="flex flex-col items-center gap-2">
-          <Button
-            variant="outline"
-            className="h-9 rounded-full px-4"
-            disabled={emailBusy}
-            onClick={() => void handleEmail()}
-          >
-            {emailBusy ? (
-              <Loader2 className="size-4 animate-spin" />
-            ) : (
-              <Mail className="size-4" />
-            )}
-            Resend Email
-          </Button>
-          <span className="text-xs font-normal text-foreground leading-tight">
-             On {data.customerEmail}
-          </span>
+            <Button
+              variant="outline"
+              className="h-9 rounded-full px-4"
+              disabled={emailBusy}
+              onClick={() => void handleEmail()}
+            >
+              {emailBusy ? (
+                <Loader2 className="size-4 animate-spin" />
+              ) : (
+                <Mail className="size-4" />
+              )}
+              Resend Email
+            </Button>
+            <span className="text-xs font-normal text-foreground leading-tight">
+              On {data.customerEmail}
+            </span>
           </div>
           {data.createdAt && (
             <div className="flex flex-col items-center gap-2">
-            <Button
-          className="h-9 rounded-full px-4"
-            >
-              <Link href={freeCallAvailable ? "/contact" : "/packages/strategy-call"} target="_blank" rel="noopener noreferrer" className="flex flex-col items-start">
+              <Button
+                className="h-9 rounded-full px-4"
+                render={
+                  freeCallAvailable ? (
+                    <a
+                      href="#discovery-call"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        document
+                          .getElementById("discovery-call")
+                          ?.scrollIntoView({ behavior: "smooth", block: "start" });
+                      }}
+                    />
+                  ) : (
+                    <Link
+                      href="/packages/strategy-call"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    />
+                  )
+                }
+              >
                 <span className="flex items-center font-semibold">
-                  {freeCallAvailable ? "Contact us" : "Book a Strategy Call"}
+                  {freeCallAvailable ? "Free Discovery Call" : "Book a Strategy Call"}
                   <ArrowRight className="ml-1 inline-block size-5 align-text-bottom" />
                 </span>
-               
-              </Link>
-            </Button>
-           { freeCallAvailable && (
-            <span className="inline-flex items-center gap-1 text-xs font-normal leading-tight text-foreground">
-              For next {next5WorkingDayDate}
-              <Tooltip>
-                <TooltipTrigger
-                  className="inline-flex text-muted-foreground transition-colors hover:text-foreground"
-                  aria-label="Free call details"
-                >
-                  <Info className="size-3.5" />
-                </TooltipTrigger>
-                <TooltipContent>
-                  This complimentary window is limited — reach out and we’ll take it from there.
-                </TooltipContent>
-              </Tooltip>
-            </span>
-           )}
-          </div>
+              </Button>
+              {freeCallAvailable && (
+                <span className="inline-flex items-center gap-1 text-xs font-normal leading-tight text-foreground">
+                  For next {next5WorkingDayDate}
+                  <Tooltip>
+                    <TooltipTrigger
+                      className="inline-flex text-muted-foreground transition-colors hover:text-foreground"
+                      aria-label="Free call details"
+                    >
+                      <Info className="size-3.5" />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      This complimentary window is limited — reach out and we’ll take it from there.
+                    </TooltipContent>
+                  </Tooltip>
+                </span>
+              )}
+            </div>
           )}
-     
-     
+
+
         </div>
       </div>
       {actionMsg ? (
@@ -322,7 +339,7 @@ export function AssessmentResult({ id }: { id: string }) {
             </div>
             <div>
               <h2 className="text-base font-semibold tracking-tight">
-                 Assessment Summary
+                Assessment Summary
               </h2>
               <div
                 className="mt-0.5 flex gap-0.5"
@@ -426,17 +443,17 @@ export function AssessmentResult({ id }: { id: string }) {
       </FadeIn>
 
       <FadeIn>
+        <div id="discovery-call" className="scroll-mt-28">
+          {freeCallAvailable ? <FreeStrategyCallCta customerDetails={{ name: data.customerName, email: data.customerEmail, phone: data.customerPhone, livesInUk: data.customerLivesInUk, currentVisa: data.customerCurrentVisa }} assessmentId={id} /> : <ReadyForStrategyCall />}
+        </div>
+        <ConversionPackages />
 
-{freeCallAvailable && <FreeStrategyCallCta customerDetails={{name: data.customerName, email: data.customerEmail, phone: data.customerPhone, livesInUk: data.customerLivesInUk, currentVisa: data.customerCurrentVisa}} assessmentId={id} />}
-        
-      <ConversionPackages />
+        <LatestInsightsSection />
+        <EbookCta />
 
-<LatestInsightsSection />
-<EbookCta />
-
-{/* <ReadyToStartCta /> */}
-<FeaturedStories />
-<TestimonialsSection />
+        {/* <ReadyToStartCta /> */}
+        <FeaturedStories />
+        <TestimonialsSection />
 
       </FadeIn>
     </div>

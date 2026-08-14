@@ -6,8 +6,10 @@ const PHONE_MIN_DIGITS = 10;
 const PHONE_MAX_DIGITS = 15;
 
 export const VISA_OPTIONS: { id: UkVisaOption; label: string }[] = [
-  { id: "PSW", label: "PSW" },
+  { id: "PSW visa", label: "PSW visa" },
   { id: "Skill visa", label: "Skill visa" },
+  { id: "Dependent visa", label: "Dependent visa" },
+  { id: "Student visa", label: "Student visa" },
   { id: "Others", label: "Others" },
 ];
 
@@ -26,7 +28,7 @@ export function parseCurrentVisa(value: string | undefined | null): {
 } {
   if (!value) return { ukVisa: "", ukVisaOther: "" };
   if (value === "PSW" || value === "psw") {
-    return { ukVisa: "PSW", ukVisaOther: "" };
+    return { ukVisa: "PSW visa", ukVisaOther: "" };
   }
   if (value === "Skill visa" || value === "skill-visa") {
     return { ukVisa: "Skill visa", ukVisaOther: "" };
@@ -43,7 +45,7 @@ export function currentVisaForPayload(details: {
   ukVisaOther: string;
 }): string | undefined {
   if (details.livesInUk !== "yes") return undefined;
-  if (details.ukVisa === "PSW" || details.ukVisa === "Skill visa") {
+  if (details.ukVisa === "PSW visa" || details.ukVisa === "Skill visa") {
     return details.ukVisa;
   }
   if (details.ukVisa === "Others") {

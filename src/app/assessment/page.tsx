@@ -37,12 +37,12 @@ export default function AssessmentPage() {
               </li>
             </ul>
             <p className="mt-8 text-sm text-muted-foreground">
-              Prefer to speak now?{" "}
+              Prefer to speak 1:1 now?{" "}
               <Link
-                href="/contact"
+                href="/packages/strategy-call"
                 className="font-medium text-primary underline-offset-4 hover:underline"
               >
-                Contact us
+                Book Strategy Call
               </Link>
               .
             </p>

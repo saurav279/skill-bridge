@@ -6,6 +6,7 @@ import { testimonials as defaultTestimonials } from "@/data/testimonials";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { Testimonial } from "@/types";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 type TestimonialsCarouselProps = {
   items?: Testimonial[];
@@ -55,15 +56,16 @@ export function TestimonialsCarousel({
           key={`cap-${current.id}`}
           className="mt-10 flex animate-in fade-in flex-col items-center gap-3 duration-500"
         >
-          <div className="relative size-14 overflow-hidden rounded-full ring-1 ring-border/60 sm:size-16">
-            <Image
-              src={current.image}
-              alt={current.name}
-              fill
-              className="object-cover"
-              sizes="64px"
-            />
-          </div>
+        <Avatar className="size-14 ring-1 ring-border/60 sm:size-16">
+  <AvatarImage
+    src={current.image}
+    alt={current.name}
+    className="object-cover"
+  />
+  <AvatarFallback>
+    {current.name.charAt(0).toUpperCase()}
+  </AvatarFallback>
+</Avatar>
           <div>
             <p className="text-base font-semibold tracking-tight text-foreground">
               {current.name}

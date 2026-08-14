@@ -4,41 +4,32 @@ export const testimonials: Testimonial[] = [
   {
     id: "1",
     quote:
-      "Skill Bridge operates like a strategy firm, not a form factory. Every recommendation was grounded in how endorsement panels actually think.",
-    name: "Maya Chen",
+      "This is a place i can trust blindly. When i heared about global talent visa for the first time, i literally had no idea about it. Then i did some research and got Skill Bridge contact. And this was the turning point of my brothers visa. The way they explained every single details was insane!!  I was very worried for my younger brother who was in Bangladesh. But now he is in the UK holding a global talent visa!!! I would say it was possible only for Skill Bridge!  I repeat, they made it possible!!!! Wish u all the very best from the bottom of my heart❤️",
+    name: "Afrida tabassum",
     role: "VP Product",
     company: "Northline",
     image:
-      "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=400&fit=crop&q=80",
+      "/testimonials/afrida.png",
   },
   {
     id: "2",
     quote:
-      "The evidence planning alone was worth it. I finally understood which achievements mattered — and which were noise.",
-    name: "James Okafor",
+      "I used their GTV service, and they handled my case amazingly. They paid attention to every detail and gave me plenty of time to prepare the documents. Thank you so much for supporting me throughout the entire journey!",
+    name: "Chirag Daware",
     role: "Senior Research Scientist",
     company: "Helix Labs",
     image:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&q=80",
+      "/testimonials/chirag.png",
   },
   {
     id: "3",
     quote:
-      "Clear timelines, sharp writing, and consultants who respect your craft. The process felt premium from day one.",
-    name: "Sofia Alvarez",
+      "Took their GTV service a year back and working with them for last one year smoothly with no problems at all. I appreciate the time and genuine support they have given me",
+    name: "Topshir Ahamed",
     role: "Design Director",
     company: "Atelier Systems",
     image:
-      "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=400&fit=crop&q=80",
-  },
-  {
-    id: "4",
-    quote:
-      "As a founder, time is everything. They compressed months of uncertainty into a decisive, well-run engagement.",
-    name: "Arjun Mehta",
-    role: "Founder & CEO",
-    company: "Stackframe",
-    image:
-      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&q=80",
+      "/testimonials/topshir.png",
+
   },
 ];
