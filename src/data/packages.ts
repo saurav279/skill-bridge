@@ -288,7 +288,136 @@ export const packages: ServicePackage[] = [
       },
     ],
   },
+
+  //appeal packages
+  {
+    slug: "appeal-diagnosis",
+    name: "Appeal Diagnosis",
+    tagline: "Start here",
+    description:
+      "A focused 30-minute consultation to review your profile, discuss Global Talent fit, and leave with a clear recommended next step.",
+    overview:
+      "The Strategy Call is a paid 30-minute 1:1. We review your background at a high level, discuss whether a Global Talent pathway is a strong fit, and recommend the right package — before you commit to a fuller engagement.",
+    priceLabel: "£45",
+    priceNote: "One-time · 30 minutes",
+    slotDurationMinutes: DEFAULT_SLOT_MINUTES,
+    features: [
+      included("30-minute 1:1 consultation"),
+      included("High-level profile review"),
+      included("Pathway fit discussion"),
+      included("Recommended next package"),
+      included("Calendar invite after payment"),
+      excluded("Written strategy memo"),
+      excluded("Full Review"),
+      excluded("Weekly Support"),
+    ],
+    idealFor:
+      "Anyone who wants an honest read on fit and next steps before investing in a course, review, or coaching package.",
+    ctaLabel: "Explore Appeal Diagnosis",
+    ctaHref: "/packages/appeal-diagnosis",
+    videoEmbedUrl: DEFAULT_VIDEO,
+    videoTitle: "Strategy Call overview",
+    steps: [
+      {
+        title: "Share your details",
+        detail: "Tell us your name, email, and a short note on what you’d like to cover.",
+      },
+      {
+        title: "Pick a UK time slot",
+        detail: "Choose a 30-minute slot. Times are shown in Europe/London.",
+      },
+      {
+        title: "Pay and join",
+        detail: "Pay securely with Stripe. Your calendar invite follows once payment is confirmed.",
+      },
+    ],
+  },
+  {
+    slug: "appeal-rebuild",
+    name: "Appeal Rebuild",
+    tagline: "Start here",
+    description:
+      "A focused 30-minute consultation to review your profile, discuss Global Talent fit, and leave with a clear recommended next step.",
+    overview:
+      "The Strategy Call is a paid 30-minute 1:1. We review your background at a high level, discuss whether a Global Talent pathway is a strong fit, and recommend the right package — before you commit to a fuller engagement.",
+    priceLabel: "£45",
+    priceNote: "One-time · 30 minutes",
+    slotDurationMinutes: DEFAULT_SLOT_MINUTES,
+    features: [
+      included("30-minute 1:1 consultation"),
+      included("High-level profile review"),
+      included("Pathway fit discussion"),
+      included("Recommended next package"),
+      included("Calendar invite after payment"),
+      excluded("Written strategy memo"),
+      excluded("Full Review"),
+      excluded("Weekly Support"),
+    ],
+    idealFor:
+      "Anyone who wants an honest read on fit and next steps before investing in a course, review, or coaching package.",
+    ctaLabel: "Explore Appeal Rebuild",
+    ctaHref: "/packages/appeal-rebuild",
+    videoEmbedUrl: DEFAULT_VIDEO,
+    videoTitle: "Strategy Call overview",
+    steps: [
+      {
+        title: "Share your details",
+        detail: "Tell us your name, email, and a short note on what you’d like to cover.",
+      },
+      {
+        title: "Pick a UK time slot",
+        detail: "Choose a 30-minute slot. Times are shown in Europe/London.",
+      },
+      {
+        title: "Pay and join",
+        detail: "Pay securely with Stripe. Your calendar invite follows once payment is confirmed.",
+      },
+    ],
+  },
+  {
+    slug: "appeal-full-support",
+    name: "Appeal Full Support",
+    tagline: "Start here",
+    description:
+      "A focused 30-minute consultation to review your profile, discuss Global Talent fit, and leave with a clear recommended next step.",
+    overview:
+      "The Strategy Call is a paid 30-minute 1:1. We review your background at a high level, discuss whether a Global Talent pathway is a strong fit, and recommend the right package — before you commit to a fuller engagement.",
+    priceLabel: "£45",
+    priceNote: "One-time · 30 minutes",
+    slotDurationMinutes: DEFAULT_SLOT_MINUTES,
+    features: [
+      included("30-minute 1:1 consultation"),
+      included("High-level profile review"),
+      included("Pathway fit discussion"),
+      included("Recommended next package"),
+      included("Calendar invite after payment"),
+      excluded("Written strategy memo"),
+      excluded("Full Review"),
+      excluded("Weekly Support"),
+    ],
+    idealFor:
+      "Anyone who wants an honest read on fit and next steps before investing in a course, review, or coaching package.",
+    ctaLabel: "Explore Appeal Full Support",
+    ctaHref: "/packages/appeal-full-support",
+    videoEmbedUrl: DEFAULT_VIDEO,
+    videoTitle: "Strategy Call overview",
+    steps: [
+      {
+        title: "Share your details",
+        detail: "Tell us your name, email, and a short note on what you’d like to cover.",
+      },
+      {
+        title: "Pick a UK time slot",
+        detail: "Choose a 30-minute slot. Times are shown in Europe/London.",
+      },
+      {
+        title: "Pay and join",
+        detail: "Pay securely with Stripe. Your calendar invite follows once payment is confirmed.",
+      },
+    ],
+  },
 ];
+
 
 export const whyWorkWithSkillBridge = [
   {

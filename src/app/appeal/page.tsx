@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Check } from "lucide-react";
 import { appealContent } from "@/data/appeal";
-import { appealPackages } from "@/data/content-extra";
+import { packages } from "@/data/packages";
 import { SectionTitle } from "@/components/shared/section-title";
 import { FadeIn, StaggerChildren, StaggerItem } from "@/components/shared/fade-in";
 import { ReadyToStartCta } from "@/components/sections/ready-to-start";
@@ -18,6 +18,7 @@ export const metadata: Metadata = {
 };
 
 export default function AppealPage() {
+  const appealPackages = packages.filter((pkg) => ["appeal-diagnosis", "appeal-rebuild", "appeal-full-support"].includes(pkg.slug) );
   return (
     <>
       <section className="py-16 md:py-24">

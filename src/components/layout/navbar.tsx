@@ -53,6 +53,9 @@ export function Navbar() {
   }, [pathname]);
 
   const hideChrome = pathname === "/login" || pathname === "/register";
+
+  const skipPackageSlugs = ["strategy-call", "appeal-diagnosis", "appeal-rebuild", "appeal-full-support"];
+  const filteredPackages = packages.filter((pkg) => !skipPackageSlugs.includes(pkg.slug));
   if (hideChrome) return null;
 
   return (
@@ -129,7 +132,7 @@ export function Navbar() {
               setOpen={setPackagesOpen}
               active={pathname.startsWith("/packages")}
             >
-              {packages.map((p) => (
+              {filteredPackages.map((p) => (
                 <DropdownItem key={p.slug} href={`/packages/${p.slug}`}>
                   {p.name}
                 </DropdownItem>
@@ -228,7 +231,7 @@ export function Navbar() {
                   }
                   active={pathname.startsWith("/packages")}
                 >
-                  {packages.map((p) => (
+                  {filteredPackages.map((p) => (
                     <MobileLink
                       key={p.slug}
                       href={`/packages/${p.slug}`}

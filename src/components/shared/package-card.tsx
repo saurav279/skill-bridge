@@ -4,7 +4,7 @@ import type { ServicePackage } from "@/types";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { PackageNameTypes } from "@/types/packages";
-import { PurchaseButton } from "./purchase-btn";
+
 import { BadgeText } from "./badge";
 
 type PackageCardProps = {
@@ -90,16 +90,14 @@ export function PackageCard({ pkg, className }: PackageCardProps) {
         {pkg.idealFor}
       </p>}
       <div className="mt-6 flex flex-col gap-2">
-        {pkg.ctaHref ? (
+        {pkg.ctaHref && (
           <Button
             className="h-11 w-full rounded-xl"
             render={<Link href={pkg.ctaHref} />}
           >
             {pkg.ctaLabel}
           </Button>
-        ) : (
-          <PurchaseButton packageName={pkg.slug as PackageNameTypes} />
-        )}
+        ) }
       </div>
     </article>
   );
