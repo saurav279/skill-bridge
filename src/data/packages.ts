@@ -295,28 +295,27 @@ export const packages: ServicePackage[] = [
     name: "Appeal Diagnosis",
     tagline: "Start here",
     description:
-      "A focused 30-minute consultation to review your profile, discuss Global Talent fit, and leave with a clear recommended next step.",
+      "A focused review of your refusal or feedback letter against your original pack — with a written diagnosis and recommended next steps.",
     overview:
-      "The Strategy Call is a paid 30-minute 1:1. We review your background at a high level, discuss whether a Global Talent pathway is a strong fit, and recommend the right package — before you commit to a fuller engagement.",
-    priceLabel: "£45",
+      "Appeal Diagnosis is a focused review of your refusal or feedback letter against your original pack. We review your background at a high level, discuss whether a Global Talent pathway is a strong fit, and recommend the right package — before you commit to a fuller engagement.",
+    priceLabel: "£1,250",
     priceNote: "One-time · 30 minutes",
     slotDurationMinutes: DEFAULT_SLOT_MINUTES,
     features: [
       included("30-minute 1:1 consultation"),
-      included("High-level profile review"),
-      included("Pathway fit discussion"),
-      included("Recommended next package"),
-      included("Calendar invite after payment"),
-      excluded("Written strategy memo"),
-      excluded("Full Review"),
-      excluded("Weekly Support"),
+      included("Refusal / feedback analysis"),
+      included("Criteria gap map"),
+      included("Written diagnosis memo"),
+      included("1 strategy call"),
+      excluded("Resubmit vs wait recommendation"),
+
     ],
     idealFor:
-      "Anyone who wants an honest read on fit and next steps before investing in a course, review, or coaching package.",
+      "Applicants who have been refused or received feedback on their pack and want a focused review of their case.",
     ctaLabel: "Explore Appeal Diagnosis",
     ctaHref: "/packages/appeal-diagnosis",
     videoEmbedUrl: DEFAULT_VIDEO,
-    videoTitle: "Strategy Call overview",
+    videoTitle: "Appeal Diagnosis overview",
     steps: [
       {
         title: "Share your details",
@@ -337,28 +336,27 @@ export const packages: ServicePackage[] = [
     name: "Appeal Rebuild",
     tagline: "Start here",
     description:
-      "A focused 30-minute consultation to review your profile, discuss Global Talent fit, and leave with a clear recommended next step.",
+      "A focused rebuild of your original pack — with a written rebuild memo and recommended next steps.",
     overview:
-      "The Strategy Call is a paid 30-minute 1:1. We review your background at a high level, discuss whether a Global Talent pathway is a strong fit, and recommend the right package — before you commit to a fuller engagement.",
-    priceLabel: "£45",
+      "Appeal Rebuild is a focused rebuild of your original pack. We review your background at a high level, discuss whether a Global Talent pathway is a strong fit, and recommend the right package — before you commit to a fuller engagement.",
+    priceLabel: "£3,950",
     priceNote: "One-time · 30 minutes",
     slotDurationMinutes: DEFAULT_SLOT_MINUTES,
     features: [
-      included("30-minute 1:1 consultation"),
-      included("High-level profile review"),
-      included("Pathway fit discussion"),
-      included("Recommended next package"),
-      included("Calendar invite after payment"),
-      excluded("Written strategy memo"),
-      excluded("Full Review"),
-      excluded("Weekly Support"),
+      included("Everything in Appeal Diagnosis"),
+      included("Narrative & evidence rebuild"),
+      included("Letter re-brief guidance"),
+      included("Annex structure redesign"),
+      included("Two review rounds"),
+      excluded("Resubmission readiness check"),
+
     ],
     idealFor:
-      "Anyone who wants an honest read on fit and next steps before investing in a course, review, or coaching package.",
+      "Applicants who have been refused or received feedback on their pack and want a focused rebuild of their case.",
     ctaLabel: "Explore Appeal Rebuild",
     ctaHref: "/packages/appeal-rebuild",
     videoEmbedUrl: DEFAULT_VIDEO,
-    videoTitle: "Strategy Call overview",
+    videoTitle: "Appeal Rebuild overview",
     steps: [
       {
         title: "Share your details",
@@ -379,28 +377,27 @@ export const packages: ServicePackage[] = [
     name: "Appeal Full Support",
     tagline: "Start here",
     description:
-      "A focused 30-minute consultation to review your profile, discuss Global Talent fit, and leave with a clear recommended next step.",
+      "End-to-end appeal/resubmission coaching with dedicated calls, iterative review, and priority turnaround until your pack is submission-ready.",
     overview:
-      "The Strategy Call is a paid 30-minute 1:1. We review your background at a high level, discuss whether a Global Talent pathway is a strong fit, and recommend the right package — before you commit to a fuller engagement.",
-    priceLabel: "£45",
+      "Appeal Full Support is an end-to-end appeal/resubmission coaching package. We work with you through dedicated calls, iterative review, and priority turnaround until your pack is submission-ready.",
+    priceLabel: "£5,950",
     priceNote: "One-time · 30 minutes",
     slotDurationMinutes: DEFAULT_SLOT_MINUTES,
     features: [
-      included("30-minute 1:1 consultation"),
-      included("High-level profile review"),
-      included("Pathway fit discussion"),
-      included("Recommended next package"),
-      included("Calendar invite after payment"),
-      excluded("Written strategy memo"),
-      excluded("Full Review"),
-      excluded("Weekly Support"),
+      included("Everything in Appeal Rebuild"),
+      included("Dedicated consultant"),
+      included("Weekly coaching calls (scoped)"),
+      included("Unlimited revisions within engagement window"),
+      included("Priority turnaround"),
+      excluded("Submission support"),
+
     ],
     idealFor:
-      "Anyone who wants an honest read on fit and next steps before investing in a course, review, or coaching package.",
+      "Applicants who have been refused or received feedback on their pack and want a focused rebuild of their case.",
     ctaLabel: "Explore Appeal Full Support",
     ctaHref: "/packages/appeal-full-support",
     videoEmbedUrl: DEFAULT_VIDEO,
-    videoTitle: "Strategy Call overview",
+    videoTitle: "Appeal Full Support overview",
     steps: [
       {
         title: "Share your details",

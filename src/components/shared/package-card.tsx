@@ -3,16 +3,16 @@ import { Check, X } from "lucide-react";
 import type { ServicePackage } from "@/types";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { PackageNameTypes } from "@/types/packages";
 
 import { BadgeText } from "./badge";
 
 type PackageCardProps = {
   pkg: ServicePackage;
   className?: string;
+  onCompare?: (slug: string) => void;
 };
 
-export function PackageCard({ pkg, className }: PackageCardProps) {
+export function PackageCard({ pkg, className, onCompare }: PackageCardProps) {
   return (
     <article
       className={cn(
@@ -97,7 +97,17 @@ export function PackageCard({ pkg, className }: PackageCardProps) {
           >
             {pkg.ctaLabel}
           </Button>
-        ) }
+        )}
+        {onCompare ? (
+          <Button
+            type="button"
+            variant="outline"
+            className="h-11 w-full rounded-xl"
+            onClick={() => onCompare(pkg.slug)}
+          >
+            Compare
+          </Button>
+        ) : null}
       </div>
     </article>
   );
