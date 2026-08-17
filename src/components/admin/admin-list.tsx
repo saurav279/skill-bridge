@@ -148,6 +148,8 @@ export function AdminList<T extends { id: string }>({
             }}
             className="h-9 rounded-xl border border-input bg-transparent px-2.5 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 dark:bg-input/30"
           >
+              <option value={5}>5</option>
+              <option value={10}>10</option>
             <option value={20}>20</option>
             <option value={50}>50</option>
             <option value={100}>100</option>
