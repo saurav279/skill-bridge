@@ -52,7 +52,10 @@ export function Navbar() {
     setMobileSection(null);
   }, [pathname]);
 
-  const hideChrome = pathname === "/login" || pathname === "/register";
+  const hideChrome =
+    pathname === "/login" ||
+    pathname === "/register" ||
+    pathname.startsWith("/admin");
 
   const skipPackageSlugs = ["strategy-call", "appeal-diagnosis", "appeal-rebuild", "appeal-full-support"];
   const filteredPackages = packages.filter((pkg) => !skipPackageSlugs.includes(pkg.slug));

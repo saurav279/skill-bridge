@@ -1,13 +1,23 @@
-import React from "react";
+"use client";
+
 import { MessageCircle } from "lucide-react";
 import Link from "next/link";
-
+import { usePathname } from "next/navigation";
 import { company } from "@/data/company";
-const Whatsapp = () => {
-    const contact = company.whatsapp;
 
-    if (!contact) return null;
-    
+export default function Whatsapp() {
+  const pathname = usePathname();
+  const contact = company.whatsapp;
+
+  if (!contact) return null;
+  if (
+    pathname === "/login" ||
+    pathname === "/register" ||
+    pathname.startsWith("/admin")
+  ) {
+    return null;
+  }
+
   return (
     <Link
       href={`https://wa.me/${contact}`}
@@ -27,6 +37,4 @@ const Whatsapp = () => {
       <span className="absolute inset-0 -z-10 animate-ping rounded-full bg-[#25D366]/30"></span>
     </Link>
   );
-};
-
-export default Whatsapp;
+}

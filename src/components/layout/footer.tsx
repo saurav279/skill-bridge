@@ -35,7 +35,13 @@ const resourceLinks = [
 
 export function Footer() {
   const pathname = usePathname();
-  if (pathname === "/login" || pathname === "/register") return null;
+  if (
+    pathname === "/login" ||
+    pathname === "/register" ||
+    pathname.startsWith("/admin")
+  ) {
+    return null;
+  }
 
   return (
     <footer className="border-t border-border bg-muted/30">
