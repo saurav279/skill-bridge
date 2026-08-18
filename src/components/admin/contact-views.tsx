@@ -29,10 +29,14 @@ const columns: AdminColumn<AdminContactMessage>[] = [
     render: (row) => dash(row.name),
   },
   {
-    id: "email",
-    header: "Email",
+    id: "contact",
+    header: "Contact",
     className: "font-mono text-xs",
-    render: (row) => dash(row.email),
+    render: (row) =>
+      <div>
+        <p>{dash(row.email)}</p>
+        <p>{dash(row.phone)}</p>
+      </div>
   },
   {
     id: "subject",
@@ -61,6 +65,7 @@ export function ContactsView() {
       rowHref={(row) => `/admin/contacts/${row.id}`}
       fetcher={fetcher}
       emptyLabel="No contact messages match these filters."
+      options={["name", "email"]}
     />
   );
 }

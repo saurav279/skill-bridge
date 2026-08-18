@@ -22,14 +22,21 @@ import { packages } from "@/data/packages";
 const columns: AdminColumn<AdminPackagePurchase>[] = [
   {
     id: "name",
-    header: "Customer",
+    header: "Name",
     render: (row) => dash(row.customerName),
   },
   {
-    id: "email",
-    header: "Email",
+    id: "contact",
+    header: "Contact",
     className: "font-mono text-xs",
-    render: (row) => dash(row.customerEmail),
+    render: (row) =>{ 
+      return (
+        <div>
+          <p>{dash(row.customerEmail)}</p>
+          <p>{dash(row.customerPhone)}</p>
+        </div>
+      )
+    },
   },
   {
     id: "package",
@@ -63,6 +70,7 @@ export function PurchasesView() {
       rowHref={(row) => `/admin/purchases/${row.id}`}
       fetcher={fetcher}
       emptyLabel="No purchases match these filters."
+      options={["name", "email", "packageName", "download"]}
     />
   );
 }

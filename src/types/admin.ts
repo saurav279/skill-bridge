@@ -8,6 +8,7 @@ export type AdminListQuery = {
   name?: string;
   email?: string;
   order?: "asc" | "desc";
+  packageName?: string;
 };
 
 export type AdminListResponse<T> = {
@@ -101,6 +102,7 @@ export type AdminPackagePurchase = {
   id: string;
   customerName: string;
   customerEmail: string;
+  customerPhone: string;
   stripeSessionId: string;
   stripePaymentIntentId: string | null;
   amount: number;

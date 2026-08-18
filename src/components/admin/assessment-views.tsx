@@ -40,10 +40,17 @@ const columns: AdminColumn<AdminAssessmentListItem>[] = [
     render: (row) => dash(row.contactName),
   },
   {
-    id: "email",
-    header: "Email",
+    id: "contact",
+    header: "Contact",
     className: "font-mono text-xs",
-    render: (row) => dash(row.contactEmail),
+    render: (row) =>{ 
+      return (
+        <div>
+          <p>{dash(row.contactEmail)}</p>
+          <p>{dash(row.phone)}</p>
+        </div>
+      )
+    },
   },
   {
     id: "route",
@@ -72,6 +79,7 @@ export function AssessmentsView() {
       rowHref={(row) => `/admin/assessments/${row.id}`}
       fetcher={fetcher}
       emptyLabel="No assessments match these filters."
+      options={["name", "email"]}
     />
   );
 }

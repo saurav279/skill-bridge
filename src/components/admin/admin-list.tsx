@@ -14,6 +14,9 @@ import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { AdminUnauthorizedError } from "@/services/admin-api";
 import type { AdminListQuery, AdminListResponse } from "@/types/admin";
+import { packages } from "@/data/packages";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { AdminListDownload } from "./admin-list-download";
 
 export type AdminColumn<T> = {
   id: string;
@@ -22,11 +25,14 @@ export type AdminColumn<T> = {
   render: (row: T) => ReactNode;
 };
 
+type FilterOptionProps = "name" | "email" | "packageName" | "download";
+
 type AdminListProps<T extends { id: string }> = {
   columns: AdminColumn<T>[];
   rowHref: (row: T) => string;
   fetcher: (query: AdminListQuery) => Promise<AdminListResponse<T>>;
   emptyLabel: string;
+  options: FilterOptionProps[];
 };
 
 export function AdminList<T extends { id: string }>({
@@ -34,12 +40,14 @@ export function AdminList<T extends { id: string }>({
   rowHref,
   fetcher,
   emptyLabel,
+  options,
 }: AdminListProps<T>) {
   const router = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [debouncedName, setDebouncedName] = useState("");
   const [debouncedEmail, setDebouncedEmail] = useState("");
+  const [packageName, setPackageName] = useState("");
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(20);
   const [order, setOrder] = useState<"asc" | "desc">("desc");
@@ -62,9 +70,17 @@ export function AdminList<T extends { id: string }>({
       page,
       limit,
       order,
-      name: debouncedName || undefined,
-      email: debouncedEmail || undefined,
+
     };
+    if (options.includes("name")) {
+      query.name = debouncedName || undefined;
+    }
+    if (options.includes("email")) {
+      query.email = debouncedEmail || undefined;
+    }
+    if (options.includes("packageName")) {
+      query.packageName = packageName || undefined;
+    }
 
     async function load() {
       setLoading(true);
@@ -89,44 +105,73 @@ export function AdminList<T extends { id: string }>({
     return () => {
       cancelled = true;
     };
-  }, [debouncedName, debouncedEmail, page, limit, order, fetcher, router]);
+  }, [debouncedName, debouncedEmail, page, limit, order, fetcher, router, packageName]);
 
   const total = result?.total ?? 0;
   const totalPages = Math.max(1, result?.totalPages ?? 1);
   const from = total === 0 ? 0 : (page - 1) * limit + 1;
   const to = Math.min(page * limit, total);
 
+  const allPackageNames = packages.map((pkg) => pkg.name);
+
   return (
     <div className="space-y-4">
       <div className="flex flex-col gap-3 rounded-2xl border border-border bg-card p-4 shadow-soft sm:flex-row sm:items-end">
-        <div className="grid flex-1 gap-3 sm:grid-cols-2">
-          <div className="space-y-1.5">
-            <Label htmlFor="admin-name" className="text-xs text-muted-foreground">
-              Name
-            </Label>
-            <div className="relative">
-              <Search className="pointer-events-none absolute top-1/2 left-2.5 size-3.5 -translate-y-1/2 text-muted-foreground" />
+        <div className="flex  flex-col md:flex-row justify-between w-full">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 w-full">
+
+
+            {options.includes("name") && <div className="space-y-1.5">
+              <Label htmlFor="admin-name" className="text-xs text-muted-foreground">
+                Name
+              </Label>
+              <div className="relative">
+                <Search className="pointer-events-none absolute top-1/2 left-2.5 size-3.5 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  id="admin-name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Search name"
+                  className="h-9 rounded-xl pl-8"
+                />
+              </div>
+            </div>}
+            {options.includes("email") && <div className="space-y-1.5">
+              <Label htmlFor="admin-email" className="text-xs text-muted-foreground">
+                Email
+              </Label>
               <Input
-                id="admin-name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Search name"
-                className="h-9 rounded-xl pl-8"
+                id="admin-email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Search email"
+                className="h-9 rounded-xl"
               />
-            </div>
-          </div>
-          <div className="space-y-1.5">
-            <Label htmlFor="admin-email" className="text-xs text-muted-foreground">
-              Email
-            </Label>
-            <Input
-              id="admin-email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Search email"
-              className="h-9 rounded-xl"
-            />
+            </div>}
+            {options.includes("packageName") &&
+              <div className="space-y-1.5">
+                <Label htmlFor="admin-package" className="text-xs text-muted-foreground">
+                  Packages
+                </Label>
+                <Select
+                  id="admin-package"
+                  value={packageName}
+                  onValueChange={(value) => setPackageName(value || "")}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select package" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {allPackageNames.map((name) => (
+                      <SelectItem key={name} value={name} className="w-full">
+                        {name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            }
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -148,12 +193,20 @@ export function AdminList<T extends { id: string }>({
             }}
             className="h-9 rounded-xl border border-input bg-transparent px-2.5 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 dark:bg-input/30"
           >
-              <option value={5}>5</option>
-              <option value={10}>10</option>
+            <option value={5}>5</option>
+            <option value={10}>10</option>
             <option value={20}>20</option>
             <option value={50}>50</option>
             <option value={100}>100</option>
           </select>
+
+          {options.includes("download") && (
+            <AdminListDownload
+              filename="admin-list.csv"
+              columns={columns}
+              rows={result?.data ?? []}
+            />
+          )}
         </div>
       </div>
 

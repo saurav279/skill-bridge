@@ -1,3 +1,4 @@
+import { packages } from "@/data/packages";
 import { getApiBaseUrl } from "@/services/fetchApi";
 import type {
   AdminAssessmentDetail,
@@ -30,8 +31,10 @@ function buildUrl(path: string, query?: AdminListQuery): string {
   if (query.order) params.set("order", query.order);
   const name = query.name?.trim();
   const email = query.email?.trim();
+  const packageName = query.packageName?.trim();
   if (name) params.set("name", name);
   if (email) params.set("email", email);
+  if (packageName) params.set("packageName", packages.find((pkg) => pkg.name === packageName)?.slug ?? "");
 
   const qs = params.toString();
   return qs ? `${url}?${qs}` : url;
@@ -107,6 +110,7 @@ export function getContactMessage(id: string) {
 }
 
 export function listPackagePurchases(query?: AdminListQuery) {
+  console.log(query);
   return adminFetch<AdminListResponse<AdminPackagePurchase>>(
     "/admin/package_purchases",
     { query }
