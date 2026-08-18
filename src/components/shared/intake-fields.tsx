@@ -1,9 +1,11 @@
+"use client";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { PhoneInputField } from "@/components/shared/phone-input";
 import { cn } from "@/lib/utils";
 import { VISA_OPTIONS } from "@/lib/intake-details";
 import type { LivesInUk, UkVisaOption } from "@/types/consultation";
+
 
 export function RequiredMark() {
   return (
@@ -36,6 +38,7 @@ export function IntakeProfileFields({
   onUkVisa,
   onUkVisaOther,
 }: IntakeProfileFieldsProps) {
+
   return (
     <>
       <div className="space-y-2">

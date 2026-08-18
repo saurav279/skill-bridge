@@ -11,17 +11,21 @@ import { ReadyToStartCta } from "@/components/sections/ready-to-start";
 import { FeaturedStories } from "@/components/sections/featured-stories";
 import { TestimonialsSection } from "@/components/sections/testimonials";
 import { FAQSection } from "@/components/sections/faq-section";
+import {CeoFeaturedIn} from "@/components/shared/ceo-featured-in";
+import { EndorsementBodiesSection } from "@/components/sections/endorsement-bodies";
 
 export default function HomePage() {
   return (
     <>
       <ConversionHero />
       <AboutGtvSection />
+      <EndorsementBodiesSection />
       <BenefitsSection />
       <ConversionStatsBand />
    
       <HowWeHelpSection />
       <FounderBand />
+      <CeoFeaturedIn />
      
 
       <ConversionPackages />

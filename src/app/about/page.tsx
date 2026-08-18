@@ -12,6 +12,7 @@ import { ceo, awards } from "@/data/content-extra";
 import { ReadyToStartCta } from "@/components/sections/ready-to-start";
 import { ConversionPackages } from "@/components/sections/conversion-packages";
 import { BadgeText } from "@/components/shared/badge";
+import { CeoFeaturedIn } from "@/components/shared/ceo-featured-in";
 
 export const metadata: Metadata = {
   title: "About",
@@ -85,6 +86,8 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
+
+      <CeoFeaturedIn />
 
       {/* More about CEO */}
       <section id="more-about-ceo" className="scroll-mt-28 py-20 md:py-28">

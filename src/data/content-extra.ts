@@ -60,6 +60,60 @@ export const awards = [
   },
 ];
 
+/** Official Global Talent Stage 1 endorsing organisations and arts partners */
+export const endorsementBodyLogos = [
+  {
+    name: "Tech Nation",
+    src: "/endorsement-bodies/tech-nation.png",
+    href: "https://technation.io",
+  },
+  {
+    name: "The Royal Society",
+    src: "/endorsement-bodies/royal-society.png",
+    href: "https://royalsociety.org",
+  },
+  {
+    name: "The British Academy",
+    src: "/endorsement-bodies/british-academy.png",
+    href: "https://www.thebritishacademy.ac.uk",
+  },
+  {
+    name: "The Royal Academy of Engineering",
+    src: "/endorsement-bodies/royal-academy-of-engineering.png",
+    href: "https://raeng.org.uk",
+  },
+  {
+    name: "UK Research and Innovation (UKRI)",
+    src: "/endorsement-bodies/ukri.png",
+    href: "https://www.ukri.org",
+  },
+  {
+    name: "Arts Council England",
+    src: "/endorsement-bodies/arts-council-england.png",
+    href: "https://www.artscouncil.org.uk",
+  },
+  {
+    name: "Royal Institute of British Architects (RIBA)",
+    src: "/endorsement-bodies/riba.png",
+    href: "https://www.architecture.com",
+  },
+  {
+    name: "British Fashion Council",
+    src: "/endorsement-bodies/british-fashion-council.png",
+    href: "https://www.britishfashioncouncil.co.uk",
+  },
+  {
+    name: "Producers’ Alliance for Cinema and Television (Pact)",
+    src: "/endorsement-bodies/pact.png",
+    href: "https://www.pact.co.uk",
+  },
+  {
+    name: "Design Business Association (DBA)",
+    src: "/endorsement-bodies/dba.png",
+    href: "https://www.dba.org.uk",
+  },
+];
+
 /** Six UK Global Talent endorsement pathways / bodies */
 export const endorsementBodies = [
   {

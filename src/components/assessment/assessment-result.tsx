@@ -68,6 +68,23 @@ function priorityMeta(priority: "high" | "medium" | "easy") {
   };
 }
 
+
+function getMotivationByScore(score: number): { title: string, description: string } {
+  if (score >= 80) {
+    return {
+      title: "Congratulations! Strong Endorsement Potential",
+      description:
+        "Let us help you build a compelling profile and maximise your chances of success.",
+    };
+  }
+
+  return {
+    title: "Your score is a starting point, not the final decision.",
+    description:
+      "Let us help you identify the gaps and build a stronger profile.",
+  };
+}
+
 export function AssessmentResult({ id }: { id: string }) {
   const [data, setData] = useState<Assessment | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -308,10 +325,35 @@ export function AssessmentResult({ id }: { id: string }) {
                 style={{ width: `${data.confidenceScore}%` }}
               />
             </div>
-            {/* <div className="mt-3 flex justify-between text-xs text-muted-foreground">
-              <span>Target {TARGET_SCORE}+</span>
-              <span>Stage 1 · {probability}</span>
-            </div> */}
+            <div className="mt-8 flex flex-col justify-between gap-4  text-muted-foreground">
+              <p className="font-bold ">{getMotivationByScore(data.confidenceScore).title}</p>
+              <p className="text-muted-foreground text-sm">{getMotivationByScore(data.confidenceScore).description}</p>
+
+              <Button
+                className="h-9 rounded-full px-4"
+                render={
+                  freeCallAvailable ? (
+                    <a
+                      href="#discovery-call"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        document
+                          .getElementById("discovery-call")
+                          ?.scrollIntoView({ behavior: "smooth", block: "start" });
+                      }}
+                    />
+                  ) : (
+                    <Link
+                      href="/packages/strategy-call"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    />
+                  )
+                }
+              >
+               {freeCallAvailable ? "Request a Free Discovery Call" : "Book a Strategy Call"}
+              </Button>
+            </div>
           </div>
         </FadeIn>
 

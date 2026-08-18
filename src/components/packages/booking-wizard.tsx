@@ -27,6 +27,7 @@ import {
   parseCurrentVisa,
   validateIntakeDetails,
 } from "@/lib/intake-details";
+import { useUserStore, useUserStoreHydrated } from "@/stores/user-details";
 import type { ServicePackage } from "@/types";
 import type { PackageNameTypes } from "@/types/packages";
 import type { BookingDetails, CalendarSlot, LivesInUk, UkVisaOption } from "@/types/consultation";
@@ -142,6 +143,9 @@ export function BookingWizard({ pkg }: BookingWizardProps) {
     [today]
   );
 
+  const storeHydrated = useUserStoreHydrated();
+  const setPersonalInfo = useUserStore((s) => s.setPersonalInfo);
+  const personalInfo = useUserStore((s) => s.personalInfo);
   const [step, setStep] = useState<StepIndex>(0);
   const [draft, setDraft] = useState<Draft>(() => emptyDraft(minDate));
   const [hydrated, setHydrated] = useState(false);
@@ -153,9 +157,37 @@ export function BookingWizard({ pkg }: BookingWizardProps) {
   const [detailsError, setDetailsError] = useState<string | null>(null);
 
   useEffect(() => {
-    setDraft(readDraft(pkg.slug, minDate, maxDate));
+    if (!storeHydrated) return;
+
+    const stored = readDraft(pkg.slug, minDate, maxDate);
+    const personal = useUserStore.getState().personalInfo;
+
+    const name = personal.name || stored.name;
+    const email = personal.email || stored.email;
+    const phone = personal.phone || stored.phone;
+    const livesInUk = personal.liveInUk || stored.livesInUk;
+    const ukVisa = personal.currentVisa || stored.ukVisa;
+    const ukVisaOther = personal.ukVisaOther || stored.ukVisaOther;
+
+    setDraft({
+      ...stored,
+      name,
+      email,
+      phone,
+      livesInUk,
+      ukVisa,
+      ukVisaOther,
+    });
+    setPersonalInfo({
+      name,
+      email,
+      phone,
+      liveInUk: livesInUk || undefined,
+      currentVisa: ukVisa || undefined,
+      ukVisaOther: ukVisaOther || undefined,
+    });
     setHydrated(true);
-  }, [pkg.slug, minDate, maxDate]);
+  }, [pkg.slug, minDate, maxDate, storeHydrated, setPersonalInfo]);
 
   useEffect(() => {
     if (!hydrated) return;
@@ -244,6 +276,14 @@ export function BookingWizard({ pkg }: BookingWizardProps) {
       ukVisaOther: prev.ukVisaOther.trim(),
       description: prev.description.trim(),
     }));
+    setPersonalInfo({
+      name: draft.name.trim(),
+      email: draft.email.trim(),
+      phone: draft.phone,
+      liveInUk: draft.livesInUk || undefined,
+      currentVisa: draft.ukVisa || undefined,
+      ukVisaOther: draft.ukVisaOther.trim() || undefined,
+    });
     setStep(1);
   }
 
@@ -254,6 +294,12 @@ export function BookingWizard({ pkg }: BookingWizardProps) {
       ukVisa: value === "yes" ? prev.ukVisa : "",
       ukVisaOther: value === "yes" ? prev.ukVisaOther : "",
     }));
+    setPersonalInfo({
+      liveInUk: value,
+      ...(value !== "yes"
+        ? { currentVisa: undefined, ukVisaOther: undefined }
+        : {}),
+    });
   }
 
   function onUkVisa(value: UkVisaOption) {
@@ -262,6 +308,10 @@ export function BookingWizard({ pkg }: BookingWizardProps) {
       ukVisa: value,
       ukVisaOther: value === "Others" ? prev.ukVisaOther : "",
     }));
+    setPersonalInfo({
+      currentVisa: value,
+      ...(value !== "Others" ? { ukVisaOther: undefined } : {}),
+    });
   }
 
   function onDateChange(next: string) {
@@ -374,7 +424,10 @@ export function BookingWizard({ pkg }: BookingWizardProps) {
                   autoComplete="name"
                   placeholder="Your full name"
                   value={draft.name}
-                  onChange={(e) => updateDraft("name", e.target.value)}
+                  onChange={(e) => {
+                    updateDraft("name", e.target.value);
+                    setPersonalInfo({ name: e.target.value });
+                  }}
                   required
                   className="h-11 rounded-xl"
                 />
@@ -391,7 +444,10 @@ export function BookingWizard({ pkg }: BookingWizardProps) {
                   autoComplete="email"
                   placeholder="you@company.com"
                   value={draft.email}
-                  onChange={(e) => updateDraft("email", e.target.value)}
+                  onChange={(e) => {
+                    updateDraft("email", e.target.value);
+                    setPersonalInfo({ email: e.target.value });
+                  }}
                   required
                   className="h-11 rounded-xl"
                 />
@@ -399,14 +455,20 @@ export function BookingWizard({ pkg }: BookingWizardProps) {
             </div>
 
             <IntakeProfileFields
-              phone={draft.phone}
+              phone={draft.phone || hydrated ? personalInfo.phone : ""}
               livesInUk={draft.livesInUk}
               ukVisa={draft.ukVisa}
               ukVisaOther={draft.ukVisaOther}
-              onPhone={(value) => updateDraft("phone", value)}
+              onPhone={(value) => {
+                updateDraft("phone", value);
+                setPersonalInfo({ phone: value });
+              }}
               onLivesInUk={onLivesInUk}
               onUkVisa={onUkVisa}
-              onUkVisaOther={(value) => updateDraft("ukVisaOther", value)}
+              onUkVisaOther={(value) => {
+                updateDraft("ukVisaOther", value);
+                setPersonalInfo({ ukVisaOther: value });
+              }}
             />
 
             <div className="space-y-2">
@@ -439,14 +501,17 @@ export function BookingWizard({ pkg }: BookingWizardProps) {
                 {detailsError}
               </p>
             ) : null}
+            <div className="flex justify-end">
 
-            <Button
-              type="submit"
-              className="h-11 w-full rounded-xl sm:w-auto sm:px-8"
-            >
-              Continue
-              <ArrowRight className="size-4" />
-            </Button>
+
+              <Button
+                type="submit"
+                className="h-11 w-full rounded-xl sm:w-auto sm:px-8"
+              >
+                Continue
+                <ArrowRight className="size-4" />
+              </Button>
+            </div>
           </form>
         ) : null}
 

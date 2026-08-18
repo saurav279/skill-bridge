@@ -16,6 +16,7 @@ export const metadata: Metadata = {
 };
 
 export default function ContactPage() {
+  
   return (
     <>
       <section className="py-16 md:py-24">

@@ -21,7 +21,7 @@ type ViewMode = "browse" | "compare";
 
 export function ConversionPackages({
   showIntro = true,
-  limit,
+  // limit,
   data,
 }: ConversionPackagesProps) {
   const skipPackageSlugs = [

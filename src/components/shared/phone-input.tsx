@@ -68,13 +68,14 @@ export function PhoneInputField({
   const searchRef = useRef<HTMLInputElement>(null);
   const [menuPos, setMenuPos] = useState({ top: 0, left: 0, width: 320 });
 
+
   const { inputValue, handlePhoneValueChange, inputRef, country, setCountry } =
     usePhoneInput({
       defaultCountry: "gb",
       value,
       disableDialCodeAndPrefix: true,
       allowMaskOverflow: true,
-      onChange: ({ phone }) => onChange(phone),
+      onChange: ({ phone }) => { onChange(phone); },
     });
 
   const filtered = useMemo(() => {
@@ -139,6 +140,9 @@ export function PhoneInputField({
     setOpen(false);
   }
 
+
+  
+
   return (
     <div ref={rootRef} className="relative">
       <div
@@ -184,76 +188,76 @@ export function PhoneInputField({
 
       {open
         ? createPortal(
-            <div
-              id="phone-country-menu"
-              role="listbox"
-              aria-label="Country codes"
-              className="fixed z-[80] overflow-hidden rounded-xl border border-border/80 bg-popover text-popover-foreground shadow-elevated"
-              style={{
-                top: menuPos.top,
-                left: menuPos.left,
-                width: menuPos.width,
-              }}
-            >
-              <div className="border-b border-border/70 p-2">
-                <div className="relative">
-                  <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
-                  <input
-                    ref={searchRef}
-                    type="search"
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                    placeholder="Search country or code"
-                    className="h-10 w-full rounded-lg border border-input bg-transparent pr-3 pl-9 text-sm outline-none focus:border-ring focus:ring-3 focus:ring-ring/50"
-                  />
-                </div>
+          <div
+            id="phone-country-menu"
+            role="listbox"
+            aria-label="Country codes"
+            className="fixed z-[80] overflow-hidden rounded-xl border border-border/80 bg-popover text-popover-foreground shadow-elevated"
+            style={{
+              top: menuPos.top,
+              left: menuPos.left,
+              width: menuPos.width,
+            }}
+          >
+            <div className="border-b border-border/70 p-2">
+              <div className="relative">
+                <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
+                <input
+                  ref={searchRef}
+                  type="search"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="Search country or code"
+                  className="h-10 w-full rounded-lg border border-input bg-transparent pr-3 pl-9 text-sm outline-none focus:border-ring focus:ring-3 focus:ring-ring/50"
+                />
               </div>
-              <ul className="max-h-64 overflow-y-auto py-1">
-                {filtered.length === 0 ? (
-                  <li className="px-3 py-6 text-center text-sm text-muted-foreground">
-                    No countries match “{query.trim()}”
-                  </li>
-                ) : (
-                  filtered.map((item, index) => {
-                    const selected = item.iso2 === country.iso2;
-                    const showDivider =
-                      !query.trim() &&
-                      index === PREFERRED_ISO2.length - 1 &&
-                      filtered.length > PREFERRED_ISO2.length;
-                    return (
-                      <li key={item.iso2}>
-                        <button
-                          type="button"
-                          role="option"
-                          aria-selected={selected}
-                          onClick={() => selectCountry(item)}
-                          className={cn(
-                            "flex w-full items-center gap-2.5 px-3 py-2 text-left text-sm hover:bg-muted/70",
-                            selected && "bg-primary/10 text-primary"
-                          )}
-                        >
-                          <FlagImage iso2={item.iso2} size={20} />
-                          <span className="min-w-0 flex-1 truncate">
-                            {item.name}
-                          </span>
-                          <span className="shrink-0 font-medium tabular-nums text-muted-foreground">
-                            +{item.dialCode}
-                          </span>
-                        </button>
-                        {showDivider ? (
-                          <div
-                            className="my-1 border-t border-border/70"
-                            aria-hidden
-                          />
-                        ) : null}
-                      </li>
-                    );
-                  })
-                )}
-              </ul>
-            </div>,
-            document.body
-          )
+            </div>
+            <ul className="max-h-64 overflow-y-auto py-1">
+              {filtered.length === 0 ? (
+                <li className="px-3 py-6 text-center text-sm text-muted-foreground">
+                  No countries match “{query.trim()}”
+                </li>
+              ) : (
+                filtered.map((item, index) => {
+                  const selected = item.iso2 === country.iso2;
+                  const showDivider =
+                    !query.trim() &&
+                    index === PREFERRED_ISO2.length - 1 &&
+                    filtered.length > PREFERRED_ISO2.length;
+                  return (
+                    <li key={item.iso2}>
+                      <button
+                        type="button"
+                        role="option"
+                        aria-selected={selected}
+                        onClick={() => selectCountry(item)}
+                        className={cn(
+                          "flex w-full items-center gap-2.5 px-3 py-2 text-left text-sm hover:bg-muted/70",
+                          selected && "bg-primary/10 text-primary"
+                        )}
+                      >
+                        <FlagImage iso2={item.iso2} size={20} />
+                        <span className="min-w-0 flex-1 truncate">
+                          {item.name}
+                        </span>
+                        <span className="shrink-0 font-medium tabular-nums text-muted-foreground">
+                          +{item.dialCode}
+                        </span>
+                      </button>
+                      {showDivider ? (
+                        <div
+                          className="my-1 border-t border-border/70"
+                          aria-hidden
+                        />
+                      ) : null}
+                    </li>
+                  );
+                })
+              )}
+            </ul>
+          </div>,
+          document.body
+        )
         : null}
     </div>
   );

@@ -50,8 +50,7 @@ export function Footer() {
           <div className="md:col-span-4">
             <BrandLogo height={28} />
             <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted-foreground">
-              Evidence-driven Global Talent Visa consultancy for exceptional
-              founders, engineers, researchers, designers, and creators.
+              {company.disclaimer}
             </p>
 
             <ul className="mt-6 space-y-3 text-sm text-muted-foreground">

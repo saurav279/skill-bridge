@@ -6,7 +6,7 @@ import { Children, useEffect, useState, type ReactNode } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ChevronDown, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ThemeToggle } from "@/components/shared/theme-toggle";
+// import { ThemeToggle } from "@/components/shared/theme-toggle";
 import { BrandLogo } from "@/components/shared/brand-logo";
 import { packages } from "@/data/packages";
 import { company } from "@/data/company";
@@ -168,6 +168,15 @@ export function Navbar() {
           </div>
 
           <div className="flex items-center gap-1.5">
+
+          <Button
+          variant="outline"
+              size="sm"
+              className="hidden h-10 rounded-full px-4 text-xs font-semibold uppercase tracking-wide sm:inline-flex"
+              render={<Link href="/contact" target="_blank" rel="noopener noreferrer"/>}
+            >
+              Free Discovery Call
+            </Button>
             {/* <ThemeToggle /> */}
             <Button
               size="sm"
@@ -278,6 +287,19 @@ export function Navbar() {
                 <MobileLink href="/contact" active={pathname === "/contact"}>
                   Contact
                 </MobileLink>
+                <Button
+                  variant="outline"
+                  className="mt-3 h-11 rounded-full font-semibold uppercase tracking-wide"
+                  render={
+                    <Link
+                      href="/contact"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    />
+                  }
+                >
+                  Free Discovery Call
+                </Button>
                 <Button
                   className="mt-3 h-11 rounded-full font-semibold uppercase tracking-wide"
                   render={

@@ -1,12 +1,12 @@
 
 import { FadeIn } from "@/components/shared/fade-in";
-import { company } from "@/data/company";
+
 
 import { SectionTitle } from "../shared/section-title";
-import { ContactMap } from "../shared/contact-map";
+
 import { ContactForm } from "../shared/contact-form";
 
-export function FreeStrategyCallCta({customerDetails, assessmentId}: {customerDetails: {name: string, email: string, phone: string, livesInUk: boolean, currentVisa?: string}, assessmentId: string}) {
+export function FreeStrategyCallCta({customerDetails}: {customerDetails: {name: string, email: string, phone: string, livesInUk: boolean, currentVisa?: string}, assessmentId: string}) {
   const subject = `Requesting Free Discovery Call — ${customerDetails.name}`;
 
   const message = `Hi Skill Bridge,

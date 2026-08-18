@@ -63,7 +63,7 @@ export const packages: ServicePackage[] = [
       "A self-paced course that helps you articulate leadership, impact, and innovation — the foundations endorsement panels look for in Digital Technology profiles.",
     overview:
       "Leadership Enhancement is your foundation. You will learn how to frame leadership, innovation, and impact in language endorsement panels recognise — before you invest in heavier coaching. Complete modules at your own pace, then upgrade when you are ready for strategy or review.",
-    priceLabel: "£499",
+    priceLabel: "£500",
     priceNote: "One-time",
     features: [
       included("Leadership in Tech profile review"),
@@ -96,7 +96,7 @@ export const packages: ServicePackage[] = [
       "Access Skill Bridge DIY resources — checklists, evidence templates, and structured prompts so you can prepare materials independently with expert frameworks.",
     overview:
       "DIY Membership gives you Skill Bridge templates without full 1:1 coaching. Use checklists, letter prompts, and criteria worksheets to organise your pack on your timeline — ideal if you are disciplined and want professional structure at a lower investment.",
-    priceLabel: "£699",
+    priceLabel: "£700",
     priceNote: "One-time",
     features: [
       included("Leadership in Tech Course"),
@@ -169,7 +169,7 @@ export const packages: ServicePackage[] = [
       "Already drafting your endorsement materials? We review your statement, evidence structure, and letters — spotting gaps and strengthening presentation before you submit.",
     overview:
       "Review Only is for applicants who already have drafts. We stress-test your statement, evidence annexes, and letters against criteria — then give precise rewrite guidance so you submit with confidence.",
-    priceLabel: "£2,000",
+    priceLabel: "£1,000",
     priceNote: "One-time · Review focused",
     features: [
       included("Leadership Enhancement"),
@@ -203,7 +203,7 @@ export const packages: ServicePackage[] = [
       "Our most popular engagement: strategy, narrative drafting support, evidence architecture, letter guidance, and iterative review until your Stage 1 pack is endorsement-ready.",
     overview:
       "Full Review combines strategy and iterative review. We help you shape narrative and evidence, guide letters, and run revision rounds until the pack is coherent, criteria-aligned, and ready for Stage 1 submission — with weekly coaching across a four-week window.",
-    priceLabel: "£3,000",
+    priceLabel: "£3,500",
     priceNote: "Installments available · Most popular",
     featured: true,
     features: [
@@ -240,7 +240,7 @@ export const packages: ServicePackage[] = [
       "White-glove coaching with dedicated sessions, full support across criteria, structure, evidence, letters, and submission — limited seats each month.",
     overview:
       "Bespoke 1-to-1 Support is Skill Bridge’s highest-touch engagement. You work with a dedicated consultant through unlimited weekly calls, full support across criteria selection, application structure, evidence architecture, recommendation letters, and the endorsement stage. Seats are limited so you get undivided attention — ideal for founders and senior talent who want a tightly managed path to Stage 1 endorsement.",
-    priceLabel: "£4,000",
+    priceLabel: "£5,000",
     priceNote: "Installments available · Full support",
     features: [
       included("Leadership Enhancement"),

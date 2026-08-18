@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { FadeIn } from "@/components/shared/fade-in";
-import { company } from "@/data/company";
+// import { company } from "@/data/company";
 import { BadgeText } from "../shared/badge";
 
 export function ReadyForStrategyCall() {

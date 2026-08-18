@@ -6,6 +6,7 @@ import {
   talentVsPromise,
   gtvFaqs,
 } from "@/data/content-extra";
+import { EndorsementBodiesSection } from "@/components/sections/endorsement-bodies";
 import { benefits } from "@/data/conversion";
 import { SectionTitle } from "@/components/shared/section-title";
 import { EbookCta } from "@/components/shared/ebook-cta";
@@ -48,12 +49,14 @@ export default function AboutGtvPage() {
         </div>
       </section>
 
+      <EndorsementBodiesSection />
+
       {/* 6 endorsement bodies */}
-      <section className="border-y border-border/70 bg-muted/20 py-20 md:py-28">
+      <section className="py-20 md:py-28">
         <div className="container-page">
           <FadeIn>
             <SectionTitle
-              eyebrow="Endorsement bodies"
+              eyebrow="Pathways"
               title="Clear differences between the six pathways"
               description="Each field has a dedicated endorsing route. Choosing the right one is the first strategic decision."
               align="center"

@@ -56,6 +56,8 @@ import {
   saveRouteCache,
   setAssessmentLastRouteId,
 } from "@/lib/assessment-cache";
+import { useUserStore, useUserStoreHydrated } from "@/stores/user-details";
+import { UkVisaOption } from "@/types/consultation";
 
 const ICONS: Record<string, LucideIcon> = {
   Users,
@@ -89,6 +91,8 @@ export function AssessmentCarousel() {
   const [hydrated, setHydrated] = useState(false);
   const [hasCache, setHasCache] = useState(false);
   const fileRef = useRef<HTMLInputElement | null>(null);
+  const { personalInfo, setPersonalInfo } = useUserStore();
+  const personalInfoHydrated = useUserStoreHydrated();
 
   const sections = useMemo(
     () => (routeId ? getSectionsForRoute(routeId) : []),
@@ -338,6 +342,41 @@ payload.resumeLink = await uploadToCloudinary(resumeFile);
     );
   }
 
+  //Populate answers with personal info if hydrated
+  useEffect(() => {
+    if (personalInfoHydrated) {
+      setAnswers(prev=>({ ...prev,
+        name: personalInfo.name,
+        email: personalInfo.email,
+        phone: personalInfo.phone,
+        livesInUk: personalInfo.liveInUk === "yes" ? "Yes" : personalInfo.liveInUk === "no" ? "No" : undefined,
+        ukVisa: personalInfo.currentVisa as UkVisaOption, 
+        ukVisaOther: personalInfo.ukVisaOther,
+        
+       }));
+    }
+  }, [personalInfoHydrated, personalInfo.name, personalInfo.email, personalInfo.phone, personalInfo.liveInUk, personalInfo.currentVisa, personalInfo.ukVisaOther]);
+
+  //Update personal info with answers if not hydrated
+  useEffect(() => {
+    if (answers.name && answers.email && answers.phone) {
+ 
+      setPersonalInfo({
+        name: answers.name as string,
+        email: answers.email as string,
+        phone: answers.phone as string,
+        liveInUk: answers.livesInUk === "Yes" ? "yes" : answers.livesInUk === "No" ? "no" : undefined,
+        currentVisa: answers.ukVisa as UkVisaOption,
+        ukVisaOther: answers.ukVisaOther as string,
+      });
+
+    }
+    
+  }, [answers.name, answers.email, answers.phone, answers.livesInUk, answers.ukVisa, answers.ukVisaOther, setPersonalInfo]);
+
+
+
+  console.log(answers.livesInUk);
   if (!hydrated) {
     return (
       <div className="flex min-h-[240px] items-center justify-center rounded-2xl border border-border/80 bg-card p-8 shadow-soft">
@@ -483,6 +522,7 @@ payload.resumeLink = await uploadToCloudinary(resumeFile);
   }
 
   const Icon = ICONS[current?.icon ?? "Users"] ?? Users;
+
 
   return (
     <div>

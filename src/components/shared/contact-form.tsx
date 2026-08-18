@@ -17,6 +17,7 @@ import { cn } from "@/lib/utils";
 import type { ContactTalkPreference } from "@/api/useContact";
 import type { LivesInUk, UkVisaOption } from "@/types/consultation";
 import Link from "next/link";
+import { useUserStore, useUserStoreHydrated } from "@/stores/user-details";
 
 const TALK_PREFERENCES: { id: ContactTalkPreference; label: string }[] = [
   { id: "phone", label: "Phone" },
@@ -24,18 +25,26 @@ const TALK_PREFERENCES: { id: ContactTalkPreference; label: string }[] = [
 ];
 
 export function ContactForm({ defaultValues }: { defaultValues?: { name: string, email: string, phone: string, livesInUk: boolean, currentVisa?: string, subject: string, message: string } }) {
-  const [name, setName] = useState(defaultValues?.name || "");
-  const [email, setEmail] = useState(defaultValues?.email || "");
-  const [phone, setPhone] = useState(defaultValues?.phone || "");
-  const [livesInUk, setLivesInUk] = useState<LivesInUk | "">(
-    defaultValues ? (defaultValues.livesInUk ? "yes" : "no") : ""
-  );
-  const [ukVisa, setUkVisa] = useState<UkVisaOption | "">(
-    () => parseCurrentVisa(defaultValues?.currentVisa).ukVisa
-  );
-  const [ukVisaOther, setUkVisaOther] = useState(
-    () => parseCurrentVisa(defaultValues?.currentVisa).ukVisaOther
-  );
+  const hydrated = useUserStoreHydrated();
+  const personalInfo = useUserStore((s) => s.personalInfo);
+  const setPersonalInfo = useUserStore((s) => s.setPersonalInfo);
+
+  const parsedDefaultVisa = parseCurrentVisa(defaultValues?.currentVisa);
+  const name = defaultValues?.name || (hydrated ? personalInfo.name : "") || "";
+  const email = defaultValues?.email || (hydrated ? personalInfo.email : "") || "";
+  const phone = defaultValues?.phone || (hydrated ? personalInfo.phone : "") || "";
+  const livesInUk: LivesInUk | "" = defaultValues
+    ? defaultValues.livesInUk
+      ? "yes"
+      : "no"
+    : hydrated
+      ? personalInfo.liveInUk || ""
+      : "";
+  const ukVisa: UkVisaOption | "" =
+    parsedDefaultVisa.ukVisa || (hydrated ? personalInfo.currentVisa || "" : "");
+  const ukVisaOther =
+    parsedDefaultVisa.ukVisaOther || (hydrated ? personalInfo.ukVisaOther || "" : "");
+
   const [prefered, setPrefered] = useState<ContactTalkPreference | "">("phone");
   const [subject, setSubject] = useState(defaultValues?.subject || "");
   const [message, setMessage] = useState(defaultValues?.message || "");
@@ -44,16 +53,17 @@ export function ContactForm({ defaultValues }: { defaultValues?: { name: string,
   const [error, setError] = useState<string | null>(null);
 
   function onLivesInUk(value: LivesInUk) {
-    setLivesInUk(value);
-    if (value !== "yes") {
-      setUkVisa("");
-      setUkVisaOther("");
-    }
+    setPersonalInfo({
+      liveInUk: value,
+      ...(value !== "yes" ? { currentVisa: undefined, ukVisaOther: undefined } : {}),
+    });
   }
 
   function onUkVisa(value: UkVisaOption) {
-    setUkVisa(value);
-    if (value !== "Others") setUkVisaOther("");
+    setPersonalInfo({
+      currentVisa: value,
+      ...(value !== "Others" ? { ukVisaOther: undefined } : {}),
+    });
   }
 
   async function onSubmit(e: FormEvent) {
@@ -111,13 +121,7 @@ export function ContactForm({ defaultValues }: { defaultValues?: { name: string,
   function resetForm() {
     setSubmitted(false);
     setError(null);
-    setName("");
-    setEmail("");
-    setPhone("");
-    setLivesInUk("");
-    setUkVisa("");
-    setUkVisaOther("");
-    setPrefered("");
+    setPrefered("phone");
     setSubject("");
     setMessage("");
   }
@@ -170,7 +174,7 @@ export function ContactForm({ defaultValues }: { defaultValues?: { name: string,
             autoComplete="name"
             placeholder="Your full name"
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e) => setPersonalInfo({ name: e.target.value })}
             required
             disabled={submitting}
             className="h-11 rounded-xl"
@@ -188,7 +192,7 @@ export function ContactForm({ defaultValues }: { defaultValues?: { name: string,
             autoComplete="email"
             placeholder="you@company.com"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => setPersonalInfo({ email: e.target.value })}
             required
             disabled={submitting}
             className="h-11 rounded-xl"
@@ -202,10 +206,14 @@ export function ContactForm({ defaultValues }: { defaultValues?: { name: string,
         ukVisa={ukVisa}
         ukVisaOther={ukVisaOther}
         disabled={submitting}
-        onPhone={setPhone}
+        onPhone={(value) => {
+          if (hydrated) setPersonalInfo({ phone: value })
+
+
+        }}
         onLivesInUk={onLivesInUk}
         onUkVisa={onUkVisa}
-        onUkVisaOther={setUkVisaOther}
+        onUkVisaOther={(value) => setPersonalInfo({ ukVisaOther: value })}
       />}
 
 
@@ -279,10 +287,13 @@ export function ContactForm({ defaultValues }: { defaultValues?: { name: string,
           {error}
         </p>
       ) : null}
+      <div className="flex justify-end">
+
+
 
       <Button
         type="submit"
-        className="h-11 w-full rounded-xl sm:w-auto sm:px-8"
+        className="h-11 w-full rounded-xl sm:w-auto sm:px-8 "
         disabled={submitting}
       >
         {submitting ? (
@@ -291,9 +302,10 @@ export function ContactForm({ defaultValues }: { defaultValues?: { name: string,
             Sending…
           </>
         ) : (
-          "Send Message"
+          "Submit Request"
         )}
       </Button>
+      </div>
     </form>
   );
 }

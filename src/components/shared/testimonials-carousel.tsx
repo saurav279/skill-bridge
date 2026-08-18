@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
+// import Image from "next/image";
 import { testimonials as defaultTestimonials } from "@/data/testimonials";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
