@@ -17,6 +17,7 @@ import {
 } from "@/components/admin/admin-list";
 import { dash, formatAdminDate, formatStripeAmount } from "@/lib/admin-format";
 import type { AdminPackagePurchase } from "@/types/admin";
+import { packages } from "@/data/packages";
 
 const columns: AdminColumn<AdminPackagePurchase>[] = [
   {
@@ -33,7 +34,11 @@ const columns: AdminColumn<AdminPackagePurchase>[] = [
   {
     id: "package",
     header: "Package",
-    render: (row) => dash(row.packageName),
+    render: (row) => {
+      const rawName = dash(row.packageName);
+      const  packageName = packages.find((pkg) => pkg.slug === rawName)?.name;
+      return packageName || rawName;
+    },
   },
   {
     id: "amount",
@@ -106,6 +111,8 @@ export function PurchaseDetailView({ id }: { id: string }) {
 }
 
 function PurchaseBody({ data }: { data: AdminPackagePurchase }) {
+  const rawName = dash(data.packageName);
+  const  packageName = packages.find((pkg) => pkg.slug === rawName)?.name;
   return (
     <div className="space-y-6">
       <header>
@@ -113,7 +120,7 @@ function PurchaseBody({ data }: { data: AdminPackagePurchase }) {
           Purchase
         </p>
         <h2 className="mt-1 text-2xl font-semibold tracking-tight">
-          {dash(data.packageName)}
+          {packageName}
         </h2>
         <p className="mt-1 text-sm text-muted-foreground">
           {dash(data.customerName)} · {formatAdminDate(data.createdAt)}
