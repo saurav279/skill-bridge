@@ -5,4 +5,8 @@ export type PackageNameTypes =
   | "review-only"
   | "full-review"
   | "strategy-session"
-  | "bespoke-coaching";
+  | "bespoke-coaching"
+  
+  | "appeal-diagnosis"
+  | "appeal-rebuild"
+  | "appeal-full-support";

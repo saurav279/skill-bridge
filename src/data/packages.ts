@@ -298,7 +298,7 @@ export const packages: ServicePackage[] = [
       "A focused review of your refusal or feedback letter against your original pack — with a written diagnosis and recommended next steps.",
     overview:
       "Appeal Diagnosis is a focused review of your refusal or feedback letter against your original pack. We review your background at a high level, discuss whether a Global Talent pathway is a strong fit, and recommend the right package — before you commit to a fuller engagement.",
-    priceLabel: "£1,250",
+    priceLabel: "£500",
     priceNote: "One-time · 30 minutes",
     slotDurationMinutes: DEFAULT_SLOT_MINUTES,
     features: [
@@ -339,7 +339,7 @@ export const packages: ServicePackage[] = [
       "A focused rebuild of your original pack — with a written rebuild memo and recommended next steps.",
     overview:
       "Appeal Rebuild is a focused rebuild of your original pack. We review your background at a high level, discuss whether a Global Talent pathway is a strong fit, and recommend the right package — before you commit to a fuller engagement.",
-    priceLabel: "£3,950",
+    priceLabel: "£1,000",
     priceNote: "One-time · 30 minutes",
     slotDurationMinutes: DEFAULT_SLOT_MINUTES,
     features: [
@@ -380,7 +380,7 @@ export const packages: ServicePackage[] = [
       "End-to-end appeal/resubmission coaching with dedicated calls, iterative review, and priority turnaround until your pack is submission-ready.",
     overview:
       "Appeal Full Support is an end-to-end appeal/resubmission coaching package. We work with you through dedicated calls, iterative review, and priority turnaround until your pack is submission-ready.",
-    priceLabel: "£5,950",
+    priceLabel: "£1,500",
     priceNote: "One-time · 30 minutes",
     slotDurationMinutes: DEFAULT_SLOT_MINUTES,
     features: [
