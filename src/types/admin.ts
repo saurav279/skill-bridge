@@ -111,3 +111,88 @@ export type AdminPackagePurchase = {
   createdAt: string;
   updatedAt: string;
 };
+
+export type Lead = {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  secondaryEmail: string | null;
+  secondaryPhone: string | null;
+  priority: string | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type LeadStatusCounts = {
+  total: number;
+  highPriority: number;
+  todayCount: number;
+  weekCount: number;
+  monthCount: number;
+};
+
+export type LeadListItem = Lead & {
+  latestStatus: string | null;
+  totalNoteCount: number;
+  lastNote: string | null;
+  lastNoteCreatedAt: string | null;
+};
+
+export type PipelineItem = {
+  id: string;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type NoteItem = {
+  id: string;
+  note: string;
+  notedBy: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type LeadDetail = Lead & {
+  pipelines: PipelineItem[];
+  notes: NoteItem[];
+};
+
+export type CreateLeadRequest = {
+  name: string;
+  email: string;
+  phone: string;
+  secondaryEmail?: string | null;
+  secondaryPhone?: string | null;
+  priority?: string | null;
+};
+
+export type UpdateLeadRequest = {
+  name?: string;
+  email?: string;
+  phone?: string;
+  secondaryEmail?: string | null;
+  secondaryPhone?: string | null;
+  priority?: string | null;
+};
+
+export type DeleteLeadResponse = {
+  message: "Lead deleted.";
+};
+
+export type CreatePipelineRequest = {
+  leadId: string;
+  status: string;
+};
+
+export type CreateNoteRequest = {
+  leadId: string;
+  note: string;
+  notedBy: string;
+};
+
+export type UpdateNoteRequest = {
+  note?: string;
+  notedBy?: string;
+};

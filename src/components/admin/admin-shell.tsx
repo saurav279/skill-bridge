@@ -10,6 +10,7 @@ import {
   Inbox,
   LogOut,
   Menu,
+  Users,
   X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -17,6 +18,7 @@ import { ThemeToggle } from "@/components/shared/theme-toggle";
 import { cn } from "@/lib/utils";
 
 const navItems = [
+  { href: "/admin/leads", label: "Leads", icon: Users },
   { href: "/admin/assessments", label: "Assessments", icon: ClipboardList },
   { href: "/admin/contacts", label: "Contact inbox", icon: Inbox },
   { href: "/admin/purchases", label: "Purchases", icon: CreditCard },
@@ -45,7 +47,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
       >
         <div className="flex h-16 items-center gap-3 border-b border-sidebar-border px-5">
           <Link
-            href="/admin/assessments"
+            href="/admin/leads"
             className="inline-flex items-center"
             aria-label="Admin dashboard"
             onClick={() => setOpen(false)}

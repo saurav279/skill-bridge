@@ -43,7 +43,7 @@ export function AdminLoginForm() {
     setBusy(true);
     try {
       await adminVerifyOtp({ email: email.trim(), otp: code });
-      router.replace("/admin/assessments");
+      router.replace("/admin/leads");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Verification failed");
       setOtp(Array(OTP_LENGTH).fill(""));

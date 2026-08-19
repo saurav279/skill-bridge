@@ -12,6 +12,18 @@ import type {
   AdminOtpResponse,
   AdminPackagePurchase,
   ApiError,
+  CreateLeadRequest,
+  CreateNoteRequest,
+  CreatePipelineRequest,
+  DeleteLeadResponse,
+  Lead,
+  LeadDetail,
+  LeadListItem,
+  LeadStatusCounts,
+  NoteItem,
+  PipelineItem,
+  UpdateLeadRequest,
+  UpdateNoteRequest,
 } from "@/types/admin";
 
 export class AdminUnauthorizedError extends Error {
@@ -121,4 +133,60 @@ export function getPackagePurchase(id: string) {
   return adminFetch<AdminPackagePurchase>(
     `/admin/package_purchases/${encodeURIComponent(id)}`
   );
+}
+
+export function listLeads(query?: AdminListQuery) {
+  return adminFetch<AdminListResponse<LeadListItem>>("/admin/leads", {
+    query,
+  });
+}
+
+export function getLead(id: string) {
+  return adminFetch<LeadDetail>(`/admin/leads/${encodeURIComponent(id)}`);
+}
+
+export function getLeadStatusCounts() {
+  return adminFetch<LeadStatusCounts>("/admin/leads/status");
+}
+
+export function createLead(body: CreateLeadRequest) {
+  return adminFetch<Lead>("/admin/leads", {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
+}
+
+export function updateLead(id: string, body: UpdateLeadRequest) {
+  return adminFetch<Lead>(`/admin/leads/${encodeURIComponent(id)}`, {
+    method: "PATCH",
+    body: JSON.stringify(body),
+  });
+}
+
+export function deleteLead(id: string) {
+  return adminFetch<DeleteLeadResponse>(
+    `/admin/leads/${encodeURIComponent(id)}`,
+    { method: "DELETE" }
+  );
+}
+
+export function createPipeline(body: CreatePipelineRequest) {
+  return adminFetch<PipelineItem>("/admin/pipeline", {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
+}
+
+export function createNote(body: CreateNoteRequest) {
+  return adminFetch<NoteItem>("/admin/notes", {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
+}
+
+export function updateNote(id: string, body: UpdateNoteRequest) {
+  return adminFetch<NoteItem>(`/admin/notes/${encodeURIComponent(id)}`, {
+    method: "PATCH",
+    body: JSON.stringify(body),
+  });
 }

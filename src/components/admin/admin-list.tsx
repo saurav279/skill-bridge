@@ -29,7 +29,11 @@ type FilterOptionProps = "name" | "email" | "packageName" | "download";
 
 type AdminListProps<T extends { id: string }> = {
   columns: AdminColumn<T>[];
-  rowHref: (row: T) => string;
+  rowHref?: (row: T) => string;
+  onRowSelect?: (row: T) => void;
+  selectedId?: string | null;
+  toolbar?: ReactNode;
+  refreshKey?: number;
   fetcher: (query: AdminListQuery) => Promise<AdminListResponse<T>>;
   emptyLabel: string;
   options: FilterOptionProps[];
@@ -38,6 +42,10 @@ type AdminListProps<T extends { id: string }> = {
 export function AdminList<T extends { id: string }>({
   columns,
   rowHref,
+  onRowSelect,
+  selectedId,
+  toolbar,
+  refreshKey = 0,
   fetcher,
   emptyLabel,
   options,
@@ -105,7 +113,17 @@ export function AdminList<T extends { id: string }>({
     return () => {
       cancelled = true;
     };
-  }, [debouncedName, debouncedEmail, page, limit, order, fetcher, router, packageName]);
+  }, [
+    debouncedName,
+    debouncedEmail,
+    page,
+    limit,
+    order,
+    fetcher,
+    router,
+    packageName,
+    refreshKey,
+  ]);
 
   const total = result?.total ?? 0;
   const totalPages = Math.max(1, result?.totalPages ?? 1);
@@ -174,7 +192,8 @@ export function AdminList<T extends { id: string }>({
             }
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          {toolbar}
           <Button
             type="button"
             variant="outline"
@@ -255,12 +274,24 @@ export function AdminList<T extends { id: string }>({
                 result.data.map((row) => (
                   <tr
                     key={row.id}
-                    className="cursor-pointer border-b border-border last:border-0 hover:bg-muted/40"
-                    onClick={() => router.push(rowHref(row))}
+                    className={cn(
+                      "border-b border-border last:border-0",
+                      rowHref || onRowSelect
+                        ? "cursor-pointer hover:bg-muted/40"
+                        : null,
+                      selectedId === row.id && "bg-muted/50"
+                    )}
+                    onClick={() => {
+                      if (onRowSelect) {
+                        onRowSelect(row);
+                        return;
+                      }
+                      if (rowHref) router.push(rowHref(row));
+                    }}
                   >
                     {columns.map((column, index) => (
                       <td key={column.id} className={cn("px-4 py-3", column.className)}>
-                        {index === 0 ? (
+                        {index === 0 && rowHref ? (
                           <Link
                             href={rowHref(row)}
                             className="font-medium text-foreground underline-offset-4 hover:underline"
@@ -268,6 +299,10 @@ export function AdminList<T extends { id: string }>({
                           >
                             {column.render(row)}
                           </Link>
+                        ) : index === 0 ? (
+                          <span className="font-medium text-foreground">
+                            {column.render(row)}
+                          </span>
                         ) : (
                           column.render(row)
                         )}
@@ -348,10 +383,12 @@ export function AdminFact({
 
 export function AdminPanel({
   title,
+  action,
   children,
   className,
 }: {
   title: string;
+  action?: ReactNode;
   children: ReactNode;
   className?: string;
 }) {
@@ -362,9 +399,31 @@ export function AdminPanel({
         className
       )}
     >
-      <h2 className="mb-4 text-sm font-semibold tracking-tight">{title}</h2>
+      <div className="mb-4 flex items-center justify-between gap-3">
+        <h2 className="text-sm font-semibold tracking-tight">{title}</h2>
+        {action}
+      </div>
       {children}
     </section>
+  );
+}
+
+export function StatusChip({
+  label,
+  tone,
+}: {
+  label: string;
+  tone?: string;
+}) {
+  return (
+    <span
+      className={cn(
+        "inline-flex max-w-full truncate rounded-full px-2 py-0.5 font-mono text-[11px] font-medium",
+        tone ?? "bg-muted text-muted-foreground"
+      )}
+    >
+      {label}
+    </span>
   );
 }
 
