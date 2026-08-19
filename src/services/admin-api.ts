@@ -122,7 +122,7 @@ export function getContactMessage(id: string) {
 }
 
 export function listPackagePurchases(query?: AdminListQuery) {
-  console.log(query);
+  // console.log(query);
   return adminFetch<AdminListResponse<AdminPackagePurchase>>(
     "/admin/package_purchases",
     { query }

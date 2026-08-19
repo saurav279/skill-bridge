@@ -65,7 +65,7 @@ export function ContactsView() {
       rowHref={(row) => `/admin/contacts/${row.id}`}
       fetcher={fetcher}
       emptyLabel="No contact messages match these filters."
-      options={["name", "email"]}
+      options={["name", "email","download"]}
     />
   );
 }

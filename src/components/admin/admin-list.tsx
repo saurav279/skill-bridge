@@ -57,7 +57,7 @@ export function AdminList<T extends { id: string }>({
   const [debouncedEmail, setDebouncedEmail] = useState("");
   const [packageName, setPackageName] = useState("");
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(20);
+  const [limit, setLimit] = useState(100);
   const [order, setOrder] = useState<"asc" | "desc">("desc");
   const [result, setResult] = useState<AdminListResponse<T> | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -217,6 +217,8 @@ export function AdminList<T extends { id: string }>({
             <option value={20}>20</option>
             <option value={50}>50</option>
             <option value={100}>100</option>
+            <option value={100}>200</option>
+            <option value={100}>300</option>
           </select>
 
           {options.includes("download") && (

@@ -79,7 +79,7 @@ export function AssessmentsView() {
       rowHref={(row) => `/admin/assessments/${row.id}`}
       fetcher={fetcher}
       emptyLabel="No assessments match these filters."
-      options={["name", "email"]}
+      options={["name", "email","download"]}
     />
   );
 }

@@ -35,12 +35,20 @@ export const useUserStore = create<UserStore>()(
       personalInfo: emptyPersonalInfo,
 
       setPersonalInfo: (data) =>
-        set((state) => ({
-          personalInfo: {
-            ...state.personalInfo,
-            ...data,
-          },
-        })),
+        set((state) => {
+          const personalInfo = { ...state.personalInfo, ...data };
+          if (
+            personalInfo.name === state.personalInfo.name &&
+            personalInfo.email === state.personalInfo.email &&
+            personalInfo.phone === state.personalInfo.phone &&
+            personalInfo.liveInUk === state.personalInfo.liveInUk &&
+            personalInfo.currentVisa === state.personalInfo.currentVisa &&
+            personalInfo.ukVisaOther === state.personalInfo.ukVisaOther
+          ) {
+            return state;
+          }
+          return { personalInfo };
+        }),
 
       clearPersonalInfo: () => set({ personalInfo: emptyPersonalInfo }),
     }),

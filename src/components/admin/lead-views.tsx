@@ -72,7 +72,7 @@ import type {
 } from "@/types/admin";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const DEFAULT_NOTED_BY = "admin";
+const DEFAULT_NOTED_BY = "Admin";
 
 const columns: AdminColumn<LeadListItem>[] = [
   {
@@ -189,7 +189,7 @@ export function LeadsView() {
         selectedId={selectedId}
         fetcher={fetcher}
         emptyLabel="No leads match these filters."
-        options={["name", "email"]}
+        options={["name", "email","download"]}
         refreshKey={listTick}
         toolbar={
           <Button
@@ -586,7 +586,7 @@ function LeadDrawerBody({
       const created = await createNote({
         leadId: data.id,
         note: nextNote,
-        notedBy: nextNotedBy,
+        notedBy: nextNotedBy.charAt(0).toUpperCase() + nextNotedBy.slice(1),
       });
       onDataChange({
         ...data,

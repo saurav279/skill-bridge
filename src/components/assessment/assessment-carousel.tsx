@@ -91,7 +91,7 @@ export function AssessmentCarousel() {
   const [hydrated, setHydrated] = useState(false);
   const [hasCache, setHasCache] = useState(false);
   const fileRef = useRef<HTMLInputElement | null>(null);
-  const { personalInfo, setPersonalInfo } = useUserStore();
+  const setPersonalInfo = useUserStore((s) => s.setPersonalInfo);
   const personalInfoHydrated = useUserStoreHydrated();
 
   const sections = useMemo(
@@ -342,41 +342,90 @@ payload.resumeLink = await uploadToCloudinary(resumeFile);
     );
   }
 
-  //Populate answers with personal info if hydrated
+  // Prefill from persisted personal info once. Do not keep copying the store
+  // into answers — that ping-pongs with the effect below and loops.
   useEffect(() => {
-    if (personalInfoHydrated) {
-      setAnswers(prev=>({ ...prev,
-        name: personalInfo.name,
-        email: personalInfo.email,
-        phone: personalInfo.phone,
-        livesInUk: personalInfo.liveInUk === "yes" ? "Yes" : personalInfo.liveInUk === "no" ? "No" : undefined,
-        ukVisa: personalInfo.currentVisa as UkVisaOption, 
-        ukVisaOther: personalInfo.ukVisaOther,
-        
-       }));
-    }
-  }, [personalInfoHydrated, personalInfo.name, personalInfo.email, personalInfo.phone, personalInfo.liveInUk, personalInfo.currentVisa, personalInfo.ukVisaOther]);
+    if (!personalInfoHydrated) return;
 
-  //Update personal info with answers if not hydrated
+    const info = useUserStore.getState().personalInfo;
+    setAnswers((prev) => {
+      const next: Answers = { ...prev };
+      if (info.name) next.name = info.name;
+      if (info.email) next.email = info.email;
+      if (info.phone) next.phone = info.phone;
+      if (info.liveInUk === "yes") next.livesInUk = "Yes";
+      else if (info.liveInUk === "no") next.livesInUk = "No";
+      if (info.currentVisa) next.ukVisa = info.currentVisa;
+      if (info.ukVisaOther) next.ukVisaOther = info.ukVisaOther;
+
+      if (
+        next.name === prev.name &&
+        next.email === prev.email &&
+        next.phone === prev.phone &&
+        next.livesInUk === prev.livesInUk &&
+        next.ukVisa === prev.ukVisa &&
+        next.ukVisaOther === prev.ukVisaOther
+      ) {
+        return prev;
+      }
+      return next;
+    });
+  }, [personalInfoHydrated]);
+
   useEffect(() => {
-    if (answers.name && answers.email && answers.phone) {
- 
-      setPersonalInfo({
-        name: answers.name as string,
-        email: answers.email as string,
-        phone: answers.phone as string,
-        liveInUk: answers.livesInUk === "Yes" ? "yes" : answers.livesInUk === "No" ? "no" : undefined,
-        currentVisa: answers.ukVisa as UkVisaOption,
-        ukVisaOther: answers.ukVisaOther as string,
-      });
+    if (!personalInfoHydrated) return;
 
+    const name = typeof answers.name === "string" ? answers.name : "";
+    const email = typeof answers.email === "string" ? answers.email : "";
+    const phone = typeof answers.phone === "string" ? answers.phone : "";
+    if (!name && !email && !phone) return;
+
+    const liveInUk =
+      answers.livesInUk === "Yes"
+        ? "yes"
+        : answers.livesInUk === "No"
+          ? "no"
+          : undefined;
+    const currentVisa = answers.ukVisa
+      ? (answers.ukVisa as UkVisaOption)
+      : undefined;
+    const ukVisaOther =
+      typeof answers.ukVisaOther === "string" ? answers.ukVisaOther : undefined;
+
+    const current = useUserStore.getState().personalInfo;
+    if (
+      current.name === name &&
+      current.email === email &&
+      current.phone === phone &&
+      current.liveInUk === liveInUk &&
+      current.currentVisa === currentVisa &&
+      current.ukVisaOther === ukVisaOther
+    ) {
+      return;
     }
-    
-  }, [answers.name, answers.email, answers.phone, answers.livesInUk, answers.ukVisa, answers.ukVisaOther, setPersonalInfo]);
+
+    setPersonalInfo({
+      name,
+      email,
+      phone,
+      liveInUk,
+      currentVisa,
+      ukVisaOther,
+    });
+  }, [
+    personalInfoHydrated,
+    answers.name,
+    answers.email,
+    answers.phone,
+    answers.livesInUk,
+    answers.ukVisa,
+    answers.ukVisaOther,
+    setPersonalInfo,
+  ]);
 
 
 
-  console.log(answers.livesInUk);
+  // console.log(answers.livesInUk);
   if (!hydrated) {
     return (
       <div className="flex min-h-[240px] items-center justify-center rounded-2xl border border-border/80 bg-card p-8 shadow-soft">
