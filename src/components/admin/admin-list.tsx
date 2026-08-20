@@ -7,7 +7,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { ArrowLeft, ArrowUpDown, ChevronLeft, ChevronRight, Loader2, Search } from "lucide-react";
+import { ArrowLeft, ArrowUpDown, ChevronLeft, ChevronRight, FilterX, Loader2, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -22,6 +22,8 @@ export type AdminColumn<T> = {
   id: string;
   header: string;
   className?: string;
+  stopRowClick?: boolean;
+  csvValue?: (row: T) => string;
   render: (row: T) => ReactNode;
 };
 
@@ -34,6 +36,7 @@ type AdminListProps<T extends { id: string }> = {
   selectedId?: string | null;
   toolbar?: ReactNode;
   refreshKey?: number;
+  enhanceRow?: (row: T) => T;
   fetcher: (query: AdminListQuery) => Promise<AdminListResponse<T>>;
   emptyLabel: string;
   options: FilterOptionProps[];
@@ -46,6 +49,7 @@ export function AdminList<T extends { id: string }>({
   selectedId,
   toolbar,
   refreshKey = 0,
+  enhanceRow,
   fetcher,
   emptyLabel,
   options,
@@ -56,6 +60,8 @@ export function AdminList<T extends { id: string }>({
   const [debouncedName, setDebouncedName] = useState("");
   const [debouncedEmail, setDebouncedEmail] = useState("");
   const [packageName, setPackageName] = useState("");
+  const [fromDate, setFromDate] = useState("");
+  const [toDate, setToDate] = useState("");
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(100);
   const [order, setOrder] = useState<"asc" | "desc">("desc");
@@ -72,27 +78,41 @@ export function AdminList<T extends { id: string }>({
     return () => window.clearTimeout(timer);
   }, [name, email]);
 
+  const dateRangeInvalid = Boolean(fromDate && toDate && fromDate > toDate);
+  const filterByName = options.includes("name");
+  const filterByEmail = options.includes("email");
+  const filterByPackage = options.includes("packageName");
+
   useEffect(() => {
     let cancelled = false;
     const query: AdminListQuery = {
       page,
       limit,
       order,
-
     };
-    if (options.includes("name")) {
+    if (filterByName) {
       query.name = debouncedName || undefined;
     }
-    if (options.includes("email")) {
+    if (filterByEmail) {
       query.email = debouncedEmail || undefined;
     }
-    if (options.includes("packageName")) {
+    if (filterByPackage) {
       query.packageName = packageName || undefined;
     }
+    if (fromDate) query.from = fromDate;
+    if (toDate) query.to = toDate;
 
     async function load() {
       setLoading(true);
       setError(null);
+
+      if (dateRangeInvalid) {
+        setResult(null);
+        setError("From date must be on or before To date.");
+        setLoading(false);
+        return;
+      }
+
       try {
         const data = await fetcher(query);
         if (!cancelled) setResult(data);
@@ -122,7 +142,13 @@ export function AdminList<T extends { id: string }>({
     fetcher,
     router,
     packageName,
+    fromDate,
+    toDate,
+    dateRangeInvalid,
     refreshKey,
+    filterByName,
+    filterByEmail,
+    filterByPackage,
   ]);
 
   const total = result?.total ?? 0;
@@ -131,43 +157,91 @@ export function AdminList<T extends { id: string }>({
   const to = Math.min(page * limit, total);
 
   const allPackageNames = packages.map((pkg) => pkg.name);
+  const hasFilters = Boolean(
+    name.trim() || email.trim() || packageName || fromDate || toDate
+  );
+
+  function clearFilters() {
+    setName("");
+    setEmail("");
+    setDebouncedName("");
+    setDebouncedEmail("");
+    setPackageName("");
+    setFromDate("");
+    setToDate("");
+    setPage(1);
+  }
 
   return (
     <div className="space-y-4">
       <div className="flex flex-col gap-3 rounded-2xl border border-border bg-card p-4 shadow-soft sm:flex-row sm:items-end">
         <div className="flex  flex-col md:flex-row justify-between w-full">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 w-full">
-
-
-            {options.includes("name") && <div className="space-y-1.5">
-              <Label htmlFor="admin-name" className="text-xs text-muted-foreground">
-                Name
-              </Label>
-              <div className="relative">
-                <Search className="pointer-events-none absolute top-1/2 left-2.5 size-3.5 -translate-y-1/2 text-muted-foreground" />
+          <div className="grid w-full grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            {options.includes("name") && (
+              <div className="space-y-1.5">
+                <Label htmlFor="admin-name" className="text-xs text-muted-foreground">
+                  Name
+                </Label>
+                <div className="relative">
+                  <Search className="pointer-events-none absolute top-1/2 left-2.5 size-3.5 -translate-y-1/2 text-muted-foreground" />
+                  <Input
+                    id="admin-name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="Search name"
+                    className="h-9 rounded-xl pl-8"
+                  />
+                </div>
+              </div>
+            )}
+            {options.includes("email") && (
+              <div className="space-y-1.5">
+                <Label htmlFor="admin-email" className="text-xs text-muted-foreground">
+                  Email
+                </Label>
                 <Input
-                  id="admin-name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="Search name"
-                  className="h-9 rounded-xl pl-8"
+                  id="admin-email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Search email"
+                  className="h-9 rounded-xl"
                 />
               </div>
-            </div>}
-            {options.includes("email") && <div className="space-y-1.5">
-              <Label htmlFor="admin-email" className="text-xs text-muted-foreground">
-                Email
+            )}
+            <div className="space-y-1.5">
+              <Label htmlFor="admin-from" className="text-xs text-muted-foreground">
+                From
               </Label>
               <Input
-                id="admin-email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Search email"
+                id="admin-from"
+                type="date"
+                value={fromDate}
+                max={toDate || undefined}
+                onChange={(e) => {
+                  setFromDate(e.target.value);
+                  setPage(1);
+                }}
                 className="h-9 rounded-xl"
               />
-            </div>}
-            {options.includes("packageName") &&
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="admin-to" className="text-xs text-muted-foreground">
+                To
+              </Label>
+              <Input
+                id="admin-to"
+                type="date"
+                value={toDate}
+                min={fromDate || undefined}
+                onChange={(e) => {
+                  setToDate(e.target.value);
+                  setPage(1);
+                }}
+                className="h-9 rounded-xl"
+              />
+            </div>
+            {options.includes("packageName") && (
               <div className="space-y-1.5">
                 <Label htmlFor="admin-package" className="text-xs text-muted-foreground">
                   Packages
@@ -175,25 +249,39 @@ export function AdminList<T extends { id: string }>({
                 <Select
                   id="admin-package"
                   value={packageName}
-                  onValueChange={(value) => setPackageName(value || "")}
+                  onValueChange={(value) => {
+                    setPackageName(value || "");
+                    setPage(1);
+                  }}
                 >
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Select package" />
                   </SelectTrigger>
                   <SelectContent>
-                    {allPackageNames.map((name) => (
-                      <SelectItem key={name} value={name} className="w-full">
-                        {name}
+                    {allPackageNames.map((pkgName) => (
+                      <SelectItem key={pkgName} value={pkgName} className="w-full">
+                        {pkgName}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </div>
-            }
+            )}
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-2">
           {toolbar}
+          {hasFilters ? (
+            <Button
+              type="button"
+              // variant="outline"
+              className="h-9 rounded-xl"
+              onClick={clearFilters}
+            >
+              <FilterX className="size-3.5" />
+              Remove filters
+            </Button>
+          ) : null}
           <Button
             type="button"
             variant="outline"
@@ -225,7 +313,9 @@ export function AdminList<T extends { id: string }>({
             <AdminListDownload
               filename="admin-list.csv"
               columns={columns}
-              rows={result?.data ?? []}
+              rows={(result?.data ?? []).map((row) =>
+                enhanceRow ? enhanceRow(row) : row
+              )}
             />
           )}
         </div>
@@ -273,45 +363,61 @@ export function AdminList<T extends { id: string }>({
                   </td>
                 </tr>
               ) : (
-                result.data.map((row) => (
-                  <tr
-                    key={row.id}
-                    className={cn(
-                      "border-b border-border last:border-0",
-                      rowHref || onRowSelect
-                        ? "cursor-pointer hover:bg-muted/40"
-                        : null,
-                      selectedId === row.id && "bg-muted/50"
-                    )}
-                    onClick={() => {
-                      if (onRowSelect) {
-                        onRowSelect(row);
-                        return;
-                      }
-                      if (rowHref) router.push(rowHref(row));
-                    }}
-                  >
-                    {columns.map((column, index) => (
-                      <td key={column.id} className={cn("px-4 py-3", column.className)}>
-                        {index === 0 && rowHref ? (
-                          <Link
-                            href={rowHref(row)}
-                            className="font-medium text-foreground underline-offset-4 hover:underline"
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            {column.render(row)}
-                          </Link>
-                        ) : index === 0 ? (
-                          <span className="font-medium text-foreground">
-                            {column.render(row)}
-                          </span>
-                        ) : (
-                          column.render(row)
-                        )}
-                      </td>
-                    ))}
-                  </tr>
-                ))
+                result.data.map((rawRow) => {
+                  const row = enhanceRow ? enhanceRow(rawRow) : rawRow;
+                  return (
+                    <tr
+                      key={row.id}
+                      className={cn(
+                        "border-b border-border last:border-0",
+                        rowHref || onRowSelect
+                          ? "cursor-pointer hover:bg-muted/40"
+                          : null,
+                        selectedId === row.id && "bg-muted/50"
+                      )}
+                      onClick={() => {
+                        if (onRowSelect) {
+                          onRowSelect(row);
+                          return;
+                        }
+                        if (rowHref) router.push(rowHref(row));
+                      }}
+                    >
+                      {columns.map((column, index) => (
+                        <td
+                          key={column.id}
+                          className={cn("px-4 py-3", column.className)}
+                          onClick={
+                            column.stopRowClick
+                              ? (event) => event.stopPropagation()
+                              : undefined
+                          }
+                          onPointerDown={
+                            column.stopRowClick
+                              ? (event) => event.stopPropagation()
+                              : undefined
+                          }
+                        >
+                          {index === 0 && rowHref ? (
+                            <Link
+                              href={rowHref(row)}
+                              className="font-medium text-foreground underline-offset-4 hover:underline"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              {column.render(row)}
+                            </Link>
+                          ) : index === 0 ? (
+                            <span className="font-medium text-foreground">
+                              {column.render(row)}
+                            </span>
+                          ) : (
+                            column.render(row)
+                          )}
+                        </td>
+                      ))}
+                    </tr>
+                  );
+                })
               )}
             </tbody>
           </table>

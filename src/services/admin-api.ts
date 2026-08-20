@@ -44,9 +44,13 @@ function buildUrl(path: string, query?: AdminListQuery): string {
   const name = query.name?.trim();
   const email = query.email?.trim();
   const packageName = query.packageName?.trim();
+  const from = query.from?.trim();
+  const to = query.to?.trim();
   if (name) params.set("name", name);
   if (email) params.set("email", email);
   if (packageName) params.set("packageName", packages.find((pkg) => pkg.name === packageName)?.slug ?? "");
+  if (from) params.set("from", from);
+  if (to) params.set("to", to);
 
   const qs = params.toString();
   return qs ? `${url}?${qs}` : url;

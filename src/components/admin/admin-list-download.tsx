@@ -49,7 +49,13 @@ export function AdminListDownload<T>({
       headers.map(escapeCsvValue).join(","),
       ...rows.map((row) =>
         columns
-          .map((column) => escapeCsvValue(reactNodeToText(column.render(row))))
+          .map((column) =>
+            escapeCsvValue(
+              column.csvValue
+                ? column.csvValue(row)
+                : reactNodeToText(column.render(row))
+            )
+          )
           .join(",")
       ),
     ].join("\n");

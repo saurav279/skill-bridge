@@ -41,12 +41,12 @@ export function ConversionHero() {
                 className="h-12 rounded-full px-7 text-sm font-semibold uppercase tracking-wide"
                 render={<Link href="/assessment" target="_blank" rel="noopener noreferrer"/>}
               >
-                Start Assessment Questionnaire
+                Start Free Assessment
               </Button>
               <Button
-              variant="outline"
+              // variant="outline"
               size="lg"
-              className="h-12 rounded-full border-white/30 bg-transparent px-7 text-sm font-semibold uppercase tracking-wide text-white hover:bg-white/10 hover:text-white"
+              className="h-12 rounded-full px-7 text-sm font-semibold uppercase tracking-wide"
               render={<Link href="/contact" target="_blank" rel="noopener noreferrer"/>}
             >
               Free Discovery Call

@@ -20,7 +20,7 @@ const aboutLinks = [
 
 const resourceLinks = [
   { href: "/resources", label: "Insights & Guides" },
-  { href: "/assessment", label: "Assessment Questionnaire" },
+  { href: "/assessment", label: "Free Assessment" },
 ];
 
 type MobileSection = "about" | "packages" | "resources" | null;
@@ -160,7 +160,7 @@ export function Navbar() {
             >
               <DropdownItem href="/resources">Insights & Guides</DropdownItem>
               {/* <DropdownItem href="/resources#newsletters">Newsletters</DropdownItem> */}
-              <DropdownItem href="/assessment">Assessment Questionnaire</DropdownItem>
+              <DropdownItem href="/assessment">Free Assessment</DropdownItem>
             </Dropdown>
             <NavLink href="/contact" active={pathname === "/contact"}>
               Contact
@@ -170,12 +170,12 @@ export function Navbar() {
           <div className="flex items-center gap-1.5">
 
           <Button
-          variant="outline"
+          // variant="outline"
               size="sm"
               className="hidden h-10 rounded-full px-4 text-xs font-semibold uppercase tracking-wide sm:inline-flex"
               render={<Link href="/contact" target="_blank" rel="noopener noreferrer"/>}
             >
-              Free Discovery Call
+              Free Call
             </Button>
             {/* <ThemeToggle /> */}
             <Button
@@ -183,7 +183,7 @@ export function Navbar() {
               className="hidden h-10 rounded-full px-4 text-xs font-semibold uppercase tracking-wide sm:inline-flex"
               render={<Link href="/assessment" target="_blank" rel="noopener noreferrer"/>}
             >
-              Assessment Questionnaire
+              Free Assessment 
             </Button>
             <Button
               variant="ghost"
@@ -288,7 +288,7 @@ export function Navbar() {
                   Contact
                 </MobileLink>
                 <Button
-                  variant="outline"
+                  // variant="outline"
                   className="mt-3 h-11 rounded-full font-semibold uppercase tracking-wide"
                   render={
                     <Link
@@ -298,7 +298,7 @@ export function Navbar() {
                     />
                   }
                 >
-                  Free Discovery Call
+                  Free Call
                 </Button>
                 <Button
                   className="mt-3 h-11 rounded-full font-semibold uppercase tracking-wide"
@@ -310,7 +310,7 @@ export function Navbar() {
                     />
                   }
                 >
-                  Assessment Questionnaire
+                  Free Assessment 
                 </Button>
               </div>
             </motion.div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Loader2, Pencil, Plus, Trash2 } from "lucide-react";
 import {
@@ -11,19 +11,17 @@ import {
   deleteLead,
   getLead,
   getLeadStatusCounts,
-  listLeads,
   updateLead,
   updateNote,
 } from "@/services/admin-api";
 import {
   AdminFact,
-  AdminList,
   AdminPanel,
   AdminStatus,
   StatusChip,
-  type AdminColumn,
 } from "@/components/admin/admin-list";
-import { dash, formatAdminDate } from "@/lib/admin-format";
+import { LeadTable } from "@/components/admin/lead-table";
+import { formatAdminDate } from "@/lib/admin-format";
 import {
   CLEAR_PRIORITY_VALUE,
   leadPriorityLabel,
@@ -65,7 +63,6 @@ import { Textarea } from "@/components/ui/textarea";
 import type {
   Lead,
   LeadDetail,
-  LeadListItem,
   LeadStatusCounts,
   NoteItem,
   UpdateLeadRequest,
@@ -73,82 +70,6 @@ import type {
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const DEFAULT_NOTED_BY = "Admin";
-
-const columns: AdminColumn<LeadListItem>[] = [
-  {
-    id: "name",
-    header: "Name",
-    render: (row) => dash(row.name),
-  },
-  {
-    id: "contact",
-    header: "Contact",
-    className: "font-mono text-xs",
-    render: (row) => (
-      <div>
-        <p>{dash(row.email)}</p>
-        <p>{dash(row.phone)}</p>
-      </div>
-    ),
-  },
-  {
-    id: "secondary",
-    header: "Secondary",
-    className: "font-mono text-xs text-muted-foreground",
-    render: (row) => {
-      if (!row.secondaryEmail && !row.secondaryPhone) return "—";
-      return (
-        <div>
-          <p>{dash(row.secondaryEmail)}</p>
-          <p>{dash(row.secondaryPhone)}</p>
-        </div>
-      );
-    },
-  },
-  {
-    id: "priority",
-    header: "Priority",
-    render: (row) => (
-      <StatusChip
-        label={leadPriorityLabel(row.priority)}
-        tone={leadPriorityTone(row.priority)}
-      />
-    ),
-  },
-  {
-    id: "status",
-    header: "Status",
-    render: (row) => (
-      <StatusChip
-        label={leadStatusLabel(row.latestStatus)}
-        tone={leadStatusTone(row.latestStatus)}
-      />
-    ),
-  },
-  {
-    id: "notes",
-    header: "Notes",
-    render: (row) => (
-      <div className="max-w-[240px]">
-        <p className="font-mono text-xs text-muted-foreground">
-          {row.totalNoteCount}
-        </p>
-        <p className="truncate text-muted-foreground">{dash(row.lastNote)}</p>
-        {row.lastNoteCreatedAt ? (
-          <p className="text-xs text-muted-foreground">
-            {formatAdminDate(row.lastNoteCreatedAt)}
-          </p>
-        ) : null}
-      </div>
-    ),
-  },
-  {
-    id: "updated",
-    header: "Updated",
-    className: "text-muted-foreground",
-    render: (row) => formatAdminDate(row.updatedAt),
-  },
-];
 
 function blankToNull(value: string) {
   const trimmed = value.trim();
@@ -159,9 +80,9 @@ export function LeadsView() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const fetcher = useCallback(listLeads, []);
   const [createOpen, setCreateOpen] = useState(false);
   const [listTick, setListTick] = useState(0);
+  const [drawerTick, setDrawerTick] = useState(0);
 
   const selectedId = searchParams.get("lead");
 
@@ -180,19 +101,21 @@ export function LeadsView() {
     setListTick((tick) => tick + 1);
   }, []);
 
+  const refreshDrawer = useCallback(() => {
+    setDrawerTick((tick) => tick + 1);
+  }, []);
+
   return (
     <div className="space-y-4">
       <LeadStats refreshKey={listTick} />
-      <AdminList
-        columns={columns}
+      <LeadTable
         onRowSelect={(row) => setSelectedId(row.id)}
         selectedId={selectedId}
-        fetcher={fetcher}
-        emptyLabel="No leads match these filters."
-        options={["name", "email","download"]}
         refreshKey={listTick}
+        onInlineChanged={refreshDrawer}
         toolbar={
           <Button
+            variant="outline"
             type="button"
             className="h-9 rounded-xl"
             onClick={() => setCreateOpen(true)}
@@ -212,6 +135,7 @@ export function LeadsView() {
       />
       <LeadDrawer
         leadId={selectedId}
+        reloadKey={drawerTick}
         onClose={() => setSelectedId(null)}
         onChanged={refreshList}
         onDeleted={() => {
@@ -400,22 +324,26 @@ function CreateLeadDialog({
 
 function LeadDrawer({
   leadId,
+  reloadKey = 0,
   onClose,
   onChanged,
   onDeleted,
 }: {
   leadId: string | null;
+  reloadKey?: number;
   onClose: () => void;
   onChanged: () => void;
   onDeleted: () => void;
 }) {
   const router = useRouter();
+  const loadedIdRef = useRef<string | null>(null);
   const [data, setData] = useState<LeadDetail | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!leadId) {
+      loadedIdRef.current = null;
       setData(null);
       setError(null);
       setLoading(false);
@@ -425,11 +353,16 @@ function LeadDrawer({
     let cancelled = false;
 
     async function load() {
-      setLoading(true);
+      if (loadedIdRef.current !== leadId) {
+        setLoading(true);
+      }
       setError(null);
       try {
         const detail = await getLead(leadId as string);
-        if (!cancelled) setData(detail);
+        if (!cancelled) {
+          loadedIdRef.current = leadId;
+          setData(detail);
+        }
       } catch (err) {
         if (cancelled) return;
         if (err instanceof AdminUnauthorizedError) {
@@ -447,7 +380,7 @@ function LeadDrawer({
     return () => {
       cancelled = true;
     };
-  }, [leadId, router]);
+  }, [leadId, reloadKey, router]);
 
   return (
     <Sheet
@@ -476,7 +409,7 @@ function LeadDrawer({
           <AdminStatus loading={loading} error={error}>
             {data ? (
               <LeadDrawerBody
-                key={data.id}
+                key={`${data.id}-${data.updatedAt}`}
                 data={data}
                 onDataChange={setData}
                 onChanged={onChanged}
@@ -503,10 +436,7 @@ function LeadDrawerBody({
 }) {
   const router = useRouter();
   const latestStatus = data.pipelines.at(-1)?.status ?? null;
-  const statusChoices = useMemo(
-    () => leadStatusOptions(latestStatus),
-    [latestStatus]
-  );
+  const statusChoices = useMemo(() => leadStatusOptions(), []);
 
   const [status, setStatus] = useState("");
   const [statusSaving, setStatusSaving] = useState(false);
@@ -809,7 +739,6 @@ function LeadDrawerBody({
               id="edit-lead-priority"
               value={priority}
               onValueChange={setPriority}
-              current={data.priority}
             />
             <div className="flex justify-end gap-2">
               <Button
@@ -1143,14 +1072,12 @@ function PrioritySelect({
   id,
   value,
   onValueChange,
-  current,
 }: {
   id: string;
   value: string;
   onValueChange: (value: string) => void;
-  current?: string | null;
 }) {
-  const options = leadPriorityOptions(current);
+  const options = leadPriorityOptions();
 
   return (
     <div className="space-y-1.5">
