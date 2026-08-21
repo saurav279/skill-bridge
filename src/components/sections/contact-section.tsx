@@ -32,7 +32,8 @@ export function ContactSection({
       className={cn("scroll-mt-28 py-16 md:py-24", className)}
     >
       <div className="container-page grid gap-12 md:grid-cols-12 md:gap-10">
-        <div className="md:col-span-5">
+      <div className="order-2 md:order-1 md:col-span-5">
+
           <FadeIn>
             <SectionTitle
               as={headingAs}
@@ -115,7 +116,8 @@ export function ContactSection({
           </FadeIn>
         </div>
 
-        <div className="md:col-span-7">
+        <div className="order-1 md:order-2 md:col-span-7">
+
           <FadeIn delay={0.08}>
             <ContactForm defaultValues={defaultValues} />
           </FadeIn>
