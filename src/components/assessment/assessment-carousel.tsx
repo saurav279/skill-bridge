@@ -57,6 +57,7 @@ import {
   setAssessmentLastRouteId,
 } from "@/lib/assessment-cache";
 import { useUserStore, useUserStoreHydrated } from "@/stores/user-details";
+import { pickPhone } from "@/lib/intake-details";
 import { UkVisaOption } from "@/types/consultation";
 
 const ICONS: Record<string, LucideIcon> = {
@@ -77,6 +78,22 @@ const ICONS: Record<string, LucideIcon> = {
 type Answers = Record<string, unknown>;
 
 type SubmitPhase = "form" | "loading" | "ready" | "error";
+
+function mergePersonalInfo(answers: Answers): Answers {
+  const info = useUserStore.getState().personalInfo;
+  const next: Answers = { ...answers };
+  const cachedPhone = typeof next.phone === "string" ? next.phone : "";
+  if (info.name) next.name = info.name;
+  if (info.email) next.email = info.email;
+  const phone = pickPhone(info.phone, cachedPhone);
+  if (phone) next.phone = phone;
+  else delete next.phone;
+  if (info.liveInUk === "yes") next.livesInUk = "Yes";
+  else if (info.liveInUk === "no") next.livesInUk = "No";
+  if (info.currentVisa) next.ukVisa = info.currentVisa;
+  if (info.ukVisaOther) next.ukVisaOther = info.ukVisaOther;
+  return next;
+}
 
 export function AssessmentCarousel() {
   const [routeId, setRouteId] = useState<string | null>(null);
@@ -113,8 +130,12 @@ export function AssessmentCarousel() {
   const canSubmit = areSectionsAnswered(sections, answers);
 
   useEffect(() => {
+    if (!personalInfoHydrated) return;
+
     const store = readAssessmentCache();
     setHasCache(hasAnyAssessmentCache(store));
+
+    let nextAnswers: Answers = {};
 
     if (store.lastRouteId && store.routes[store.lastRouteId]) {
       const cached = store.routes[store.lastRouteId];
@@ -124,11 +145,12 @@ export function AssessmentCarousel() {
       );
       setRouteId(store.lastRouteId);
       setStep(Math.min(Math.max(0, cached.step), maxStep));
-      setAnswers(deserializeAnswersFromCache(cached.answers));
+      nextAnswers = deserializeAnswersFromCache(cached.answers);
     }
 
+    setAnswers(mergePersonalInfo(nextAnswers));
     setHydrated(true);
-  }, []);
+  }, [personalInfoHydrated]);
 
   useEffect(() => {
     if (!hydrated || phase !== "form") return;
@@ -155,12 +177,12 @@ export function AssessmentCarousel() {
   }
 
   function startRoute(nextRouteId: string) {
-    // Choosing a route always starts fresh and overwrites that route’s cache.
+    const nextAnswers = mergePersonalInfo({});
     setRouteId(nextRouteId);
     setStep(0);
-    setAnswers({});
+    setAnswers(nextAnswers);
     setDirection("next");
-    saveRouteCache(nextRouteId, { step: 0, answers: {} });
+    saveRouteCache(nextRouteId, { step: 0, answers: nextAnswers });
     setHasCache(true);
   }
 
@@ -342,43 +364,13 @@ payload.resumeLink = await uploadToCloudinary(resumeFile);
     );
   }
 
-  // Prefill from persisted personal info once. Do not keep copying the store
-  // into answers — that ping-pongs with the effect below and loops.
-  useEffect(() => {
-    if (!personalInfoHydrated) return;
-
-    const info = useUserStore.getState().personalInfo;
-    setAnswers((prev) => {
-      const next: Answers = { ...prev };
-      if (info.name) next.name = info.name;
-      if (info.email) next.email = info.email;
-      if (info.phone) next.phone = info.phone;
-      if (info.liveInUk === "yes") next.livesInUk = "Yes";
-      else if (info.liveInUk === "no") next.livesInUk = "No";
-      if (info.currentVisa) next.ukVisa = info.currentVisa;
-      if (info.ukVisaOther) next.ukVisaOther = info.ukVisaOther;
-
-      if (
-        next.name === prev.name &&
-        next.email === prev.email &&
-        next.phone === prev.phone &&
-        next.livesInUk === prev.livesInUk &&
-        next.ukVisa === prev.ukVisa &&
-        next.ukVisaOther === prev.ukVisaOther
-      ) {
-        return prev;
-      }
-      return next;
-    });
-  }, [personalInfoHydrated]);
-
   useEffect(() => {
     if (!personalInfoHydrated) return;
 
     const name = typeof answers.name === "string" ? answers.name : "";
     const email = typeof answers.email === "string" ? answers.email : "";
-    const phone = typeof answers.phone === "string" ? answers.phone : "";
-    if (!name && !email && !phone) return;
+    const rawPhone = typeof answers.phone === "string" ? answers.phone : "";
+    if (!name && !email && !rawPhone) return;
 
     const liveInUk =
       answers.livesInUk === "Yes"
@@ -393,6 +385,7 @@ payload.resumeLink = await uploadToCloudinary(resumeFile);
       typeof answers.ukVisaOther === "string" ? answers.ukVisaOther : undefined;
 
     const current = useUserStore.getState().personalInfo;
+    const phone = pickPhone(rawPhone, current.phone);
     if (
       current.name === name &&
       current.email === email &&

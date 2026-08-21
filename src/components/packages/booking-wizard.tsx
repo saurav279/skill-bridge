@@ -25,6 +25,7 @@ import { IntakeProfileFields, RequiredMark } from "@/components/shared/intake-fi
 import {
   currentVisaForPayload,
   parseCurrentVisa,
+  pickPhone,
   validateIntakeDetails,
 } from "@/lib/intake-details";
 import { useUserStore, useUserStoreHydrated } from "@/stores/user-details";
@@ -164,7 +165,7 @@ export function BookingWizard({ pkg }: BookingWizardProps) {
 
     const name = personal.name || stored.name;
     const email = personal.email || stored.email;
-    const phone = personal.phone || stored.phone;
+    const phone = pickPhone(personal.phone, stored.phone);
     const livesInUk = personal.liveInUk || stored.livesInUk;
     const ukVisa = personal.currentVisa || stored.ukVisa;
     const ukVisaOther = personal.ukVisaOther || stored.ukVisaOther;
@@ -400,7 +401,14 @@ export function BookingWizard({ pkg }: BookingWizardProps) {
       </div>
 
       <div className="p-5 sm:p-8">
-        {step === 0 ? (
+        {step === 0 && !hydrated ? (
+          <div className="flex min-h-[240px] items-center justify-center py-12">
+            <Loader2 className="size-5 animate-spin text-muted-foreground" />
+            <span className="sr-only">Loading your details</span>
+          </div>
+        ) : null}
+
+        {step === 0 && hydrated ? (
           <form onSubmit={onDetailsContinue} className="space-y-5">
             <div>
               <h2 className="text-xl font-semibold tracking-tight sm:text-2xl">
@@ -455,7 +463,7 @@ export function BookingWizard({ pkg }: BookingWizardProps) {
             </div>
 
             <IntakeProfileFields
-              phone={draft.phone || hydrated ? personalInfo.phone : ""}
+              phone={draft.phone}
               livesInUk={draft.livesInUk}
               ukVisa={draft.ukVisa}
               ukVisaOther={draft.ukVisaOther}

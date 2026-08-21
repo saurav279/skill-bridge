@@ -5,6 +5,7 @@ import {
   useMemo,
   useRef,
   useState,
+  type ChangeEvent,
 } from "react";
 import { createPortal } from "react-dom";
 import { ChevronDown, Search } from "lucide-react";
@@ -54,6 +55,24 @@ type PhoneInputFieldProps = {
   disabled?: boolean;
   required?: boolean;
 };
+function extractCountryFromPhone(phone: string): CountryIso2 | null {
+  if (!phone || !phone.startsWith("+")) return null;
+  
+  // Sort by dialCode length descending to match longest code first
+  // (e.g., +1-242 before +1 to avoid false matches)
+  const sorted = [...ALL_COUNTRIES].sort(
+    (a, b) => b.dialCode.length - a.dialCode.length
+  );
+  
+  for (const country of sorted) {
+    if (phone.startsWith(`+${country.dialCode}`)) {
+      return country.iso2;
+    }
+  }
+  
+  return null;
+}
+
 
 export function PhoneInputField({
   id = "intake-phone",
@@ -68,15 +87,37 @@ export function PhoneInputField({
   const searchRef = useRef<HTMLInputElement>(null);
   const [menuPos, setMenuPos] = useState({ top: 0, left: 0, width: 320 });
 
+  const getInitialCountry = (): CountryIso2 => {
+    if (value) {
+      const extracted = extractCountryFromPhone(value);
+      if (extracted) return extracted;
+    }
+    return "gb";
+  };
+
+  // The library emits onChange on init (empty → "+44") and when a parent
+  // value hydrates. Only forward changes that came from the user.
+  const emitPhoneChangeRef = useRef(false);
+  const onChangeRef = useRef(onChange);
+  onChangeRef.current = onChange;
 
   const { inputValue, handlePhoneValueChange, inputRef, country, setCountry } =
     usePhoneInput({
-      defaultCountry: "gb",
+      defaultCountry: getInitialCountry(),
       value,
       disableDialCodeAndPrefix: true,
+      disableDialCodePrefill: true,
       allowMaskOverflow: true,
-      onChange: ({ phone }) => { onChange(phone); },
+      onChange: ({ phone }) => {
+        if (!emitPhoneChangeRef.current) return;
+        onChangeRef.current(phone);
+      },
     });
+
+  function onNationalNumberChange(event: ChangeEvent<HTMLInputElement>) {
+    emitPhoneChangeRef.current = true;
+    handlePhoneValueChange(event);
+  }
 
   const filtered = useMemo(() => {
     const matched = ALL_COUNTRIES.filter((c) => countryMatches(c, query));
@@ -136,6 +177,7 @@ export function PhoneInputField({
   }, [open]);
 
   function selectCountry(next: ParsedCountry) {
+    emitPhoneChangeRef.current = true;
     setCountry(next.iso2, { focusOnInput: true });
     setOpen(false);
   }
@@ -180,7 +222,7 @@ export function PhoneInputField({
           required={required}
           disabled={disabled}
           value={inputValue}
-          onChange={handlePhoneValueChange}
+          onChange={onNationalNumberChange}
           placeholder="7123456789"
           className="h-full min-w-0 flex-1 bg-transparent px-3 text-base outline-none md:text-sm"
         />

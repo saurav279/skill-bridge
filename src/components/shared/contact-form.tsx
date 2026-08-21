@@ -11,6 +11,7 @@ import { IntakeProfileFields, RequiredMark } from "@/components/shared/intake-fi
 import {
   currentVisaForPayload,
   parseCurrentVisa,
+  pickPhone,
   validateIntakeDetails,
 } from "@/lib/intake-details";
 import { cn } from "@/lib/utils";
@@ -44,7 +45,10 @@ export function ContactForm({
   const parsedDefaultVisa = parseCurrentVisa(defaultValues?.currentVisa);
   const name = defaultValues?.name || (hydrated ? personalInfo.name : "") || "";
   const email = defaultValues?.email || (hydrated ? personalInfo.email : "") || "";
-  const phone = defaultValues?.phone || (hydrated ? personalInfo.phone : "") || "";
+  const phone = pickPhone(
+    defaultValues?.phone ?? "",
+    hydrated ? personalInfo.phone : ""
+  );
   const livesInUk: LivesInUk | "" =
     defaultValues?.livesInUk === true
       ? "yes"
@@ -169,6 +173,15 @@ export function ContactForm({
     );
   }
 
+  if (!hydrated) {
+    return (
+      <div className="flex min-h-[240px] items-center justify-center rounded-2xl border border-border/80 bg-card p-8 shadow-soft sm:p-10">
+        <Loader2 className="size-5 animate-spin text-muted-foreground" />
+        <span className="sr-only">Loading your details</span>
+      </div>
+    );
+  }
+
   return (
     <form
       onSubmit={(e) => void onSubmit(e)}
@@ -219,11 +232,7 @@ export function ContactForm({
         ukVisa={ukVisa}
         ukVisaOther={ukVisaOther}
         disabled={submitting}
-        onPhone={(value) => {
-          if (hydrated) setPersonalInfo({ phone: value })
-
-
-        }}
+        onPhone={(value) => setPersonalInfo({ phone: value })}
         onLivesInUk={onLivesInUk}
         onUkVisa={onUkVisa}
         onUkVisaOther={(value) => setPersonalInfo({ ukVisaOther: value })}

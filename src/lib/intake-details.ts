@@ -68,6 +68,13 @@ export function isCompletePhoneNumber(phone: string): boolean {
   return digits.length >= PHONE_MIN_DIGITS && digits.length <= PHONE_MAX_DIGITS;
 }
 
+/** Prefer a complete E.164 number over a bare dial code like "+44". */
+export function pickPhone(preferred: string, fallback: string): string {
+  if (isCompletePhoneNumber(preferred)) return preferred;
+  if (isCompletePhoneNumber(fallback)) return fallback;
+  return preferred || fallback;
+}
+
 /** Returns an error message, or null if the shared intake fields are valid. */
 export function validateIntakeDetails(details: IntakeDetails): string | null {
   const name = details.name.trim();
