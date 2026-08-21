@@ -28,6 +28,7 @@ const TALK_PREFERENCES: { id: ContactTalkPreference; label: string }[] = [
 
 export function ContactForm({
   defaultValues,
+  onSubmitCallback,
 }: {
   defaultValues?: Partial<{
     name: string;
@@ -38,6 +39,7 @@ export function ContactForm({
     subject: string;
     message: string;
   }>;
+  onSubmitCallback?: () => void;
 }) {
   const hydrated = useUserStoreHydrated();
   const personalInfo = useUserStore((s) => s.personalInfo);
@@ -132,6 +134,7 @@ export function ContactForm({
       setError(submitError ?? "Something went wrong. Please try again.");
       return;
     }
+    onSubmitCallback?.();
 
     setSubmitted(true);
   }
