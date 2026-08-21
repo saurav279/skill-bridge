@@ -1119,13 +1119,15 @@ function LeadPaymentPlans({ lead }: { lead: LeadDetail }) {
     };
   }, [lead.id, reloadKey, router]);
 
-  async function handleNewPlan() {
+  async function handleNewPlan(openPlanDialog: boolean = false) {
     setPreparing(true);
     setError(null);
     try {
       const nextUser = user ?? (await ensureUserForLead(lead));
       setUser(nextUser);
+      if (openPlanDialog) {
       setCreateOpen(true);
+      }
     } catch (err) {
       if (err instanceof AdminUnauthorizedError) {
         router.replace("/admin/login");
@@ -1139,6 +1141,41 @@ function LeadPaymentPlans({ lead }: { lead: LeadDetail }) {
 
   return (
     <>
+      {!user && <AdminPanel
+        title="Create User"
+        action={
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            className="rounded-lg"
+            disabled={preparing}
+            onClick={() => void handleNewPlan()}
+          >
+            {preparing ? (
+              <Loader2 className="size-3.5 animate-spin" />
+            ) : (
+              <Plus className="size-3.5" />
+            )}
+            Create User
+          </Button>
+        }
+      >
+        {loading ? (
+          <Loader2 className="size-4 animate-spin text-muted-foreground" />
+        ) : error ? (
+          <p className="text-sm text-destructive">{error}</p>
+        ) : (
+          <div className="space-y-3">
+
+            <p className="text-sm text-muted-foreground">
+              You can create a user for this lead by clicking the button above.
+            </p>
+
+
+          </div>
+        )}
+      </AdminPanel>}
       <AdminPanel
         title="Payment plans"
         action={
@@ -1148,7 +1185,7 @@ function LeadPaymentPlans({ lead }: { lead: LeadDetail }) {
             size="sm"
             className="rounded-lg"
             disabled={preparing}
-            onClick={() => void handleNewPlan()}
+            onClick={() => void handleNewPlan(true)}
           >
             {preparing ? (
               <Loader2 className="size-3.5 animate-spin" />

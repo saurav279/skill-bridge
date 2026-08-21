@@ -40,17 +40,22 @@ const columns: AdminColumn<AdminAssessmentListItem>[] = [
     render: (row) => dash(row.contactName),
   },
   {
-    id: "contact",
-    header: "Contact",
+    id: "email",
+    header: "Email",
     className: "font-mono text-xs",
     render: (row) =>{ 
       return (
-        <div>
-          <p>{dash(row.contactEmail)}</p>
-          <p>{dash(row.phone)}</p>
-        </div>
+        <p>{dash(row.contactEmail)}</p>
       )
     },
+  },
+  {
+    id: "phone",
+    header: "Phone",
+    className: "font-mono text-xs",
+    render: (row) => (
+      <p>{dash(row.phone)}</p>
+    ),
   },
   {
     id: "route",
@@ -80,6 +85,7 @@ export function AssessmentsView() {
       fetcher={fetcher}
       emptyLabel="No assessments match these filters."
       options={["name", "email","download"]}
+      downloadFilename={`assessments-${new Date().toISOString().split('T')[0]}.csv`}
     />
   );
 }

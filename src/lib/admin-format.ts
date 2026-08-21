@@ -53,6 +53,8 @@ export function formatStripeAmount(amount: number, currency: string) {
     return new Intl.NumberFormat("en-GB", {
       style: "currency",
       currency: code,
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 2
     }).format(amount / divisor);
   } catch {
     return `${(amount / divisor).toFixed(2)} ${code}`;

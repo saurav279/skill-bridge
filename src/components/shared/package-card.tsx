@@ -1,7 +1,13 @@
 import Link from "next/link";
-import { Check, X } from "lucide-react";
-import type { ServicePackage } from "@/types";
+import { Check, Info, X } from "lucide-react";
+import type { PackageInstallmentPlan, ServicePackage } from "@/types";
+import { formatPackagePrice } from "@/lib/format-package-price";
 import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 
 import { BadgeText } from "./badge";
@@ -11,6 +17,59 @@ type PackageCardProps = {
   className?: string;
   onCompare?: (slug: string) => void;
 };
+
+function InstallmentHint({ plan }: { plan: PackageInstallmentPlan }) {
+  const first = plan.payments[0];
+  if (!first) return null;
+
+  return (
+    <div className="flex items-start gap-1.5">
+      <div className="min-w-0">
+        <p className="text-sm text-muted-foreground">{plan.label}</p>
+        <p className="text-xs text-muted-foreground/80">
+          First {formatPackagePrice(first.amount, plan.currency)} · {first.due}
+        </p>
+      </div>
+      <Tooltip>
+        <TooltipTrigger
+          className="mt-0.5 inline-flex shrink-0 text-muted-foreground transition-colors hover:text-primary"
+          aria-label="View payment schedule"
+        >
+          <Info className="size-3.5" />
+        </TooltipTrigger>
+        <TooltipContent className="max-w-md p-0" side="top">
+          <table className="w-full text-left text-xs">
+            <thead>
+              <tr className="border-b border-background/20">
+                <th className="px-3 py-2 font-medium">Due</th>
+                <th className="px-3 py-2 font-medium">Amount</th>
+                <th className="px-3 py-2 font-medium">You get</th>
+              </tr>
+            </thead>
+            <tbody>
+              {plan.payments.map((payment) => (
+                <tr
+                  key={`${payment.due}-${payment.amount}`}
+                  className="border-b border-background/10 last:border-0"
+                >
+                  <td className="whitespace-nowrap px-3 py-2 align-top">
+                    {payment.due}
+                  </td>
+                  <td className="whitespace-nowrap px-3 py-2 align-top tabular-nums">
+                    {formatPackagePrice(payment.amount, plan.currency)}
+                  </td>
+                  <td className="max-w-[14rem] px-3 py-2 align-top leading-snug">
+                    {payment.achievement}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </TooltipContent>
+      </Tooltip>
+    </div>
+  );
+}
 
 export function PackageCard({ pkg, className, onCompare }: PackageCardProps) {
   return (
@@ -38,18 +97,18 @@ export function PackageCard({ pkg, className, onCompare }: PackageCardProps) {
         {pkg.description}
       </p>
 
-      {(pkg.priceLabel || pkg.priceNote) && (
-        <div className="mt-5 border-y border-border/70 py-4">
+      {(pkg.priceLabel || pkg.installments) ? (
+        <div className="mt-5 space-y-1.5 border-y border-border/70 py-4">
           {pkg.priceLabel ? (
             <p className="text-lg font-semibold text-foreground">
               {pkg.priceLabel}
             </p>
           ) : null}
-          {pkg.priceNote ? (
-            <p className="mt-1 text-xs text-muted-foreground">{pkg.priceNote}</p>
+          {pkg.installments ? (
+            <InstallmentHint plan={pkg.installments} />
           ) : null}
         </div>
-      )}
+      ) : null}
 
       <ul className="mt-6 flex-1 space-y-3">
         {pkg.features.map((feature) => (

@@ -3,144 +3,194 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useState, type ReactNode } from "react";
+import { type ReactNode } from "react";
 import {
   CalendarClock,
   ClipboardList,
   CreditCard,
   Inbox,
   LogOut,
-  Menu,
   UserRound,
   Users,
   Wallet,
-  X,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { ThemeToggle } from "@/components/shared/theme-toggle";
-import { cn } from "@/lib/utils";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarInset,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarProvider,
+  SidebarTrigger,
+} from "@/components/ui/sidebar";
 
-const navItems = [
-  { href: "/admin/leads", label: "Leads", icon: Users },
-  { href: "/admin/users", label: "Users", icon: UserRound },
-  { href: "/admin/assessments", label: "Assessments", icon: ClipboardList },
-  { href: "/admin/contacts", label: "Contact inbox", icon: Inbox },
-  { href: "/admin/purchases", label: "Purchases", icon: CreditCard },
-  { href: "/admin/payment-plans", label: "Payments Plans", icon: Wallet },
-  { href: "/admin/installments", label: "Installments", icon: CalendarClock },
+type NavSection = {
+  label: string;
+  items: Array<{
+    href: string;
+    label: string;
+    icon: React.ComponentType<{ className?: string }>;
+  }>;
+};
+
+const navSections: NavSection[] = [
+  {
+    label: "Leads",
+    items: [
+      { href: "/admin/leads", label: "Leads", icon: Users },
+      { href: "/admin/users", label: "Users", icon: UserRound },
+    ],
+  },
+  {
+    label: "Services",
+    items: [
+      { href: "/admin/assessments", label: "Assessments", icon: ClipboardList },
+      { href: "/admin/contacts", label: "Contact Inbox", icon: Inbox },
+      { href: "/admin/purchases", label: "Package Purchases", icon: CreditCard },
+    ],
+  },
+  {
+    label: "Payments",
+    items: [
+      { href: "/admin/payment-plans", label: "Payment Plans", icon: Wallet },
+      { href: "/admin/installments", label: "Installments", icon: CalendarClock },
+    ],
+  },
 ];
+
+function AppSidebar() {
+  const pathname = usePathname();
+
+  return (
+    <Sidebar collapsible="icon">
+      <SidebarHeader>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              size="lg"
+              render={<Link href="/admin/leads" />}
+              tooltip="Skill Bridge Admin"
+              className="cursor-pointer"
+            >
+              <Image
+                src="/fav/apple-touch-icon.png"
+                alt=""
+                width={32}
+                height={32}
+                className="hidden size-8 rounded-md group-data-[collapsible=icon]:block"
+              />
+              <Image
+                src="/logo.png"
+                alt="Skill Bridge"
+                width={148}
+                height={28}
+                className="h-7 w-auto group-data-[collapsible=icon]:hidden"
+                priority
+              />
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarHeader>
+
+      <SidebarContent>
+        {navSections.map((section) => (
+          <SidebarGroup key={section.label}>
+            <SidebarGroupLabel>{section.label}</SidebarGroupLabel>
+            <SidebarMenu>
+              {section.items.map(({ href, label, icon: Icon }) => {
+                const active =
+                  pathname === href || pathname.startsWith(`${href}/`);
+                return (
+                  <SidebarMenuItem key={href}>
+                    <SidebarMenuButton
+                      render={<Link href={href} />}
+                      isActive={active}
+                      tooltip={label}
+                      className="cursor-pointer"
+                    >
+                      <Icon />
+                      <span>{label}</span>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                );
+              })}
+            </SidebarMenu>
+          </SidebarGroup>
+        ))}
+      </SidebarContent>
+
+      <SidebarFooter>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SignOutButton />
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
+    </Sidebar>
+  );
+}
+
+function SignOutButton() {
+  const router = useRouter();
+
+  return (
+    <SidebarMenuButton
+      tooltip="Sign out"
+      className="cursor-pointer"
+      onClick={() => router.replace("/admin/login")}
+    >
+      <LogOut />
+      <span>Sign out</span>
+    </SidebarMenuButton>
+  );
+}
 
 export function AdminShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
-  const router = useRouter();
-  const [open, setOpen] = useState(false);
 
   if (pathname === "/admin/login") {
     return <>{children}</>;
   }
 
-  const current = navItems.find(
-    (item) => pathname === item.href || pathname.startsWith(`${item.href}/`)
-  );
+  // Find current page label for header
+  let currentLabel = "Dashboard";
+  for (const section of navSections) {
+    const item = section.items.find(
+      (item) => pathname === item.href || pathname.startsWith(`${item.href}/`)
+    );
+    if (item) {
+      currentLabel = item.label;
+      break;
+    }
+  }
 
   return (
-    <div className="min-h-screen bg-background">
-      <aside
-        className={cn(
-          "fixed inset-y-0 left-0 z-40 flex w-64 flex-col border-r border-sidebar-border bg-sidebar transition-transform duration-200",
-          open ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
-        )}
-      >
-        <div className="flex h-16 items-center gap-3 border-b border-sidebar-border px-5">
-          <Link
-            href="/admin/leads"
-            className="inline-flex items-center"
-            aria-label="Admin dashboard"
-            onClick={() => setOpen(false)}
-          >
-            <Image
-              src="/logo.png"
-              alt="Skill Bridge"
-              width={148}
-              height={28}
-              className="h-7 w-auto"
-              priority
-            />
-          </Link>
-        </div>
-
-        <nav className="flex flex-1 flex-col gap-1 p-3" aria-label="Admin">
-          {navItems.map(({ href, label, icon: Icon }) => {
-            const active =
-              pathname === href || pathname.startsWith(`${href}/`);
-            return (
-              <Link
-                key={href}
-                href={href}
-                onClick={() => setOpen(false)}
-                className={cn(
-                  "flex items-center gap-2.5 rounded-xl px-3 py-2 text-sm font-medium transition-colors",
-                  active
-                    ? "bg-sidebar-accent text-sidebar-primary"
-                    : "text-sidebar-foreground/70 hover:bg-sidebar-accent/70 hover:text-sidebar-foreground"
-                )}
-                aria-current={active ? "page" : undefined}
-              >
-                <Icon className="size-4 shrink-0" />
-                {label}
-              </Link>
-            );
-          })}
-        </nav>
-
-        <div className="border-t border-sidebar-border p-3">
-          <Button
-            type="button"
-            variant="ghost"
-            className="h-9 w-full justify-start rounded-xl text-muted-foreground"
-            onClick={() => router.replace("/admin/login")}
-          >
-            <LogOut className="size-4" />
-            Sign out
-          </Button>
-        </div>
-      </aside>
-
-      {open ? (
-        <button
-          type="button"
-          aria-label="Close navigation"
-          className="fixed inset-0 z-30 bg-foreground/20 backdrop-blur-[2px] lg:hidden"
-          onClick={() => setOpen(false)}
-        />
-      ) : null}
-
-      <div className="lg:pl-64">
-        <header className="sticky top-0 z-20 flex h-16 items-center justify-between border-b border-border bg-background/80 px-4 backdrop-blur-xl sm:px-6">
-          <div className="flex items-center gap-3">
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              className="lg:hidden"
-              aria-label="Open navigation"
-              onClick={() => setOpen(true)}
-            >
-              {open ? <X className="size-4" /> : <Menu className="size-4" />}
-            </Button>
-            <div>
-              <p className="font-mono text-[11px] font-semibold uppercase tracking-wider text-primary">
-                Admin
-              </p>
-              <h1 className="text-sm font-semibold tracking-tight sm:text-base">
-                {current?.label ?? "Dashboard"}
-              </h1>
-            </div>
+    <SidebarProvider>
+      <AppSidebar />
+      <SidebarInset>
+        {/* Header */}
+        <header className="sticky top-0 z-20 flex h-16 items-center gap-4 border-b border-border bg-background/80 px-4 backdrop-blur-xl sm:px-6">
+          <SidebarTrigger className="-ml-1" />
+          <div className="flex-1">
+            <p className="font-mono text-[11px] font-semibold uppercase tracking-wider text-primary">
+              Admin
+            </p>
+            <h1 className="text-sm font-semibold tracking-tight sm:text-base">
+              {currentLabel}
+            </h1>
           </div>
-          {/* <ThemeToggle /> */}
         </header>
-        <div className="px-4 py-8 sm:px-6 lg:px-8">{children}</div>
-      </div>
-    </div>
+
+        {/* Content */}
+        <div className="flex flex-1 flex-col gap-4 px-4 py-8 sm:px-6 lg:px-8">
+          {children}
+        </div>
+      </SidebarInset>
+    </SidebarProvider>
   );
 }

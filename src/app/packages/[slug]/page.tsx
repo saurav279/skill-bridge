@@ -15,6 +15,8 @@ import { ReadyToStartCta } from "@/components/sections/ready-to-start";
 import { Button } from "@/components/ui/button";
 import { ConversionPackages } from "@/components/sections/conversion-packages";
 import { BookingWizard } from "@/components/packages/booking-wizard";
+import { PackageInstallmentSchedule } from "@/components/packages/package-installment-schedule";
+import { ContactSection } from "@/components/sections/contact-section";
 import { BadgeText } from "@/components/shared/badge";
 
 type PageProps = {
@@ -70,9 +72,14 @@ export default async function PackageDetailPage({ params }: PageProps) {
                   <span className="text-4xl font-bold text-primary">
                     {pkg.priceLabel}
                   </span>
-                  <span className="text-sm text-muted-foreground">
-                    {pkg.priceNote}
-                  </span>
+                  {pkg.installments ? (
+                    <a
+                      href="#payment-path"
+                      className="text-sm font-medium text-primary underline-offset-4 hover:underline"
+                    >
+                      {pkg.installments.label}
+                    </a>
+                  ) : null}
                 </div>
                 <p className="mt-6 text-base leading-relaxed text-muted-foreground sm:text-lg">
                   {overview}
@@ -138,6 +145,17 @@ export default async function PackageDetailPage({ params }: PageProps) {
               <FadeIn delay={0.08}>
                 <div className="lg:sticky lg:top-28">
                   <BookingWizard pkg={pkg} />
+
+                { pkg.installments && <p className="mx-auto mt-8 max-w-2xl text-center text-sm text-muted-foreground">
+                    Want to request for a installment plan? Send a message and
+                    we’ll confirm the schedule with you.{" "}
+                    <a
+                      href="#installment-request"
+                      className="font-medium text-primary hover:underline"
+                    >
+                      Request Installment Plan
+                    </a>
+                  </p>}
                 </div>
               </FadeIn>
             </div>
@@ -170,6 +188,27 @@ export default async function PackageDetailPage({ params }: PageProps) {
             </div>
           </div>
         </section>
+      ) : null}
+
+
+      {pkg.installments ? (
+        <>
+          <PackageInstallmentSchedule
+            plan={pkg.installments}
+            packageName={pkg.name}
+          />
+          <div id="installment-request" className="scroll-mt-28">
+            <ContactSection
+              className="border-t border-border/70 bg-muted/20"
+              title="Set up this payment path"
+              description={`Want to pay for ${pkg.name} in ${pkg.installments.payments.length} instalments? Send a message and we’ll confirm the schedule with you.`}
+              defaultValues={{
+                subject: `Installment plan — ${pkg.name}`,
+                message: `I’d like to discuss the ${pkg.installments.label} for ${pkg.name}.`,
+              }}
+            />
+          </div>
+        </>
       ) : null}
 
       <section className="py-20 md:py-28">

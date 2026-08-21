@@ -1,10 +1,22 @@
-import type { PackageFeature, ServicePackage } from "@/types";
+import type {
+  PackageFeature,
+  PackageInstallment,
+  PackageInstallmentPlan,
+  ServicePackage,
+} from "@/types";
 
 const DEFAULT_VIDEO =
   "https://www.youtube.com/embed/ScMzIvxBSi4"; /* replace with your package walkthrough */
 
 const included = (label: string): PackageFeature => ({ label, included: true });
 const excluded = (label: string): PackageFeature => ({ label, included: false });
+
+function installmentPlan(
+  label: string,
+  payments: PackageInstallment[]
+): PackageInstallmentPlan {
+  return { label, currency: "GBP", payments };
+}
 
 /**
  * Package ladder aligned with michellehua.co.uk structure,
@@ -22,7 +34,6 @@ export const packages: ServicePackage[] = [
     overview:
       "The Strategy Call is a paid 30-minute 1:1. We review your background at a high level, discuss whether a Global Talent pathway is a strong fit, and recommend the right package — before you commit to a fuller engagement.",
     priceLabel: "£45",
-    priceNote: "One-time · 30 minutes",
     slotDurationMinutes: DEFAULT_SLOT_MINUTES,
     features: [
       included("30-minute 1:1 consultation"),
@@ -64,7 +75,6 @@ export const packages: ServicePackage[] = [
     overview:
       "Leadership Enhancement is your foundation. You will learn how to frame leadership, innovation, and impact in language endorsement panels recognise — before you invest in heavier coaching. Complete modules at your own pace, then upgrade when you are ready for strategy or review.",
     priceLabel: "£500",
-    priceNote: "One-time",
     features: [
       included("Leadership in Tech profile review"),
       included("Frameworks for Impact & Recognition"),
@@ -87,6 +97,18 @@ export const packages: ServicePackage[] = [
       { title: "Map early evidence", detail: "Start a lightweight evidence list aligned to Digital Technology criteria." },
       { title: "Decide next step", detail: "Upgrade to Strategy Session or DIY Membership when you are ready for deeper support." },
     ],
+    installments: installmentPlan("2-payment plan", [
+      {
+        due: "Due on booking",
+        amount: 250,
+        achievement: "Course access and leadership, impact, and innovation frameworks",
+      },
+      {
+        due: "After 30 days",
+        amount: 250,
+        achievement: "Evidence mapping worksheets and a recommended next package",
+      },
+    ]),
   },
   {
     slug: "diy-membership",
@@ -97,7 +119,6 @@ export const packages: ServicePackage[] = [
     overview:
       "DIY Membership gives you Skill Bridge templates without full 1:1 coaching. Use checklists, letter prompts, and criteria worksheets to organise your pack on your timeline — ideal if you are disciplined and want professional structure at a lower investment.",
     priceLabel: "£700",
-    priceNote: "One-time",
     features: [
       included("Leadership in Tech Course"),
       included("DIY Membership Area"),
@@ -123,6 +144,18 @@ export const packages: ServicePackage[] = [
       { title: "Build your draft pack", detail: "Use DIY tools to structure statement outlines and evidence lists." },
       { title: "Optional upgrade", detail: "Move to Strategy Session or Review Only when you want expert eyes on your draft." },
     ],
+    installments: installmentPlan("2-payment plan", [
+      {
+        due: "Due on booking",
+        amount: 350,
+        achievement: "Leadership course plus DIY membership, templates, and checklists",
+      },
+      {
+        due: "After 30 days",
+        amount: 350,
+        achievement: "Criteria worksheets and structured prompts to build your draft pack",
+      },
+    ]),
   },
   {
     slug: "strategy-session",
@@ -133,7 +166,6 @@ export const packages: ServicePackage[] = [
     overview:
       "The Strategy Session is a clarity engagement. We assess Exceptional Talent vs Promise fit, prioritise evidence, and deliver a written memo so you know exactly what to strengthen — before committing to a full review or bespoke coaching.",
     priceLabel: "£1,500",
-    priceNote: "One-time",
     features: [
       included("Leadership in Tech Course"),
       included("DIY Membership Area"),
@@ -160,6 +192,18 @@ export const packages: ServicePackage[] = [
       { title: "Written memo", detail: "Receive a clear plan: evidence priorities, risks, and recommended next package." },
       { title: "Decide how to proceed", detail: "Continue DIY, move to Review Only / Full Review, or pause with clarity." },
     ],
+    installments: installmentPlan("2-payment plan", [
+      {
+        due: "Due on booking",
+        amount: 750,
+        achievement: "Intake, profile review, and the strategy call",
+      },
+      {
+        due: "After 30 days",
+        amount: 750,
+        achievement: "Written pathway memo, evidence priorities, and recommended next step",
+      },
+    ]),
   },
   {
     slug: "review-only",
@@ -170,7 +214,6 @@ export const packages: ServicePackage[] = [
     overview:
       "Review Only is for applicants who already have drafts. We stress-test your statement, evidence annexes, and letters against criteria — then give precise rewrite guidance so you submit with confidence.",
     priceLabel: "£1,000",
-    priceNote: "One-time · Review focused",
     features: [
       included("Leadership Enhancement"),
       included("DIY Membership Area"),
@@ -194,6 +237,18 @@ export const packages: ServicePackage[] = [
       { title: "Feedback & rewrite guide", detail: "Receive actionable notes and priorities for strengthening the pack." },
       { title: "Final sense-check", detail: "Optional follow-up review within scope before you submit." },
     ],
+    installments: installmentPlan("2-payment plan", [
+      {
+        due: "Due on booking",
+        amount: 500,
+        achievement: "Full pack review — statement, evidence structure, and letters",
+      },
+      {
+        due: "After 30 days",
+        amount: 500,
+        achievement: "Rewrite guidance, gap analysis, and a final sense-check before submission",
+      },
+    ]),
   },
   {
     slug: "full-review",
@@ -204,7 +259,6 @@ export const packages: ServicePackage[] = [
     overview:
       "Full Review combines strategy and iterative review. We help you shape narrative and evidence, guide letters, and run revision rounds until the pack is coherent, criteria-aligned, and ready for Stage 1 submission — with weekly coaching across a four-week window.",
     priceLabel: "£3,500",
-    priceNote: "Installments available · Most popular",
     featured: true,
     features: [
       included("Leadership Enhancement"),
@@ -231,6 +285,23 @@ export const packages: ServicePackage[] = [
       { title: "Iterative review", detail: "Revision rounds until narrative and proof are endorsement-ready." },
       { title: "Submission readiness", detail: "Final QA checklist and guidance for portal submission." },
     ],
+    installments: installmentPlan("3-payment plan", [
+      {
+        due: "Due on booking",
+        amount: 1500,
+        achievement: "Kickoff, pathway strategy, and course + DIY access",
+      },
+      {
+        due: "After 30 days",
+        amount: 1000,
+        achievement: "Statement support, evidence architecture, and letter briefs",
+      },
+      {
+        due: "After 60 days",
+        amount: 1000,
+        achievement: "Revision rounds, weekly coaching, and submission-readiness QA",
+      },
+    ]),
   },
   {
     slug: "bespoke-coaching",
@@ -241,7 +312,6 @@ export const packages: ServicePackage[] = [
     overview:
       "Bespoke 1-to-1 Support is Skill Bridge’s highest-touch engagement. You work with a dedicated consultant through unlimited weekly calls, full support across criteria selection, application structure, evidence architecture, recommendation letters, and the endorsement stage. Seats are limited so you get undivided attention — ideal for founders and senior talent who want a tightly managed path to Stage 1 endorsement.",
     priceLabel: "£5,000",
-    priceNote: "Installments available · Full support",
     features: [
       included("Leadership Enhancement"),
       included("DIY Membership Area"),
@@ -287,6 +357,23 @@ export const packages: ServicePackage[] = [
           "Final QA, portal guidance, and clear next steps after Stage 1 decision — with full support throughout.",
       },
     ],
+    installments: installmentPlan("3-payment plan", [
+      {
+        due: "Due on booking",
+        amount: 2000,
+        achievement: "Discovery, kickoff, consultant matching, and full course access",
+      },
+      {
+        due: "After 30 days",
+        amount: 1500,
+        achievement: "Criteria strategy, evidence matrix, letters, and weekly 1-to-1 coaching",
+      },
+      {
+        due: "After 60 days",
+        amount: 1500,
+        achievement: "Pack assembly, priority review, and endorsement-stage support through submission",
+      },
+    ]),
   },
 
   //appeal packages
@@ -299,7 +386,6 @@ export const packages: ServicePackage[] = [
     overview:
       "Appeal Diagnosis is a focused review of your refusal or feedback letter against your original pack. We review your background at a high level, discuss whether a Global Talent pathway is a strong fit, and recommend the right package — before you commit to a fuller engagement.",
     priceLabel: "£500",
-    priceNote: "One-time · 30 minutes",
     slotDurationMinutes: DEFAULT_SLOT_MINUTES,
     features: [
       included("30-minute 1:1 consultation"),
@@ -330,6 +416,18 @@ export const packages: ServicePackage[] = [
         detail: "Pay securely with Stripe. Your calendar invite follows once payment is confirmed.",
       },
     ],
+    installments: installmentPlan("2-payment plan", [
+      {
+        due: "Due on booking",
+        amount: 250,
+        achievement: "Refusal analysis, criteria gap map, and strategy call",
+      },
+      {
+        due: "After the diagnosis call",
+        amount: 250,
+        achievement: "Written diagnosis memo and a recommended next step",
+      },
+    ]),
   },
   {
     slug: "appeal-rebuild",
@@ -340,7 +438,6 @@ export const packages: ServicePackage[] = [
     overview:
       "Appeal Rebuild is a focused rebuild of your original pack. We review your background at a high level, discuss whether a Global Talent pathway is a strong fit, and recommend the right package — before you commit to a fuller engagement.",
     priceLabel: "£1,000",
-    priceNote: "One-time · 30 minutes",
     slotDurationMinutes: DEFAULT_SLOT_MINUTES,
     features: [
       included("Everything in Appeal Diagnosis"),
@@ -371,6 +468,18 @@ export const packages: ServicePackage[] = [
         detail: "Pay securely with Stripe. Your calendar invite follows once payment is confirmed.",
       },
     ],
+    installments: installmentPlan("2-payment plan", [
+      {
+        due: "Due on booking",
+        amount: 500,
+        achievement: "Diagnosis plus narrative and evidence rebuild kickoff",
+      },
+      {
+        due: "After 30 days",
+        amount: 500,
+        achievement: "Letter re-briefs, annex redesign, and two review rounds",
+      },
+    ]),
   },
   {
     slug: "appeal-full-support",
@@ -381,7 +490,6 @@ export const packages: ServicePackage[] = [
     overview:
       "Appeal Full Support is an end-to-end appeal/resubmission coaching package. We work with you through dedicated calls, iterative review, and priority turnaround until your pack is submission-ready.",
     priceLabel: "£1,500",
-    priceNote: "One-time · 30 minutes",
     slotDurationMinutes: DEFAULT_SLOT_MINUTES,
     features: [
       included("Everything in Appeal Rebuild"),
@@ -412,6 +520,23 @@ export const packages: ServicePackage[] = [
         detail: "Pay securely with Stripe. Your calendar invite follows once payment is confirmed.",
       },
     ],
+    installments: installmentPlan("3-payment plan", [
+      {
+        due: "Due on booking",
+        amount: 500,
+        achievement: "Diagnosis, rebuild kickoff, and dedicated consultant matching",
+      },
+      {
+        due: "After 30 days",
+        amount: 500,
+        achievement: "Weekly coaching calls and iterative review of the rebuilt pack",
+      },
+      {
+        due: "After 60 days",
+        amount: 500,
+        achievement: "Priority turnaround until the pack is submission-ready",
+      },
+    ]),
   },
 ];
 

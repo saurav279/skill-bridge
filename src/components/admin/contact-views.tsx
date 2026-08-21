@@ -29,14 +29,16 @@ const columns: AdminColumn<AdminContactMessage>[] = [
     render: (row) => dash(row.name),
   },
   {
-    id: "contact",
-    header: "Contact",
+    id: "email",
+    header: "Email",
     className: "font-mono text-xs",
-    render: (row) =>
-      <div>
-        <p>{dash(row.email)}</p>
-        <p>{dash(row.phone)}</p>
-      </div>
+    render: (row) => dash(row.email),
+  },
+  {
+    id: "phone",
+    header: "Phone",
+    className: "font-mono text-xs",
+    render: (row) =>  dash(row.phone),
   },
   {
     id: "subject",
@@ -65,7 +67,8 @@ export function ContactsView() {
       rowHref={(row) => `/admin/contacts/${row.id}`}
       fetcher={fetcher}
       emptyLabel="No contact messages match these filters."
-      options={["name", "email","download"]}
+      options={["name", "email", "download"]}
+      downloadFilename={`contacts-${new Date().toISOString().split('T')[0]}.csv`}
     />
   );
 }

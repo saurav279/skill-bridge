@@ -109,7 +109,7 @@ export function AdminList<T extends { id: string }>({
     if (filterByEmail) {
       query.email = debouncedEmail || undefined;
     }
-    if (filterByPackage) {
+    if (filterByPackage && packageName !== "All packages") {
       query.packageName = packageName || undefined;
     }
     if (filterByStatus) {
@@ -180,7 +180,7 @@ export function AdminList<T extends { id: string }>({
   const from = total === 0 ? 0 : (page - 1) * limit + 1;
   const to = Math.min(page * limit, total);
 
-  const allPackageNames = packages.map((pkg) => pkg.name);
+  const allPackageNames = [...packages.map((pkg) => pkg.name), "All packages"];
   const hasFilters = Boolean(
     name.trim() || email.trim() || packageName || status || fromDate || toDate
   );

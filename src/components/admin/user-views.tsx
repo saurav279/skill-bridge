@@ -191,7 +191,7 @@ function UserTable({
       emptyLabel="No users match these filters."
       options={["name", "email", "download"]}
       refreshKey={refreshKey}
-      downloadFilename="users.csv"
+      downloadFilename={`users-${new Date().toISOString().split('T')[0]}.csv`}
       toolbar={toolbar}
     />
   );
@@ -323,6 +323,7 @@ export function CreateUserDialog({
               />
             </div>
             <Field label="Lead ID" htmlFor="user-lead">
+              <p className="text-xs text-muted-foreground">If lead already exists, We recommend creating the user directly from the Lead Drawer instead. Simply click + Create User to create a user in just one click.</p>
               <Input
                 id="user-lead"
                 value={leadId}

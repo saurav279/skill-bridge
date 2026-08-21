@@ -1,6 +1,6 @@
 import { api, type ApiResponse } from "@/services/fetchApi";
 
-export type ContactTalkPreference = "phone" | "google_meet";
+export type ContactTalkPreference = "phone" | "email";
 
 export type ContactUsPayload = {
   name: string;

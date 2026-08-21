@@ -26,17 +26,22 @@ const columns: AdminColumn<AdminPackagePurchase>[] = [
     render: (row) => dash(row.customerName),
   },
   {
-    id: "contact",
-    header: "Contact",
+    id: "email",
+    header: "Email",
     className: "font-mono text-xs",
     render: (row) =>{ 
       return (
-        <div>
-          <p>{dash(row.customerEmail)}</p>
-          <p>{dash(row.customerPhone)}</p>
-        </div>
+        <p>{dash(row.customerEmail)}</p>
       )
     },
+  },
+  {
+    id: "phone",
+    header: "Phone",
+    className: "font-mono text-xs",
+    render: (row) => (
+      <p>{dash(row.customerPhone)}</p>
+    ),
   },
   {
     id: "package",
@@ -71,6 +76,7 @@ export function PurchasesView() {
       fetcher={fetcher}
       emptyLabel="No purchases match these filters."
       options={["name", "email", "packageName", "download"]}
+      downloadFilename={`package-purchases-${new Date().toISOString().split('T')[0]}.csv`}
     />
   );
 }

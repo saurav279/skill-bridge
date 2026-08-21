@@ -174,9 +174,9 @@ export function CreatePaymentPlanDialog({
 
     const schedule = customSplit
       ? rows.map((row) => ({
-          amount: poundsInputToPence(row.amount),
-          dueAt: row.dueAt,
-        }))
+        amount: poundsInputToPence(row.amount),
+        dueAt: row.dueAt,
+      }))
       : preview;
 
     if (schedule.length !== count) {
@@ -347,7 +347,9 @@ export function CreatePaymentPlanDialog({
                 onValueChange={(value) => handlePackageChange(value ?? "")}
               >
                 <SelectTrigger id="plan-package" className="h-9 w-full rounded-xl">
-                  <SelectValue placeholder="Select package" />
+                  <SelectValue placeholder="Select package">
+                    {packages.find((pkg) => pkg.slug === packageName)?.name}
+                  </SelectValue>
                 </SelectTrigger>
                 <SelectContent className="z-[60]" alignItemWithTrigger={false}>
                   {packages.map((pkg) => (
@@ -514,12 +516,12 @@ export function CreatePaymentPlanDialog({
               </p>
             ) : null}
           </div>
-         
-         {!selectedUser?.leadId && !createNewUser ? (
-          <p className="text-sm text-muted-foreground">
-            This user does not have a lead ID.
-          </p>
-        ) : null}
+
+          {selectedUser && !selectedUser?.leadId && !createNewUser ? (
+            <p className="text-sm text-muted-foreground">
+              This user does not have a lead ID.
+            </p>
+          ) : null}
 
           <DialogFooter>
             <Button

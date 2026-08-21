@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 };
 
 export default function AppealPage() {
-  const appealPackages = packages.filter((pkg) => ["appeal-diagnosis", "appeal-rebuild", "appeal-full-support"].includes(pkg.slug) );
+  const appealPackages = packages.filter((pkg) => ["appeal-diagnosis", "appeal-rebuild", "appeal-full-support"].includes(pkg.slug));
   return (
     <>
       <section className="py-16 md:py-24">
@@ -33,19 +33,22 @@ export default function AppealPage() {
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Button
                 className="h-11 rounded-full px-6 font-semibold uppercase tracking-wide"
-                render={<Link href="/assessment"  target="_blank" rel="noopener noreferrer"/>}
+                render={<Link href="/assessment" target="_blank" rel="noopener noreferrer" />}
               >
                 Start Assessment Questionnaire
               </Button>
               <Button
                 variant="outline"
                 className="h-11 rounded-full px-6 font-semibold uppercase tracking-wide"
-                render={<Link href="#appeal-packages"/>}
+                render={<Link href="#appeal-packages" />}
               >
                 View Appeal Packages
               </Button>
             </div>
-          </FadeIn>
+            <p className="mt-5 max-w-2xl text-muted-foreground leading-relaxed">
+              Flexible installment options are available. Explore our packages to learn more.
+            </p>        
+              </FadeIn>
         </div>
       </section>
 
@@ -124,7 +127,7 @@ export default function AppealPage() {
           <StaggerChildren className="mt-12 grid gap-6 md:grid-cols-3">
             {appealPackages.map((pkg) => (
               <StaggerItem key={pkg.slug}>
-              <PackageCard pkg={pkg as unknown as ServicePackage} />
+                <PackageCard pkg={pkg as unknown as ServicePackage} />
               </StaggerItem>
             ))}
           </StaggerChildren>
@@ -136,9 +139,9 @@ export default function AppealPage() {
       </section>
       <EbookCta />
       <ReadyToStartCta />
-     
-      
-    
+
+
+
     </>
   );
 }

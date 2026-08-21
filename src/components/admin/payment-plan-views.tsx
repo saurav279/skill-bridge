@@ -61,16 +61,23 @@ export function PaymentPlansView() {
         render: (row) => dash(row.customerName),
       },
       {
-        id: "contact",
-        header: "Contact",
+        id: "email",
+        header: "Email",
         className: "font-mono text-xs",
         csvValue: (row) =>
-          [dash(row.customerEmail), dash(row.customerPhone)].join(" "),
+          dash(row.customerEmail),
         render: (row) => (
-          <div>
-            <p>{dash(row.customerEmail)}</p>
-            <p>{dash(row.customerPhone)}</p>
-          </div>
+          <p>{dash(row.customerEmail)}</p>
+        ),
+      },
+      {
+        id: "phone",
+        header: "Phone",
+        className: "font-mono text-xs",
+        csvValue: (row) =>
+          dash(row.customerPhone),
+        render: (row) => (
+          <p>{dash(row.customerPhone)}</p>
         ),
       },
       {
@@ -141,7 +148,7 @@ export function PaymentPlansView() {
           label: item.label,
         }))}
         refreshKey={listTick}
-        downloadFilename="payment-plans.csv"
+        downloadFilename={`payment-plans-${new Date().toISOString().split('T')[0]}.csv`}
         toolbar={
           <Button
             variant="outline"

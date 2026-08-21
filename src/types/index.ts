@@ -80,6 +80,21 @@ export type PackageFeature = {
   included: boolean;
 };
 
+/** One payment in a package payment path. */
+export type PackageInstallment = {
+  /** When this payment is due, relative to booking. e.g. "Due on booking", "After 30 days". */
+  due: string;
+  amount: number;
+  /** What this payment unlocks in the engagement. */
+  achievement: string;
+};
+
+/** Optional split-payment path shown on package cards. */
+export type PackageInstallmentPlan = {
+  label: string;
+  currency: string;
+  payments: PackageInstallment[];
+};
 
 export type ServicePackage = {
   slug: string; //backend key
@@ -89,7 +104,7 @@ export type ServicePackage = {
   /** Longer page copy for the package detail page */
   overview?: string;
   priceLabel?: string;
-  priceNote?: string;
+  // priceNote?: string;
   featured?: boolean;
   features: PackageFeature[];
   idealFor: string;
@@ -101,6 +116,7 @@ export type ServicePackage = {
   videoEmbedUrl?: string;
   videoTitle?: string;
   steps?: { title: string; detail: string }[];
+  installments?: PackageInstallmentPlan;
 };
 
 export type {

@@ -290,6 +290,7 @@ export function LeadTable({
       refreshKey={refreshKey}
       enhanceRow={enhanceRow}
       toolbar={toolbar}
+      downloadFilename={`leads-${new Date().toISOString().split('T')[0]}.csv`}
     />
   );
 }

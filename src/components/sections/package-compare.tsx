@@ -339,9 +339,6 @@ function PackageHeader({ pkg }: { pkg: ServicePackage }) {
       {pkg.priceLabel ? (
         <p className="mt-1 text-sm font-medium text-foreground">{pkg.priceLabel}</p>
       ) : null}
-      {pkg.priceNote ? (
-        <p className="mt-0.5 text-xs text-muted-foreground">{pkg.priceNote}</p>
-      ) : null}
     </div>
   );
 }

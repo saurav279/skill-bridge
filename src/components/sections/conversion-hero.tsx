@@ -60,6 +60,9 @@ export function ConversionHero() {
                 View Packages
               </Button>
             </div>
+            <p className="mt-5 max-w-2xl text-base leading-relaxed text-white/75 text-center">
+              Flexible installment options are available. Explore our packages to learn more.
+            </p> 
           </FadeIn>
         </div>
       </div>

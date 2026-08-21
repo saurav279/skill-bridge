@@ -21,10 +21,22 @@ import { useUserStore, useUserStoreHydrated } from "@/stores/user-details";
 
 const TALK_PREFERENCES: { id: ContactTalkPreference; label: string }[] = [
   { id: "phone", label: "Phone" },
-  // { id: "google_meet", label: "Google Meet" },
+  { id: "email", label: "Email" },
 ];
 
-export function ContactForm({ defaultValues }: { defaultValues?: { name: string, email: string, phone: string, livesInUk: boolean, currentVisa?: string, subject: string, message: string } }) {
+export function ContactForm({
+  defaultValues,
+}: {
+  defaultValues?: Partial<{
+    name: string;
+    email: string;
+    phone: string;
+    livesInUk: boolean;
+    currentVisa?: string;
+    subject: string;
+    message: string;
+  }>;
+}) {
   const hydrated = useUserStoreHydrated();
   const personalInfo = useUserStore((s) => s.personalInfo);
   const setPersonalInfo = useUserStore((s) => s.setPersonalInfo);
@@ -33,13 +45,14 @@ export function ContactForm({ defaultValues }: { defaultValues?: { name: string,
   const name = defaultValues?.name || (hydrated ? personalInfo.name : "") || "";
   const email = defaultValues?.email || (hydrated ? personalInfo.email : "") || "";
   const phone = defaultValues?.phone || (hydrated ? personalInfo.phone : "") || "";
-  const livesInUk: LivesInUk | "" = defaultValues
-    ? defaultValues.livesInUk
+  const livesInUk: LivesInUk | "" =
+    defaultValues?.livesInUk === true
       ? "yes"
-      : "no"
-    : hydrated
-      ? personalInfo.liveInUk || ""
-      : "";
+      : defaultValues?.livesInUk === false
+        ? "no"
+        : hydrated
+          ? personalInfo.liveInUk || ""
+          : "";
   const ukVisa: UkVisaOption | "" =
     parsedDefaultVisa.ukVisa || (hydrated ? personalInfo.currentVisa || "" : "");
   const ukVisaOther =

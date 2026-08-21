@@ -508,7 +508,7 @@ export function BookingWizard({ pkg }: BookingWizardProps) {
                 type="submit"
                 className="h-11 w-full rounded-xl sm:w-auto sm:px-8"
               >
-                Continue
+                Continue for {pkg.priceLabel}
                 <ArrowRight className="size-4" />
               </Button>
             </div>
@@ -723,7 +723,7 @@ export function BookingWizard({ pkg }: BookingWizardProps) {
                 ) : (
                   <>
                     <Check className="size-4" />
-                    Pay with Stripe
+                    Pay {pkg.priceLabel} with Stripe
                   </>
                 )}
               </Button>
