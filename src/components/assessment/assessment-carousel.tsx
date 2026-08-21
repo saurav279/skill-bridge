@@ -59,6 +59,7 @@ import {
 import { useUserStore, useUserStoreHydrated } from "@/stores/user-details";
 import { pickPhone } from "@/lib/intake-details";
 import { UkVisaOption } from "@/types/consultation";
+import PrivacyAndTermsConsent from "../shared/privacy-and-terms-consent";
 
 const ICONS: Record<string, LucideIcon> = {
   Users,
@@ -288,21 +289,21 @@ export function AssessmentCarousel() {
       payload[section.id] = sectionAnswers;
     }
 
-if (resumeFile instanceof File) {
-  try {
-//payload.resumeLink = "https://res.cloudinary.com/dud6q9sp/raw/upload/v1786380068/qwrkjhflfqppisi8jgm2.pdf" 
-payload.resumeLink = await uploadToCloudinary(resumeFile);
+    if (resumeFile instanceof File) {
+      try {
+        //payload.resumeLink = "https://res.cloudinary.com/dud6q9sp/raw/upload/v1786380068/qwrkjhflfqppisi8jgm2.pdf" 
+        payload.resumeLink = await uploadToCloudinary(resumeFile);
 
-  } catch (e) {
-    setSubmitError(
-      e instanceof Error
-        ? e.message
-        : "Could not upload your resume. Please try again."
-    );
-    setPhase("error");
-    return;
-  }
-}
+      } catch (e) {
+        setSubmitError(
+          e instanceof Error
+            ? e.message
+            : "Could not upload your resume. Please try again."
+        );
+        setPhase("error");
+        return;
+      }
+    }
     const { success, data, error } = await createAssessment(payload);
 
     if (!success || !data) {
@@ -510,7 +511,7 @@ payload.resumeLink = await uploadToCloudinary(resumeFile);
           <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
             <Button
               className="h-11 rounded-full px-6 font-semibold uppercase tracking-wide"
-              render={<Link href={`/assessment/${assessment.id}`} target="_blank" rel="noopener noreferrer"/>}
+              render={<Link href={`/assessment/${assessment.id}`} target="_blank" rel="noopener noreferrer" />}
             >
               View assessment
               <ArrowRight className="size-4" />
@@ -570,114 +571,126 @@ payload.resumeLink = await uploadToCloudinary(resumeFile);
     <div>
       <CacheToolbar />
       <div className="overflow-hidden rounded-2xl border border-border/80 bg-card shadow-soft">
-      {/* Progress */}
-      <div className="border-b border-border/70 px-5 py-4 sm:px-8">
-        <div className="flex items-center justify-between gap-3 text-xs">
-          <span className="font-medium text-muted-foreground">
-            {AssessmentRoutes.find((r) => r.id === routeId)?.name}
-          </span>
-          {/* <span className="font-mono text-primary">
+        {/* Progress */}
+        <div className="border-b border-border/70 px-5 py-4 sm:px-8">
+          <div className="flex items-center justify-between gap-3 text-xs">
+            <span className="font-medium text-muted-foreground">
+              {AssessmentRoutes.find((r) => r.id === routeId)?.name}
+            </span>
+            {/* <span className="font-mono text-primary">
             {step + 1} / {sections.length}
           </span> */}
-          <BadgeText text={`${step + 1} / ${sections.length}`} />
-          {/* </span> */}
-        </div>
-        <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-muted">
-          <div
-            className="h-full rounded-full bg-primary transition-all duration-500"
-            style={{ width: `${progress}%` }}
-          />
-        </div>
-        {/* Section dots */}
-        <div className="mt-4 flex gap-1.5 overflow-x-auto pb-1">
-          {sections.map((s, i) => (
-            <button
-              key={s.id}
-              type="button"
-              title={s.title}
-              onClick={() => {
-                setDirection(i > step ? "next" : "prev");
-                setStep(i);
-              }}
-              className={cn(
-                "h-1.5 min-w-6 flex-1 rounded-full transition-colors",
-                i === step
-                  ? "bg-primary"
-                  : i < step
-                    ? "bg-primary/40"
-                    : "bg-muted-foreground/20"
-              )}
-              aria-label={`Go to ${s.title}`}
-            />
-          ))}
-        </div>
-      </div>
-
-      {/* Carousel panel */}
-      <div
-        key={`${current?.id}-${direction}`}
-        className={cn(
-          "px-5 py-8 sm:px-8 sm:py-10",
-          "animate-in fade-in duration-300",
-          direction === "next" ? "slide-in-from-right-4" : "slide-in-from-left-4"
-        )}
-      >
-        <div className="mb-6 flex items-start gap-4">
-          <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-            <Icon className="size-6" aria-hidden />
+            <BadgeText text={`${step + 1} / ${sections.length}`} />
+            {/* </span> */}
           </div>
-          <div>
-            <p className="font-mono text-xs font-semibold uppercase tracking-wider text-primary">
-              Section {step + 1}
-            </p>
-            <h2 className="text-2xl font-bold tracking-tight">{current?.title}</h2>
-            {current?.description ? (
-              <p className="mt-1 text-sm text-muted-foreground">
-                {current.description}
+          <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-muted">
+            <div
+              className="h-full rounded-full bg-primary transition-all duration-500"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+          {/* Section dots */}
+          <div className="mt-4 flex gap-1.5 overflow-x-auto pb-1">
+            {sections.map((s, i) => (
+              <button
+                key={s.id}
+                type="button"
+                title={s.title}
+                onClick={() => {
+                  setDirection(i > step ? "next" : "prev");
+                  setStep(i);
+                }}
+                className={cn(
+                  "h-1.5 min-w-6 flex-1 rounded-full transition-colors",
+                  i === step
+                    ? "bg-primary"
+                    : i < step
+                      ? "bg-primary/40"
+                      : "bg-muted-foreground/20"
+                )}
+                aria-label={`Go to ${s.title}`}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Carousel panel */}
+        <div
+          key={`${current?.id}-${direction}`}
+          className={cn(
+            "px-5 py-8 sm:px-8 sm:py-10",
+            "animate-in fade-in duration-300",
+            direction === "next" ? "slide-in-from-right-4" : "slide-in-from-left-4"
+          )}
+        >
+          <div className="mb-6 flex items-start gap-4">
+            <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+              <Icon className="size-6" aria-hidden />
+            </div>
+            <div>
+              <p className="font-mono text-xs font-semibold uppercase tracking-wider text-primary">
+                Section {step + 1}
               </p>
-            ) : null}
+              <h2 className="text-2xl font-bold tracking-tight">{current?.title}</h2>
+              {current?.description ? (
+                <p className="mt-1 text-sm text-muted-foreground">
+                  {current.description}
+                </p>
+              ) : null}
+            </div>
           </div>
+
+          <div className="space-y-8">
+            {visibleQuestions.map((q) => (
+              <QuestionField
+                key={q.id}
+                question={q}
+                value={answers[q.id]}
+                onCheckbox={toggleCheckbox}
+                onRadio={(opt) => setAnswer(q.id, opt)}
+                onChips={(opt) => setAnswer(q.id, opt)}
+                onText={(v) => setAnswer(q.id, v)}
+                onFile={(file) => setAnswer(q.id, file)}
+                onValue={(v) => setAnswer(q.id, v)}
+                fileRef={q.type === "file" ? fileRef : undefined}
+              />
+            ))}
+            {isLastStep &&
+
+
+              <PrivacyAndTermsConsent />
+
+            }
+          
+          </div>
+
         </div>
 
-        <div className="space-y-8">
-          {visibleQuestions.map((q) => (
-            <QuestionField
-              key={q.id}
-              question={q}
-              value={answers[q.id]}
-              onCheckbox={toggleCheckbox}
-              onRadio={(opt) => setAnswer(q.id, opt)}
-              onChips={(opt) => setAnswer(q.id, opt)}
-              onText={(v) => setAnswer(q.id, v)}
-              onFile={(file) => setAnswer(q.id, file)}
-              onValue={(v) => setAnswer(q.id, v)}
-              fileRef={q.type === "file" ? fileRef : undefined}
-            />
-          ))}
-        </div>
-      </div>
 
-      {/* Nav */}
-      <div className="flex items-center justify-between gap-3 border-t border-border/70 px-5 py-4 sm:px-8">
-        <Button
-          type="button"
-          variant="outline"
-          className="h-10 rounded-full px-4"
-          onClick={goPrev}
-        >
-          <ArrowLeft className="size-4" />
-          Back
-        </Button>
-        <Button
-          type="button"
-          className="h-10 rounded-full px-5 font-semibold uppercase tracking-wide"
-          onClick={goNext}
-          disabled={isLastStep && !canSubmit}
-        >
-          {isLastStep ? "Submit" : "Next"}
-          {!isLastStep ? <ArrowRight className="size-4" /> : null}
-        </Button>
-      </div>
+
+        {/* Nav */}
+        <div className="flex items-center justify-between gap-3 border-t border-border/70 px-5 py-4 sm:px-8">
+          <Button
+            type="button"
+            variant="outline"
+            className="h-10 rounded-full px-4"
+            onClick={goPrev}
+          >
+            <ArrowLeft className="size-4" />
+            Back
+          </Button>
+          <Button
+            type="button"
+            className="h-10 rounded-full px-5 font-semibold uppercase tracking-wide"
+            onClick={goNext}
+            disabled={isLastStep && !canSubmit}
+          >
+            {isLastStep ? "Submit" : "Next"}
+            {!isLastStep ? <ArrowRight className="size-4" /> : null}
+          </Button>
+        </div>
+
+
       </div>
     </div>
   );

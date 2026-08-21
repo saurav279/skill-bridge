@@ -19,6 +19,7 @@ import type { ContactTalkPreference } from "@/api/useContact";
 import type { LivesInUk, UkVisaOption } from "@/types/consultation";
 import Link from "next/link";
 import { useUserStore, useUserStoreHydrated } from "@/stores/user-details";
+import PrivacyAndTermsConsent from "./privacy-and-terms-consent";
 
 const TALK_PREFERENCES: { id: ContactTalkPreference; label: string }[] = [
   { id: "phone", label: "Phone" },
@@ -309,6 +310,7 @@ export function ContactForm({
           {error}
         </p>
       ) : null}
+      <PrivacyAndTermsConsent/>
       <div className="flex justify-end">
 
 

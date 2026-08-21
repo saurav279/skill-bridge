@@ -84,7 +84,7 @@ export function ContactSection({
                   <span className="block font-medium text-foreground">
                     Response time
                   </span>
-                  Within 1 business day
+                  Within 5 business days
                 </span>
               </li>
               <li className="flex gap-3 text-sm text-muted-foreground">

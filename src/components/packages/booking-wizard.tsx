@@ -32,7 +32,8 @@ import { useUserStore, useUserStoreHydrated } from "@/stores/user-details";
 import type { ServicePackage } from "@/types";
 import type { PackageNameTypes } from "@/types/packages";
 import type { BookingDetails, CalendarSlot, LivesInUk, UkVisaOption } from "@/types/consultation";
-
+import Link from "next/link";
+import PrivacyAndTermsConsent from "../shared/privacy-and-terms-consent";
 const STEPS = ["Details", "Time", "Pay"] as const;
 const DESCRIPTION_MAX = 500;
 const DATE_WINDOW_DAYS = 60;
@@ -520,6 +521,8 @@ export function BookingWizard({ pkg }: BookingWizardProps) {
                 <ArrowRight className="size-4" />
               </Button>
             </div>
+
+
           </form>
         ) : null}
 
@@ -700,11 +703,15 @@ export function BookingWizard({ pkg }: BookingWizardProps) {
               <SummaryRow label="Cost" value={pkg.priceLabel ?? "—"} />
             </dl>
 
+
+
             {payError ? (
               <p className="text-sm text-destructive" role="alert">
                 {payError}
               </p>
             ) : null}
+
+            <PrivacyAndTermsConsent/>
 
             <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-between">
               <Button
@@ -736,9 +743,12 @@ export function BookingWizard({ pkg }: BookingWizardProps) {
                 )}
               </Button>
             </div>
+
+           
           </div>
         ) : null}
       </div>
+
     </div>
   );
 }
