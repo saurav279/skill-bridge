@@ -1,4 +1,12 @@
+import { addDays, format, isWeekend, parse } from "date-fns";
+
 const UK_TIME_ZONE = "Europe/London";
+const ISO_DATE = "yyyy-MM-dd";
+
+/** Parse a `YYYY-MM-DD` value as a local calendar date (no UTC shift). */
+export function parseDateOnly(isoDate: string): Date {
+  return parse(isoDate, ISO_DATE, new Date());
+}
 
 /** Today's calendar date in the UK, as `YYYY-MM-DD`. */
 export function getUkToday(): string {
@@ -11,16 +19,12 @@ export function getUkToday(): string {
 }
 
 export function addCalendarDays(isoDate: string, days: number): string {
-  const [year, month, day] = isoDate.split("-").map(Number);
-  const next = new Date(Date.UTC(year, month - 1, day + days));
-  return next.toISOString().slice(0, 10);
+  return format(addDays(parseDateOnly(isoDate), days), ISO_DATE);
 }
 
 /** Saturday or Sunday for a `YYYY-MM-DD` calendar date. */
 export function isWeekendDate(isoDate: string): boolean {
-  const [year, month, day] = isoDate.split("-").map(Number);
-  const weekday = new Date(Date.UTC(year, month - 1, day)).getUTCDay();
-  return weekday === 0 || weekday === 6;
+  return isWeekend(parseDateOnly(isoDate));
 }
 
 export function nextWeekdayOnOrAfter(isoDate: string): string {
@@ -78,14 +82,7 @@ export function isUkWeekendInstant(isoDateTime: string): boolean {
 }
 
 export function formatUkCalendarDate(isoDate: string): string {
-  const [year, month, day] = isoDate.split("-").map(Number);
-  return new Intl.DateTimeFormat("en-GB", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-    timeZone: "UTC",
-  }).format(new Date(Date.UTC(year, month - 1, day)));
+  return format(parseDateOnly(isoDate), "EEEE d MMMM yyyy");
 }
 
 export function isIsoDate(value: string): boolean {

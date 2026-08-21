@@ -5,12 +5,15 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState, type ReactNode } from "react";
 import {
+  CalendarClock,
   ClipboardList,
   CreditCard,
   Inbox,
   LogOut,
   Menu,
+  UserRound,
   Users,
+  Wallet,
   X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -19,9 +22,12 @@ import { cn } from "@/lib/utils";
 
 const navItems = [
   { href: "/admin/leads", label: "Leads", icon: Users },
+  { href: "/admin/users", label: "Users", icon: UserRound },
   { href: "/admin/assessments", label: "Assessments", icon: ClipboardList },
   { href: "/admin/contacts", label: "Contact inbox", icon: Inbox },
   { href: "/admin/purchases", label: "Purchases", icon: CreditCard },
+  { href: "/admin/payment-plans", label: "Payments Plans", icon: Wallet },
+  { href: "/admin/installments", label: "Installments", icon: CalendarClock },
 ];
 
 export function AdminShell({ children }: { children: ReactNode }) {

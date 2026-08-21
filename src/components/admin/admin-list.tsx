@@ -27,7 +27,12 @@ export type AdminColumn<T> = {
   render: (row: T) => ReactNode;
 };
 
-type FilterOptionProps = "name" | "email" | "packageName" | "download";
+type FilterOptionProps = "name" | "email" | "packageName" | "download" | "status";
+
+type StatusOption = {
+  value: string;
+  label: string;
+};
 
 type AdminListProps<T extends { id: string }> = {
   columns: AdminColumn<T>[];
@@ -40,6 +45,9 @@ type AdminListProps<T extends { id: string }> = {
   fetcher: (query: AdminListQuery) => Promise<AdminListResponse<T>>;
   emptyLabel: string;
   options: FilterOptionProps[];
+  statusOptions?: StatusOption[];
+  extraQuery?: Pick<AdminListQuery, "leadId" | "userId" | "planId">;
+  downloadFilename?: string;
 };
 
 export function AdminList<T extends { id: string }>({
@@ -53,6 +61,9 @@ export function AdminList<T extends { id: string }>({
   fetcher,
   emptyLabel,
   options,
+  statusOptions = [],
+  extraQuery,
+  downloadFilename = "admin-list.csv",
 }: AdminListProps<T>) {
   const router = useRouter();
   const [name, setName] = useState("");
@@ -60,6 +71,7 @@ export function AdminList<T extends { id: string }>({
   const [debouncedName, setDebouncedName] = useState("");
   const [debouncedEmail, setDebouncedEmail] = useState("");
   const [packageName, setPackageName] = useState("");
+  const [status, setStatus] = useState("");
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
   const [page, setPage] = useState(1);
@@ -82,6 +94,7 @@ export function AdminList<T extends { id: string }>({
   const filterByName = options.includes("name");
   const filterByEmail = options.includes("email");
   const filterByPackage = options.includes("packageName");
+  const filterByStatus = options.includes("status");
 
   useEffect(() => {
     let cancelled = false;
@@ -99,8 +112,14 @@ export function AdminList<T extends { id: string }>({
     if (filterByPackage) {
       query.packageName = packageName || undefined;
     }
+    if (filterByStatus) {
+      query.status = status || undefined;
+    }
     if (fromDate) query.from = fromDate;
     if (toDate) query.to = toDate;
+    if (extraQuery?.leadId) query.leadId = extraQuery.leadId;
+    if (extraQuery?.userId) query.userId = extraQuery.userId;
+    if (extraQuery?.planId) query.planId = extraQuery.planId;
 
     async function load() {
       setLoading(true);
@@ -142,6 +161,7 @@ export function AdminList<T extends { id: string }>({
     fetcher,
     router,
     packageName,
+    status,
     fromDate,
     toDate,
     dateRangeInvalid,
@@ -149,6 +169,10 @@ export function AdminList<T extends { id: string }>({
     filterByName,
     filterByEmail,
     filterByPackage,
+    filterByStatus,
+    extraQuery?.leadId,
+    extraQuery?.userId,
+    extraQuery?.planId,
   ]);
 
   const total = result?.total ?? 0;
@@ -158,7 +182,7 @@ export function AdminList<T extends { id: string }>({
 
   const allPackageNames = packages.map((pkg) => pkg.name);
   const hasFilters = Boolean(
-    name.trim() || email.trim() || packageName || fromDate || toDate
+    name.trim() || email.trim() || packageName || status || fromDate || toDate
   );
 
   function clearFilters() {
@@ -167,6 +191,7 @@ export function AdminList<T extends { id: string }>({
     setDebouncedName("");
     setDebouncedEmail("");
     setPackageName("");
+    setStatus("");
     setFromDate("");
     setToDate("");
     setPage(1);
@@ -267,6 +292,32 @@ export function AdminList<T extends { id: string }>({
                 </Select>
               </div>
             )}
+            {options.includes("status") && statusOptions.length > 0 && (
+              <div className="space-y-1.5">
+                <Label htmlFor="admin-status" className="text-xs text-muted-foreground">
+                  Status
+                </Label>
+                <Select
+                  value={status || "__all__"}
+                  onValueChange={(value) => {
+                    setStatus(value === "__all__" ? "" : value || "");
+                    setPage(1);
+                  }}
+                >
+                  <SelectTrigger id="admin-status" className="w-full">
+                    <SelectValue placeholder="All statuses" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="__all__">All statuses</SelectItem>
+                    {statusOptions.map((item) => (
+                      <SelectItem key={item.value} value={item.value}>
+                        {item.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-2">
@@ -311,7 +362,7 @@ export function AdminList<T extends { id: string }>({
 
           {options.includes("download") && (
             <AdminListDownload
-              filename="admin-list.csv"
+              filename={downloadFilename}
               columns={columns}
               rows={(result?.data ?? []).map((row) =>
                 enhanceRow ? enhanceRow(row) : row

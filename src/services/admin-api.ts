@@ -12,18 +12,30 @@ import type {
   AdminOtpResponse,
   AdminPackagePurchase,
   ApiError,
+  CreateInstallmentCheckoutRequest,
   CreateLeadRequest,
   CreateNoteRequest,
+  CreatePaymentPlanRequest,
   CreatePipelineRequest,
+  CreateUserRequest,
   DeleteLeadResponse,
+  EmailInstallmentResponse,
+  Installment,
+  InstallmentStatusCounts,
   Lead,
   LeadDetail,
   LeadListItem,
   LeadStatusCounts,
   NoteItem,
+  PaymentPlanDetail,
+  PaymentPlanListItem,
+  PaymentPlanStatusCounts,
   PipelineItem,
+  UpdateInstallmentRequest,
   UpdateLeadRequest,
   UpdateNoteRequest,
+  UpdateUserRequest,
+  User,
 } from "@/types/admin";
 
 export class AdminUnauthorizedError extends Error {
@@ -31,6 +43,14 @@ export class AdminUnauthorizedError extends Error {
     super(message);
     this.name = "AdminUnauthorizedError";
   }
+}
+
+function toPackageSlug(packageName: string) {
+  const byName = packages.find((pkg) => pkg.name === packageName);
+  if (byName) return byName.slug;
+  const bySlug = packages.find((pkg) => pkg.slug === packageName);
+  if (bySlug) return bySlug.slug;
+  return packageName;
 }
 
 function buildUrl(path: string, query?: AdminListQuery): string {
@@ -46,11 +66,19 @@ function buildUrl(path: string, query?: AdminListQuery): string {
   const packageName = query.packageName?.trim();
   const from = query.from?.trim();
   const to = query.to?.trim();
+  const status = query.status?.trim();
+  const leadId = query.leadId?.trim();
+  const userId = query.userId?.trim();
+  const planId = query.planId?.trim();
   if (name) params.set("name", name);
   if (email) params.set("email", email);
-  if (packageName) params.set("packageName", packages.find((pkg) => pkg.name === packageName)?.slug ?? "");
+  if (packageName) params.set("packageName", toPackageSlug(packageName));
   if (from) params.set("from", from);
   if (to) params.set("to", to);
+  if (status) params.set("status", status);
+  if (leadId) params.set("leadId", leadId);
+  if (userId) params.set("userId", userId);
+  if (planId) params.set("planId", planId);
 
   const qs = params.toString();
   return qs ? `${url}?${qs}` : url;
@@ -193,4 +221,109 @@ export function updateNote(id: string, body: UpdateNoteRequest) {
     method: "PATCH",
     body: JSON.stringify(body),
   });
+}
+
+export function listUsers(query?: AdminListQuery) {
+  return adminFetch<AdminListResponse<User>>("/admin/users", { query });
+}
+
+export function getUser(id: string) {
+  return adminFetch<User>(`/admin/users/${encodeURIComponent(id)}`);
+}
+
+export function createUser(body: CreateUserRequest) {
+  return adminFetch<User>("/admin/users", {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
+}
+
+export function updateUser(id: string, body: UpdateUserRequest) {
+  return adminFetch<User>(`/admin/users/${encodeURIComponent(id)}`, {
+    method: "PATCH",
+    body: JSON.stringify(body),
+  });
+}
+
+export function listPaymentPlans(query?: AdminListQuery) {
+  return adminFetch<AdminListResponse<PaymentPlanListItem>>(
+    "/admin/payment_plans",
+    { query }
+  );
+}
+
+export function getPaymentPlanStatusCounts() {
+  return adminFetch<PaymentPlanStatusCounts>("/admin/payment_plans/status");
+}
+
+export function getPaymentPlan(id: string) {
+  return adminFetch<PaymentPlanDetail>(
+    `/admin/payment_plans/${encodeURIComponent(id)}`
+  );
+}
+
+export function createPaymentPlan(body: CreatePaymentPlanRequest) {
+  return adminFetch<PaymentPlanDetail>("/admin/payment_plans", {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
+}
+
+export function cancelPaymentPlan(id: string) {
+  return adminFetch<PaymentPlanDetail>(
+    `/admin/payment_plans/${encodeURIComponent(id)}`,
+    { method: "DELETE" }
+  );
+}
+
+export function listInstallments(query?: AdminListQuery) {
+  return adminFetch<AdminListResponse<Installment>>("/admin/installments", {
+    query,
+  });
+}
+
+export function getInstallmentStatusCounts() {
+  return adminFetch<InstallmentStatusCounts>("/admin/installments/status");
+}
+
+export function getInstallment(id: string) {
+  return adminFetch<Installment>(
+    `/admin/installments/${encodeURIComponent(id)}`
+  );
+}
+
+export function createInstallmentCheckout(
+  id: string,
+  body?: CreateInstallmentCheckoutRequest
+) {
+  return adminFetch<Installment>(
+    `/admin/installments/${encodeURIComponent(id)}/checkout`,
+    {
+      method: "POST",
+      body: JSON.stringify(body ?? {}),
+    }
+  );
+}
+
+export function emailInstallment(
+  id: string,
+  body?: CreateInstallmentCheckoutRequest
+) {
+  return adminFetch<EmailInstallmentResponse>(
+    `/admin/installments/${encodeURIComponent(id)}/email`,
+    {
+      method: "POST",
+      body: JSON.stringify(body ?? {}),
+    }
+  );
+}
+
+export function updateInstallment(id: string, body: UpdateInstallmentRequest) {
+  return adminFetch<Installment>(
+    `/admin/installments/${encodeURIComponent(id)}`,
+    {
+      method: "PATCH",
+      body: JSON.stringify(body),
+    }
+  );
 }

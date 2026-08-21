@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Loader2, Pencil, Plus, Trash2 } from "lucide-react";
 import {
@@ -11,6 +12,8 @@ import {
   deleteLead,
   getLead,
   getLeadStatusCounts,
+  listPaymentPlans,
+  listUsers,
   updateLead,
   updateNote,
 } from "@/services/admin-api";
@@ -21,7 +24,7 @@ import {
   StatusChip,
 } from "@/components/admin/admin-list";
 import { LeadTable } from "@/components/admin/lead-table";
-import { formatAdminDate } from "@/lib/admin-format";
+import { formatAdminDate, formatStripeAmount, packageLabel } from "@/lib/admin-format";
 import {
   CLEAR_PRIORITY_VALUE,
   leadPriorityLabel,
@@ -32,8 +35,11 @@ import {
   leadStatusTone,
   parsePriorityValue,
 } from "@/lib/lead-status";
+import { paymentPlanStatusLabel, paymentPlanStatusTone } from "@/lib/installments";
 import { toast } from "@/lib/toast";
 import { cn } from "@/lib/utils";
+import { CreatePaymentPlanDialog } from "@/components/admin/create-payment-plan-dialog";
+import { ensureUserForLead } from "@/components/admin/user-views";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -65,8 +71,12 @@ import type {
   LeadDetail,
   LeadStatusCounts,
   NoteItem,
+  PaymentPlanListItem,
   UpdateLeadRequest,
+  User,
 } from "@/types/admin";
+import { IntakeProfileFields, RequiredMark } from "../shared/intake-fields";
+import { PhoneInputField } from "../shared/phone-input";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const DEFAULT_NOTED_BY = "Admin";
@@ -258,7 +268,7 @@ function CreateLeadDialog({
                 required
               />
             </Field>
-            <Field label="Phone" htmlFor="lead-phone">
+            {/* <Field label="Phone" htmlFor="lead-phone">
               <Input
                 id="lead-phone"
                 value={phone}
@@ -267,7 +277,20 @@ function CreateLeadDialog({
                 className="h-9 rounded-xl"
                 required
               />
-            </Field>
+            </Field> */}
+            <div className="space-y-2">
+              <Label htmlFor="intake-phone">
+                Phone
+                <RequiredMark />
+              </Label>
+              <PhoneInputField
+                id="intake-phone"
+                value={phone}
+                onChange={setPhone}
+                disabled={saving}
+                required
+              />
+            </div>
             <PrioritySelect
               id="lead-priority"
               value={priority}
@@ -763,59 +786,61 @@ function LeadDrawerBody({
             </div>
           </form>
         ) : (
-        <dl className="space-y-3 break-all">
-          <AdminFact label="Email">
-            <a
-              href={`mailto:${data.email}`}
-              className="text-primary underline-offset-4 hover:underline"
-            >
-              {data.email}
-            </a>
-          </AdminFact>
-          <AdminFact label="Phone">
-            <a
-              href={`tel:${data.phone}`}
-              className="text-primary underline-offset-4 hover:underline"
-            >
-              {data.phone}
-            </a>
-          </AdminFact>
-          <AdminFact label="Secondary email">
-            {data.secondaryEmail ? (
+          <dl className="space-y-3 break-all">
+            <AdminFact label="Email">
               <a
-                href={`mailto:${data.secondaryEmail}`}
+                href={`mailto:${data.email}`}
                 className="text-primary underline-offset-4 hover:underline"
               >
-                {data.secondaryEmail}
+                {data.email}
               </a>
-            ) : (
-              "—"
-            )}
-          </AdminFact>
-          <AdminFact label="Secondary phone">
-            {data.secondaryPhone ? (
+            </AdminFact>
+            <AdminFact label="Phone">
               <a
-                href={`tel:${data.secondaryPhone}`}
+                href={`tel:${data.phone}`}
                 className="text-primary underline-offset-4 hover:underline"
               >
-                {data.secondaryPhone}
+                {data.phone}
               </a>
-            ) : (
-              "—"
-            )}
-          </AdminFact>
-          <AdminFact label="Priority">
-            {leadPriorityLabel(data.priority)}
-          </AdminFact>
-          <AdminFact label="Created">
-            {formatAdminDate(data.createdAt)}
-          </AdminFact>
-          <AdminFact label="ID">
-            <span className="font-mono text-xs">{data.id}</span>
-          </AdminFact>
-        </dl>
+            </AdminFact>
+            <AdminFact label="Secondary email">
+              {data.secondaryEmail ? (
+                <a
+                  href={`mailto:${data.secondaryEmail}`}
+                  className="text-primary underline-offset-4 hover:underline"
+                >
+                  {data.secondaryEmail}
+                </a>
+              ) : (
+                "—"
+              )}
+            </AdminFact>
+            <AdminFact label="Secondary phone">
+              {data.secondaryPhone ? (
+                <a
+                  href={`tel:${data.secondaryPhone}`}
+                  className="text-primary underline-offset-4 hover:underline"
+                >
+                  {data.secondaryPhone}
+                </a>
+              ) : (
+                "—"
+              )}
+            </AdminFact>
+            <AdminFact label="Priority">
+              {leadPriorityLabel(data.priority)}
+            </AdminFact>
+            <AdminFact label="Created">
+              {formatAdminDate(data.createdAt)}
+            </AdminFact>
+            <AdminFact label="ID">
+              <span className="font-mono text-xs">{data.id}</span>
+            </AdminFact>
+          </dl>
         )}
       </AdminPanel>
+
+      <LeadPaymentPlans lead={data} />
 
       <AdminPanel title="Pipeline">
         {data.pipelines.length === 0 ? (
@@ -1044,6 +1069,160 @@ function LeadDrawerBody({
         )}
       </div>
     </div>
+  );
+}
+
+function LeadPaymentPlans({ lead }: { lead: LeadDetail }) {
+  const router = useRouter();
+  const [plans, setPlans] = useState<PaymentPlanListItem[]>([]);
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [createOpen, setCreateOpen] = useState(false);
+  const [preparing, setPreparing] = useState(false);
+  const [reloadKey, setReloadKey] = useState(0);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function load() {
+      setLoading(true);
+      setError(null);
+      try {
+        const [planResult, userResult] = await Promise.all([
+          listPaymentPlans({
+            leadId: lead.id,
+            limit: 20,
+            order: "desc",
+          }),
+          listUsers({ leadId: lead.id, limit: 1 }),
+        ]);
+        if (!cancelled) {
+          setPlans(planResult.data);
+          setUser(userResult.data[0] ?? null);
+        }
+      } catch (err) {
+        if (cancelled) return;
+        if (err instanceof AdminUnauthorizedError) {
+          router.replace("/admin/login");
+          return;
+        }
+        setError(err instanceof Error ? err.message : "Request failed");
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+
+    void load();
+    return () => {
+      cancelled = true;
+    };
+  }, [lead.id, reloadKey, router]);
+
+  async function handleNewPlan() {
+    setPreparing(true);
+    setError(null);
+    try {
+      const nextUser = user ?? (await ensureUserForLead(lead));
+      setUser(nextUser);
+      setCreateOpen(true);
+    } catch (err) {
+      if (err instanceof AdminUnauthorizedError) {
+        router.replace("/admin/login");
+        return;
+      }
+      setError(err instanceof Error ? err.message : "Request failed");
+    } finally {
+      setPreparing(false);
+    }
+  }
+
+  return (
+    <>
+      <AdminPanel
+        title="Payment plans"
+        action={
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            className="rounded-lg"
+            disabled={preparing}
+            onClick={() => void handleNewPlan()}
+          >
+            {preparing ? (
+              <Loader2 className="size-3.5 animate-spin" />
+            ) : (
+              <Plus className="size-3.5" />
+            )}
+            New plan
+          </Button>
+        }
+      >
+        {loading ? (
+          <Loader2 className="size-4 animate-spin text-muted-foreground" />
+        ) : error ? (
+          <p className="text-sm text-destructive">{error}</p>
+        ) : (
+          <div className="space-y-3">
+            {user ? (
+              <p className="text-sm text-muted-foreground">
+                Linked user{" "}
+                <Link
+                  href={`/admin/users?user=${encodeURIComponent(user.id)}`}
+                  className="text-primary underline-offset-4 hover:underline"
+                >
+                  {user.name}
+                </Link>
+              </p>
+            ) : (
+              <p className="text-sm text-muted-foreground">
+                Creating a plan will also create a billing user for this lead.
+              </p>
+            )}
+            {plans.length === 0 ? (
+              <p className="text-sm text-muted-foreground">
+                No installment plans for this lead yet.
+              </p>
+            ) : (
+              <ul className="space-y-2">
+                {plans.map((plan) => (
+                  <li key={plan.id}>
+                    <Link
+                      href={`/admin/payment-plans/${plan.id}`}
+                      className="flex items-start justify-between gap-3 rounded-xl border border-border p-3 hover:bg-muted/40"
+                    >
+                      <div>
+                        <p className="text-sm font-medium">
+                          {packageLabel(plan.packageName)}
+                        </p>
+                        <p className="mt-0.5 font-mono text-xs text-muted-foreground">
+                          {formatStripeAmount(plan.paidAmount, plan.currency)} /{" "}
+                          {formatStripeAmount(plan.totalAmount, plan.currency)}
+                        </p>
+                      </div>
+                      <StatusChip
+                        label={paymentPlanStatusLabel(plan.status)}
+                        tone={paymentPlanStatusTone(plan.status)}
+                      />
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        )}
+      </AdminPanel>
+      <CreatePaymentPlanDialog
+        open={createOpen}
+        onOpenChange={setCreateOpen}
+        prefill={user ? { user } : undefined}
+        onCreated={(plan) => {
+          setReloadKey((key) => key + 1);
+          router.push(`/admin/payment-plans/${plan.id}`);
+        }}
+      />
+    </>
   );
 }
 

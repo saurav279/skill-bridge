@@ -1,7 +1,10 @@
+import { format, isValid, parseISO } from "date-fns";
 import {
   AssessmentRoutes,
   AssessmentSections,
 } from "@/data/assessment-questionnaire";
+import { packages } from "@/data/packages";
+import { isIsoDate, parseDateOnly } from "@/lib/uk-date";
 
 const UK_TIME_ZONE = "Europe/London";
 
@@ -25,13 +28,22 @@ const ZERO_DECIMAL_CURRENCIES = new Set([
 ]);
 
 export function formatAdminDate(iso: string) {
-  const date = new Date(iso);
-  if (Number.isNaN(date.getTime())) return "—";
+  const date = parseISO(iso);
+  if (!isValid(date)) return "—";
   return new Intl.DateTimeFormat("en-GB", {
     dateStyle: "medium",
     timeStyle: "short",
     timeZone: UK_TIME_ZONE,
   }).format(date);
+}
+
+export function formatAdminDay(value: string) {
+  if (isIsoDate(value)) {
+    const date = parseDateOnly(value);
+    if (!isValid(date)) return "—";
+    return format(date, "d MMM yyyy");
+  }
+  return formatAdminDate(value);
 }
 
 export function formatStripeAmount(amount: number, currency: string) {
@@ -88,4 +100,26 @@ export function titleCase(value: string) {
 export function dash(value: string | null | undefined) {
   const trimmed = value?.trim();
   return trimmed ? trimmed : "—";
+}
+
+export function packageLabel(slug: string | null | undefined) {
+  if (!slug?.trim()) return "—";
+  const match = packages.find((pkg) => pkg.slug === slug || pkg.name === slug);
+  return match?.name ?? titleCase(slug);
+}
+
+export function parseGbpLabelToPence(label: string) {
+  const match = label.replace(/,/g, "").match(/£\s*([\d]+(?:\.\d{1,2})?)/);
+  if (!match) return null;
+  return Math.round(Number(match[1]) * 100);
+}
+
+export function penceToPoundsInput(pence: number) {
+  return (pence / 100).toFixed(2);
+}
+
+export function poundsInputToPence(value: string) {
+  const parsed = Number.parseFloat(value.replace(/,/g, "").trim());
+  if (!Number.isFinite(parsed) || parsed <= 0) return null;
+  return Math.round(parsed * 100);
 }
